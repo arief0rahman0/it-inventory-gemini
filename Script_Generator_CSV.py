@@ -3,63 +3,106 @@ import random
 import uuid
 from datetime import datetime, timedelta
 
-def generate_csv(filename="data_aset_dummy.csv", count=50):
+def generate_csv(filename="data_aset_dummy_3000.csv", count=3000):
     """
-    Membuat file CSV berisi data aset dummy untuk testing fitur Import.
-    Format kolom sesuai dengan frontend:
-    name, serial_number, category, location, user, email, loan_date, warranty_date, purchase_date
+    Membuat file CSV berisi 3000 data aset dummy yang valid untuk fitur Import.
+    Format kolom:
+    0: name
+    1: serial_number
+    2: category
+    3: location
+    4: user
+    5: user_email
+    6: loan_date
+    7: warranty_date
+    8: purchase_date
     """
     
-    # Header kolom (opsional, tapi bagus untuk kejelasan)
+    # Header CSV (Frontend akan melewati baris ini jika mengandung 'name')
     headers = [
         "name", "serial_number", "category", "location", "user", 
         "user_email", "loan_date", "warranty_date", "purchase_date"
     ]
     
-    # Data sampel untuk randomisasi
-    categories = ["Laptop", "Desktop", "Server", "Network", "Printer", "Monitor", "Scanner"]
-    brands = ["Dell", "HP", "Lenovo", "Asus", "Apple", "Samsung", "Canon"]
-    locations = ["Lantai 1", "Lantai 2", "Gudang Utama", "Ruang Server", "Lobby"]
-    names = ["Budi", "Siti", "Agus", "Dewi", "Rina", "Joko", "Admin"]
+    # Data Sampel untuk variasi
+    categories = [
+        "Laptop", "Desktop", "Server", "Network", "Printer", 
+        "Monitor", "Scanner", "Software License", "Tablet", "Projector", "Workstation"
+    ]
+    brands = ["Dell", "HP", "Lenovo", "Asus", "Apple", "Samsung", "Microsoft", "Cisco", "Epson", "Logitech"]
+    software_names = ["Office 365 Business", "Adobe Creative Cloud", "Antivirus Premium", "Windows 11 Pro", "Zoom Enterprise"]
+    locations = ["Lantai 1", "Lantai 2", "Lantai 3", "Gudang Utama", "Ruang Server A", "Ruang Server B", "Lobby", "Virtual (Cloud)", "Ruang Meeting", "Lab IT"]
+    first_names = ["Budi", "Siti", "Agus", "Dewi", "Rina", "Joko", "Admin", "Reza", "Putri", "Eko", "Fajar", "Dian", "Sari"]
+    last_names = ["Santoso", "Putri", "Wijaya", "Kusuma", "Hidayat", "Pratama", "Nugroho", "Saputra", "Utami", "Lestari"]
     
-    print(f"Membuat file '{filename}' dengan {count} baris data...")
+    print(f"Sedang membuat file '{filename}' dengan {count} data...")
     
     with open(filename, mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
-        
-        # Tulis baris pertama (mungkin dianggap data atau header oleh frontend, 
-        # tapi frontend kita cukup pintar mendeteksi header 'name')
         writer.writerow(headers)
         
         base_time = datetime.now()
         
         for i in range(count):
-            brand = random.choice(brands)
-            cat = random.choice(categories)
-            name = f"{brand} {cat} Import-{random.randint(100, 999)}"
+            category = random.choice(categories)
             
-            # Serial number
-            sn = f"CSV-{uuid.uuid4().hex[:6].upper()}"
+            # --- Logika Nama & Serial Number ---
+            if category == "Software License":
+                name = f"{random.choice(software_names)} - Seat {random.randint(1,500)}"
+                sn = f"LIC-{uuid.uuid4().hex[:12].upper()}" # Format License Key
+                loc = "Virtual / Cloud"
+            else:
+                brand = random.choice(brands)
+                model_type = random.choice(['Pro', 'Air', 'XPS', 'ThinkPad', 'Latitude', 'Pavilion', 'Ultra', 'MacBook'])
+                name = f"{brand} {category} {model_type} {random.randint(100, 999)}"
+                sn = f"SN-{brand[:3].upper()}-{uuid.uuid4().hex[:8].upper()}"
+                loc = random.choice(locations)
             
-            loc = random.choice(locations)
-            user_name = f"{random.choice(names)} {random.choice(['Santoso', 'Putri', 'Wijaya'])}"
-            email = f"{user_name.split()[0].lower()}@contoh.com"
+            # --- Logika User & Email ---
+            # 80% kemungkinan aset ada penggunanya
+            has_user = random.random() > 0.2 
             
-            # Tanggal-tanggal
-            # Beli: 1-2 tahun lalu
-            purchase_date = (base_time - timedelta(days=random.randint(30, 700))).strftime('%Y-%m-%d')
-            # Pinjam: Setelah beli
-            loan_date = (datetime.strptime(purchase_date, '%Y-%m-%d') + timedelta(days=random.randint(1, 10))).strftime('%Y-%m-%d')
-            # Garansi: 1 tahun setelah beli
-            warranty_date = (datetime.strptime(purchase_date, '%Y-%m-%d') + timedelta(days=365)).strftime('%Y-%m-%d')
+            if has_user:
+                user_first = random.choice(first_names)
+                user_last = random.choice(last_names)
+                user_fullname = f"{user_first} {user_last}"
+                email = f"{user_first.lower()}.{user_last.lower()}@perusahaan.com"
+            else:
+                user_fullname = ""
+                email = ""
+                # Jika tidak ada user, biasanya di gudang (kecuali software)
+                if category != "Software License":
+                    loc = "Gudang Utama"
+            
+            # --- Logika Tanggal ---
+            # 1. Tanggal Beli (Purchase): Antara 1 bulan s.d. 4 tahun lalu
+            purchase_dt_obj = base_time - timedelta(days=random.randint(30, 1460))
+            purchase_date = purchase_dt_obj.strftime('%Y-%m-%d')
+            
+            # 2. Tanggal Pinjam (Loan): Harus SETELAH beli
+            if has_user:
+                # Pinjam antara 1 hari s.d. 30 hari setelah beli (atau random sampai hari ini)
+                days_after_purchase = (base_time - purchase_dt_obj).days
+                if days_after_purchase > 1:
+                    loan_offset = random.randint(1, days_after_purchase)
+                    loan_dt_obj = purchase_dt_obj + timedelta(days=loan_offset)
+                    loan_date = loan_dt_obj.strftime('%Y-%m-%d')
+                else:
+                    loan_date = purchase_date
+            else:
+                loan_date = ""
+
+            # 3. Garansi (Warranty): Biasanya 1, 2, atau 3 tahun SETELAH beli
+            # Ada kemungkinan 10% garansi sudah habis (untuk testing notifikasi)
+            warranty_years = random.choice([1, 2, 3])
+            warranty_date = (purchase_dt_obj + timedelta(days=365 * warranty_years)).strftime('%Y-%m-%d')
             
             writer.writerow([
-                name, sn, cat, loc, user_name, email, 
+                name, sn, category, loc, user_fullname, email, 
                 loan_date, warranty_date, purchase_date
             ])
             
-    print("Selesai! File siap digunakan untuk testing Import CSV.")
+    print(f"Selesai! File '{filename}' berhasil dibuat.")
 
 if __name__ == "__main__":
-    # Anda bisa mengubah jumlah data di sini, misalnya 100 atau 500
-    generate_csv(count=100)
+    generate_csv()
