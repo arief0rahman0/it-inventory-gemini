@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyIT-Inventory: Dashboard</title>
+    <title>MyIT-Inventory</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -20,6 +20,7 @@
         .modal-bg { background-color: rgba(0, 0, 0, 0.85); backdrop-filter: blur(4px); }
         .transition-all { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
@@ -30,7 +31,7 @@
         
         .modal-content { transform: scale(0.95); opacity: 0; transition: all 0.3s ease-out; }
         .modal-content.modal-open { transform: scale(1); opacity: 1; }
-
+        
         .notification-badge {
             position: absolute; top: -2px; right: -2px;
             background-color: #ef4444; color: white;
@@ -45,11 +46,63 @@
         .group:hover .dropdown-menu {
             opacity: 1; visibility: visible; transform: translateY(0);
         }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div class="grid grid-cols-1 md:grid-cols-[260px_1fr] min-h-screen">
+    <!-- ================= LOGIN PAGE ================= -->
+    <div id="login-page" class="min-h-screen flex items-center justify-center bg-slate-900 p-4">
+        <div class="card p-8 rounded-3xl w-full max-w-sm shadow-2xl border-slate-700 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-sky-500/10 rounded-full blur-3xl -mr-16 -mt-16"></div>
+            
+            <div class="text-center mb-8 relative z-10">
+                <div class="bg-sky-500 w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-sky-500/30">
+                    <i data-lucide="shield-check" class="text-white w-8 h-8"></i>
+                </div>
+                <h1 class="text-2xl font-black text-white tracking-tight">MyIT Login</h1>
+                <p class="text-slate-400 text-sm mt-2">Masuk untuk mengelola inventaris</p>
+            </div>
+            
+            <form id="login-form" class="space-y-5 relative z-10">
+                <div class="space-y-1">
+                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Username</label>
+                    <div class="relative">
+                        <i data-lucide="user" class="absolute left-3 top-3.5 w-4 h-4 text-slate-500"></i>
+                        <input type="text" id="login-username" class="w-full pl-10 p-3 rounded-xl border text-sm focus:border-sky-500 transition-colors" placeholder="admin" required>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Password</label>
+                    <div class="relative">
+                        <i data-lucide="lock" class="absolute left-3 top-3.5 w-4 h-4 text-slate-500"></i>
+                        <input type="password" id="login-password" class="w-full pl-10 p-3 rounded-xl border text-sm focus:border-sky-500 transition-colors" placeholder="••••••" required>
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-3 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-xl shadow-lg shadow-sky-500/20 transition transform hover:-translate-y-0.5 active:translate-y-0">Masuk Aplikasi</button>
+            </form>
+
+            <div class="relative my-6">
+                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-700"></div></div>
+                <div class="relative flex justify-center text-[10px] uppercase font-bold tracking-widest"><span class="bg-slate-900 px-2 text-slate-500">Atau masuk dengan</span></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 relative z-10">
+                <button onclick="mockLogin('google')" class="flex items-center justify-center gap-2 bg-white text-slate-900 py-2.5 rounded-xl font-bold text-xs hover:bg-gray-100 transition shadow-lg transform hover:-translate-y-0.5">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                    Google
+                </button>
+                <button onclick="mockLogin('sso')" class="flex items-center justify-center gap-2 bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-xs hover:bg-indigo-500 transition shadow-lg shadow-indigo-500/20 transform hover:-translate-y-0.5">
+                    <i data-lucide="key-round" class="w-3.5 h-3.5"></i> SSO Login
+                </button>
+            </div>
+            <div id="login-error" class="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-xl text-center text-xs mt-6 hidden font-medium"></div>
+            <div class="mt-8 pt-6 border-t border-slate-700/50 text-center text-[10px] text-slate-400 font-mono">admin/admin123 • staff/staff123 • viewer/viewer123</div>
+        </div>
+    </div>
+
+    <!-- ================= MAIN APP ================= -->
+    <div id="main-app" class="grid grid-cols-1 md:grid-cols-[260px_1fr] min-h-screen hidden transition-opacity duration-500">
         <!-- Sidebar -->
         <aside class="p-6 bg-slate-900 border-r border-slate-800 flex flex-col fixed md:relative h-full z-40 w-64">
             <div class="mb-10 flex items-center space-x-3">
@@ -58,30 +111,41 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-black text-white tracking-tight">MyIT-INV</h1>
-                    <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Asset Manager</p>
+                    <div id="current-user-role" class="text-[9px] text-sky-400 uppercase tracking-widest font-black bg-sky-900/30 px-1.5 py-0.5 rounded inline-block mt-1">LOADING...</div>
                 </div>
             </div>
             
             <nav class="space-y-2 flex-grow">
                 <div class="text-[10px] uppercase font-bold text-slate-500 px-3 mb-2">Menu Utama</div>
-                <button onclick="switchView('dashboard')" id="nav-dashboard" class="w-full flex items-center space-x-3 p-3 rounded-xl active-nav shadow-lg shadow-sky-500/20 group transition-all text-left">
-                    <i data-lucide="layout-grid" class="w-5 h-5"></i>
+                <button onclick="switchView('dashboard')" id="nav-dashboard" class="w-full flex items-center space-x-3 p-3 rounded-xl active-nav transition-all text-left group">
+                    <i data-lucide="layout-grid" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
                     <span class="font-bold text-sm">Dashboard</span>
                 </button>
-                <button onclick="switchView('assets')" id="nav-assets" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition-all text-left">
-                    <i data-lucide="list" class="w-5 h-5"></i>
+                <button onclick="switchView('assets')" id="nav-assets" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition-all text-left group">
+                    <i data-lucide="list" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
                     <span class="font-bold text-sm">Data Aset</span>
                 </button>
+                
+                <div class="role-superadmin hidden mt-6">
+                    <div class="text-[10px] uppercase font-bold text-slate-500 px-3 mb-2">Admin Zone</div>
+                    <button onclick="switchView('users')" id="nav-users" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-purple-400 transition-all text-left group">
+                        <i data-lucide="users" class="w-5 h-5 group-hover:scale-110 transition-transform text-purple-500"></i>
+                        <span class="font-bold text-sm">Manajemen User</span>
+                    </button>
+                </div>
             </nav>
 
             <div class="mt-auto pt-6 border-t border-slate-800">
-                <div class="flex items-center justify-between mb-4 px-2 bg-slate-800/50 p-2 rounded-lg border border-slate-700/50">
-                    <span class="text-[10px] font-bold text-slate-400">STATUS API</span>
-                    <div class="flex items-center space-x-2">
-                        <div id="status-dot" class="w-2 h-2 bg-slate-500 rounded-full"></div>
-                        <span id="status-text" class="text-[10px] font-mono text-slate-400 uppercase">Checking</span>
+                <div class="flex items-center gap-3 mb-4 px-2 bg-slate-800/50 p-2 rounded-xl border border-slate-700/50">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-sky-500 to-indigo-500 flex items-center justify-center text-xs font-bold text-white shadow-lg" id="user-initial">U</div>
+                    <div class="overflow-hidden">
+                        <p class="text-sm font-bold text-white truncate" id="user-name">User</p>
+                        <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span><p class="text-[10px] text-slate-400 truncate">Online</p></div>
                     </div>
                 </div>
+                <button onclick="logout()" class="w-full py-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition border border-red-500/20 hover:border-red-500/40">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i><span>Keluar</span>
+                </button>
             </div>
         </aside>
 
@@ -90,53 +154,32 @@
             <header class="mb-8 flex justify-between items-center">
                 <div>
                     <h2 class="text-3xl font-black text-white tracking-tight" id="page-title">Dashboard</h2>
-                    <p class="text-slate-400 text-sm mt-1">Ringkasan status infrastruktur TI.</p>
+                    <p class="text-slate-400 text-sm mt-1">Sistem Informasi Manajemen Aset</p>
                 </div>
-                
                 <div class="relative cursor-pointer hover:scale-105 transition" onclick="openModal('notification-modal')">
-                    <div class="p-3 bg-slate-800 rounded-xl hover:bg-slate-700 transition border border-slate-700">
-                        <i data-lucide="bell" class="w-5 h-5 text-slate-300"></i>
-                    </div>
+                    <div class="p-3 bg-slate-800 rounded-xl hover:bg-slate-700 transition border border-slate-700"><i data-lucide="bell" class="w-5 h-5 text-slate-300"></i></div>
                     <div id="notif-badge" class="notification-badge hidden">0</div>
                 </div>
             </header>
 
-            <!-- VIEW: DASHBOARD -->
+            <!-- VIEW: DASHBOARD (REVISI: Hapus Barang Masuk/Keluar) -->
             <div id="view-dashboard" class="space-y-6 animate-fade-in">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="card p-6 rounded-2xl border-l-4 border-l-emerald-500 relative overflow-hidden group">
-                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2">Barang Masuk (Bulan Ini)</div>
-                        <div class="text-4xl font-black text-white" id="stat-incoming">0</div>
-                        <i data-lucide="arrow-down-left" class="absolute right-4 bottom-4 text-emerald-500/10 w-16 h-16 group-hover:scale-110 transition-transform"></i>
-                    </div>
-                    <div class="card p-6 rounded-2xl border-l-4 border-l-sky-500 relative overflow-hidden group">
+                <div class="grid grid-cols-1 gap-6">
+                    <!-- Hanya Menampilkan Total Aset -->
+                    <div class="card p-6 rounded-2xl border-l-4 border-l-sky-500 relative overflow-hidden group hover:bg-slate-800/50 transition">
                         <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2">Total Aset Aktif</div>
-                        <div class="text-4xl font-black text-white" id="stat-total">0</div>
-                        <i data-lucide="server" class="absolute right-4 bottom-4 text-sky-500/10 w-16 h-16 group-hover:scale-110 transition-transform"></i>
-                    </div>
-                    <div class="card p-6 rounded-2xl border-l-4 border-l-rose-500 relative overflow-hidden group">
-                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2">Barang Keluar (Dispose)</div>
-                        <div class="text-4xl font-black text-white" id="stat-disposed">0</div>
-                        <i data-lucide="trash-2" class="absolute right-4 bottom-4 text-rose-500/10 w-16 h-16 group-hover:scale-110 transition-transform"></i>
+                        <div class="text-5xl font-black text-white tracking-tighter" id="stat-total">0</div>
+                        <i data-lucide="server" class="absolute right-4 bottom-4 text-sky-500/10 w-24 h-24 group-hover:scale-110 transition-transform"></i>
                     </div>
                 </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="card p-6 rounded-2xl lg:col-span-2">
-                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Distribusi Kategori Aset</h3>
-                        <div class="h-64">
-                            <canvas id="categoryChart"></canvas>
-                        </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="card p-6 rounded-2xl">
+                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Distribusi Kategori</h3>
+                        <div class="h-64 flex justify-center"><canvas id="categoryChart"></canvas></div>
                     </div>
-
-                    <div class="card p-6 rounded-2xl flex flex-col h-full">
-                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                            <i data-lucide="alert-triangle" class="text-amber-500 w-4 h-4"></i>
-                            Garansi Habis (30 Hari)
-                        </h3>
-                        <div id="warranty-list-dashboard" class="space-y-3 overflow-y-auto flex-grow pr-2 max-h-64 custom-scrollbar">
-                            <div class="text-center text-slate-500 text-sm py-10">Memuat data...</div>
-                        </div>
+                    <div class="card p-6 rounded-2xl">
+                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="alert-triangle" class="text-amber-500 w-4 h-4"></i> Peringatan Garansi (30 Hari)</h3>
+                        <div id="warranty-list-dashboard" class="space-y-3 overflow-y-auto flex-grow h-64 pr-2 custom-scrollbar"><div class="text-center text-slate-500 text-sm py-10">Memuat data...</div></div>
                     </div>
                 </div>
             </div>
@@ -146,33 +189,22 @@
                 <div class="card p-4 rounded-2xl mb-6 flex flex-col md:flex-row gap-4 justify-between items-center bg-slate-800/50 backdrop-blur-md sticky top-0 z-20">
                     <div class="relative w-full md:w-80">
                         <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-500"></i>
-                        <input type="text" id="search-input" onkeyup="filterAssets()" placeholder="Cari aset..." 
-                            class="w-full pl-10 pr-4 py-2 rounded-xl text-sm border bg-slate-900 border-slate-700 focus:border-sky-500 transition-colors">
+                        <input type="text" id="search-input" onkeyup="filterAssets()" placeholder="Cari aset..." class="w-full pl-10 pr-4 py-2 rounded-xl text-sm border bg-slate-900 border-slate-700 focus:border-sky-500 transition-colors">
                     </div>
                     <div class="flex gap-2 relative">
-                        <button onclick="openModal('import-modal')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition shadow-lg shadow-indigo-500/20">
-                            <i data-lucide="arrow-down-to-line" class="w-3.5 h-3.5"></i> Barang Masuk (CSV)
-                        </button>
-
-                        <div class="relative group">
-                            <button class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition border border-slate-600">
-                                <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
-                                <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                        <div class="role-editable hidden flex gap-2">
+                            <!-- Import Barang Masuk -->
+                            <button onclick="openModal('import-modal')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition shadow-lg shadow-indigo-500/20">
+                                <i data-lucide="arrow-down-to-line" class="w-3.5 h-3.5"></i> Import Barang Masuk (CSV)
                             </button>
-                            <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl overflow-hidden z-50">
-                                <a href="#" onclick="exportCSV('all')" class="block px-4 py-3 text-xs text-slate-300 hover:bg-slate-700 hover:text-white transition border-b border-slate-700/50">
-                                    <span class="font-bold block mb-0.5">Export Semua</span>
-                                    <span class="text-[10px] text-slate-500">Seluruh data aset</span>
-                                </a>
-                                <a href="#" onclick="exportCSV('disposed')" class="block px-4 py-3 text-xs text-rose-400 hover:bg-rose-500/10 transition">
-                                    <span class="font-bold block mb-0.5">Barang Keluar</span>
-                                    <span class="text-[10px] text-slate-500">Hanya status 'Disposed'</span>
-                                </a>
-                            </div>
+                            <button onclick="openModal('edit-modal', true)" class="bg-sky-600 hover:bg-sky-500 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition shadow-lg shadow-sky-500/20">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Tambah
+                            </button>
                         </div>
-
-                        <button onclick="openModal('edit-modal', true)" class="bg-sky-600 hover:bg-sky-500 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition shadow-lg shadow-sky-500/20">
-                            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                        
+                        <!-- Export CSV (Langsung, tanpa dropdown) -->
+                        <button onclick="exportCSV('all')" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition border border-slate-600">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV
                         </button>
                     </div>
                 </div>
@@ -185,550 +217,211 @@
                                     <th class="p-5">Aset</th>
                                     <th class="p-5">Kategori</th>
                                     <th class="p-5">Lokasi & Pengguna</th>
-                                    <th class="p-5">Garansi</th>
                                     <th class="p-5 text-center">Status</th>
-                                    <th class="p-5 text-right">Aksi</th>
+                                    <th class="p-5 text-right role-editable hidden">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="assets-list" class="divide-y divide-slate-800/50 text-sm"></tbody>
                         </table>
                     </div>
-                    
                     <div class="p-4 border-t border-slate-800 bg-slate-900/30 flex justify-between items-center">
-                        <span class="text-xs text-slate-400">Halaman <span id="curr-page" class="text-white font-bold">1</span></span>
+                        <span class="text-xs text-slate-400">Halaman <span id="curr-page">1</span></span>
                         <div class="flex gap-2">
-                            <button onclick="prevPage()" id="btn-prev" class="p-2 bg-slate-800 rounded-lg hover:bg-slate-700 disabled:opacity-50 transition"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
-                            <button onclick="nextPage()" id="btn-next" class="p-2 bg-slate-800 rounded-lg hover:bg-slate-700 disabled:opacity-50 transition"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                            <button onclick="prevPage()" class="p-2 bg-slate-800 rounded-lg hover:bg-slate-700"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                            <button onclick="nextPage()" class="p-2 bg-slate-800 rounded-lg hover:bg-slate-700"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- VIEW: USER MANAGEMENT -->
+            <div id="view-users" class="hidden animate-fade-in">
+                <div class="card p-6 rounded-2xl mb-6 border-l-4 border-l-purple-500 bg-gradient-to-r from-slate-900 to-purple-900/20">
+                    <h3 class="text-lg font-bold text-white mb-1">Manajemen Pengguna</h3>
+                    <p class="text-xs text-slate-400">Kelola akses pengguna.</p>
+                </div>
+                <div class="card p-6 rounded-2xl mb-6">
+                    <form id="user-form" class="flex flex-col md:flex-row gap-4 items-end">
+                        <div class="flex-1 w-full space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Username</label><input type="text" id="new-username" required class="w-full p-2.5 rounded-xl border text-sm"></div>
+                        <div class="flex-1 w-full space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Password</label><input type="password" id="new-password" required class="w-full p-2.5 rounded-xl border text-sm"></div>
+                        <div class="w-full md:w-48 space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Role</label>
+                            <select id="new-role" class="w-full p-2.5 rounded-xl border text-sm cursor-pointer"><option value="editor">Staff (Edit)</option><option value="viewer">Viewer (Read Only)</option><option value="superadmin">Superadmin</option></select>
+                        </div>
+                        <button type="submit" class="w-full md:w-auto bg-purple-600 hover:bg-purple-500 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition">Buat Akun</button>
+                    </form>
+                </div>
+                <div class="card rounded-2xl overflow-hidden shadow-xl border-0">
+                    <table class="w-full text-left"><thead class="bg-slate-800 text-slate-400 text-[10px] font-black uppercase tracking-widest"><tr><th class="p-5">Pengguna</th><th class="p-5">Role</th><th class="p-5">Dibuat Pada</th><th class="p-5 text-right">Aksi</th></tr></thead><tbody id="users-list" class="divide-y divide-slate-800/50 text-sm"></tbody></table>
+                </div>
+            </div>
         </main>
     </div>
 
-    <!-- MODAL: NOTIFIKASI GARANSI -->
-    <div id="notification-modal" class="modal-bg fixed inset-0 flex items-center justify-center hidden p-4 z-[3000]">
-        <div class="card p-6 rounded-3xl max-w-lg w-full modal-content border-slate-700 shadow-2xl relative">
-            <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-4">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i data-lucide="bell-ring" class="text-amber-500 w-5 h-5"></i> Peringatan Garansi
-                </h3>
-                <button onclick="closeModal('notification-modal')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-            <p class="text-xs text-slate-400 mb-4">Aset berikut memiliki garansi yang akan habis dalam 30 hari ke depan.</p>
-            <div id="warranty-list-full" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar"></div>
-        </div>
-    </div>
-
-    <!-- MODAL: TAMBAH / EDIT ASET -->
+    <!-- Modals untuk Asset -->
     <div id="edit-modal" class="modal-bg fixed inset-0 flex items-center justify-center hidden p-4 z-[2000]">
         <div class="card p-8 rounded-3xl max-w-2xl w-full modal-content border-slate-700 shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
-            <h3 class="text-xl font-bold mb-6 text-white flex items-center space-x-2 border-b border-slate-700 pb-4">
-                <i data-lucide="edit-3" class="text-sky-500"></i><span id="modal-title">Edit Aset</span>
-            </h3>
+            <h3 class="text-xl font-bold mb-6 text-white flex items-center space-x-2 border-b border-slate-700 pb-4"><i data-lucide="edit-3" class="text-sky-500"></i><span id="modal-title">Edit Aset</span></h3>
             <form id="asset-form" class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <input type="hidden" id="edit-id">
-                
+                <input type="text" id="edit-name" required class="w-full p-3 rounded-xl border text-sm" placeholder="Nama Aset">
+                <input type="text" id="edit-sn" required class="w-full p-3 rounded-xl border text-sm font-mono" placeholder="Serial Number">
+                <select id="edit-category" class="w-full p-3 rounded-xl border text-sm">
+                    <option value="Laptop">Laptop</option><option value="Desktop">Desktop</option><option value="Server">Server</option><option value="Network">Network</option><option value="Printer">Printer</option><option value="Software License">Software License</option>
+                </select>
+                <!-- Datalist untuk Lokasi -->
                 <div class="space-y-1">
-                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Nama Aset</label>
-                    <input type="text" id="edit-name" required class="w-full p-3 rounded-xl border text-sm focus:border-sky-500 transition-colors">
+                    <input type="text" id="edit-location" list="location-list" required class="w-full p-3 rounded-xl border text-sm" placeholder="Pilih atau Ketik Lokasi">
+                    <datalist id="location-list">
+                        <option value="Gudang Utama"><option value="Ruang Server"><option value="Lobby"><option value="Lantai 1"><option value="Lantai 2"><option value="Lantai 3"><option value="Ruang Meeting">
+                    </datalist>
                 </div>
-                <div class="space-y-1">
-                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Nomor Seri</label>
-                    <input type="text" id="edit-sn" required class="w-full p-3 rounded-xl border text-sm font-mono focus:border-sky-500 transition-colors">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Kategori</label>
-                    <select id="edit-category" class="w-full p-3 rounded-xl border text-sm focus:border-sky-500 transition-colors">
-                        <option value="Laptop">Laptop</option><option value="Desktop">Desktop</option><option value="Server">Server</option><option value="Network">Network</option><option value="Printer">Printer</option><option value="Monitor">Monitor</option><option value="Tablet">Tablet</option><option value="Scanner">Scanner</option><option value="Projector">Projector</option><option value="Workstation">Workstation</option>
-                    </select>
-                </div>
-                <div class="space-y-1">
-                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Lokasi</label>
-                    <input type="text" id="edit-location" required class="w-full p-3 rounded-xl border text-sm focus:border-sky-500 transition-colors">
-                </div>
-                
-                <div class="space-y-1">
-                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Nama Pengguna</label>
-                    <input type="text" id="edit-user" class="w-full p-3 rounded-xl border text-sm focus:border-sky-500 transition-colors" placeholder="Nama Karyawan">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-[10px] font-bold text-sky-500 uppercase ml-1">Email Pengguna</label>
-                    <input type="email" id="edit-email" class="w-full p-3 rounded-xl border text-sm focus:border-sky-500 transition-colors" placeholder="email@perusahaan.com">
-                </div>
-
-                <!-- DATE FIELDS -->
-                <div class="space-y-1">
-                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Tanggal Pembelian</label>
-                    <div class="relative">
-                        <i data-lucide="shopping-bag" class="absolute left-3 top-3.5 w-4 h-4 text-slate-500"></i>
-                        <input type="date" id="edit-purchase-date" class="w-full pl-10 p-3 rounded-xl border text-sm text-slate-300 focus:border-sky-500 transition-colors">
-                    </div>
-                </div>
-                <div class="space-y-1">
-                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Tanggal Peminjaman</label>
-                    <div class="relative">
-                        <i data-lucide="calendar" class="absolute left-3 top-3.5 w-4 h-4 text-slate-500"></i>
-                        <input type="date" id="edit-loan-date" class="w-full pl-10 p-3 rounded-xl border text-sm text-slate-300 focus:border-sky-500 transition-colors">
-                    </div>
-                </div>
-                <div class="space-y-1 md:col-span-2">
-                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Garansi Berakhir</label>
-                    <div class="relative">
-                        <i data-lucide="shield" class="absolute left-3 top-3.5 w-4 h-4 text-slate-500"></i>
-                        <input type="date" id="edit-warranty-date" class="w-full pl-10 p-3 rounded-xl border text-sm text-slate-300 focus:border-sky-500 transition-colors">
-                    </div>
-                </div>
-
-                <div class="space-y-1 md:col-span-2">
-                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Status</label>
-                    <select id="edit-status" class="w-full p-3 rounded-xl border text-sm focus:border-sky-500 transition-colors">
-                        <option value="In Use">In Use (Dipakai)</option>
-                        <option value="Maintenance">Maintenance (Perbaikan)</option>
-                        <option value="Disposed">Disposed (Dihapus/Keluar)</option>
-                        <option value="Broken">Broken (Rusak)</option>
-                        <option value="In Storage">In Storage (Disimpan)</option>
-                    </select>
-                </div>
-
-                <div class="col-span-full flex gap-3 mt-4 pt-4 border-t border-slate-700">
-                    <button type="button" onclick="closeModal('edit-modal')" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-bold text-sm transition">Batal</button>
-                    <button type="submit" class="flex-1 py-3 bg-sky-500 hover:bg-sky-400 text-slate-900 font-black rounded-xl text-sm transition shadow-lg shadow-sky-500/20">Simpan Data</button>
-                </div>
+                <input type="text" id="edit-user" class="w-full p-3 rounded-xl border text-sm" placeholder="Pengguna">
+                <input type="email" id="edit-email" class="w-full p-3 rounded-xl border text-sm" placeholder="Email">
+                <div class="space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Tgl Beli</label><input type="date" id="edit-purchase-date" class="w-full p-3 rounded-xl border text-sm text-slate-300"></div>
+                <div class="space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Tgl Pinjam</label><input type="date" id="edit-loan-date" class="w-full p-3 rounded-xl border text-sm text-slate-300"></div>
+                <div class="space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Garansi Berakhir</label><input type="date" id="edit-warranty-date" class="w-full p-3 rounded-xl border text-sm text-slate-300"></div>
+                <select id="edit-status" class="w-full p-3 rounded-xl border text-sm"><option value="In Use">In Use</option><option value="Maintenance">Maintenance</option><option value="Disposed">Disposed</option></select>
+                <div class="col-span-full flex gap-3 mt-4"><button type="button" onclick="closeModal('edit-modal')" class="flex-1 py-3 bg-slate-800 rounded-xl font-bold text-sm">Batal</button><button type="submit" class="flex-1 py-3 bg-sky-500 hover:bg-sky-400 text-slate-900 font-black rounded-xl text-sm">Simpan</button></div>
             </form>
         </div>
     </div>
 
-    <!-- Import Modal (Barang Masuk) -->
+    <!-- Import Modal -->
     <div id="import-modal" class="modal-bg fixed inset-0 flex items-center justify-center hidden p-4 z-[2000]">
         <div class="card p-8 rounded-3xl max-w-md w-full modal-content border-slate-700 shadow-2xl">
-            <h3 class="text-xl font-bold mb-2 flex items-center space-x-2 text-white">
-                <i data-lucide="arrow-down-to-line" class="text-indigo-500"></i>
-                <span>Import Barang Masuk (CSV)</span>
-            </h3>
+            <h3 class="text-xl font-bold mb-2 flex items-center space-x-2 text-white"><i data-lucide="file-spreadsheet" class="text-indigo-500"></i><span>Import File CSV</span></h3>
             <div class="flex justify-between items-center mb-6 gap-2">
-                <p class="text-xs text-slate-400 font-mono bg-slate-900 p-2 rounded border border-slate-800 break-words flex-grow">
-                    name, sn, category, location, user, email, loan_date, warranty_date, purchase_date
-                </p>
-                <button onclick="downloadTemplate()" class="bg-slate-800 hover:bg-slate-700 text-sky-400 p-2.5 rounded-xl border border-slate-700 transition shadow-md flex-shrink-0" title="Download Template Kosong">
-                    <i data-lucide="file-down" class="w-5 h-5"></i>
-                </button>
+                <p class="text-xs text-slate-400 font-mono bg-slate-900 p-2 rounded border border-slate-800 flex-grow">name, sn, category, location, user, email, loan, warranty, purchase</p>
+                <button onclick="downloadTemplate()" class="bg-slate-800 hover:bg-slate-700 text-sky-400 p-2.5 rounded-xl border border-slate-700" title="Download Template"><i data-lucide="file-down" class="w-5 h-5"></i></button>
             </div>
-            
-            <div id="drop-zone" class="drop-zone border-2 border-dashed border-slate-700 rounded-2xl py-12 flex flex-col items-center cursor-pointer hover:border-sky-500 transition mb-6 bg-slate-800/50" onclick="document.getElementById('csv-input').click()">
-                <div class="bg-slate-800 p-3 rounded-full mb-3">
-                    <i data-lucide="cloud-upload" class="w-8 h-8 text-sky-500"></i>
-                </div>
+            <div id="drop-zone" class="drop-zone rounded-2xl py-12 flex flex-col items-center cursor-pointer hover:border-sky-500 transition mb-6 bg-slate-800/50" onclick="document.getElementById('csv-input').click()">
+                <div class="bg-slate-800 p-3 rounded-full mb-3"><i data-lucide="cloud-upload" class="w-8 h-8 text-sky-500"></i></div>
                 <p class="text-xs font-bold text-slate-300" id="file-label">Klik atau seret file CSV ke sini</p>
                 <input type="file" id="csv-input" accept=".csv" class="hidden" onchange="handleCSV(event)">
             </div>
-            <div class="flex gap-3">
-                <button onclick="closeModal('import-modal')" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-bold text-xs transition">Batal</button>
-                <button id="btn-import" onclick="processCSV()" disabled class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-black text-xs opacity-50 cursor-not-allowed transition shadow-lg">Mulai Import</button>
-            </div>
+            <div class="flex gap-3"><button onclick="closeModal('import-modal')" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-bold text-xs">Batal</button><button id="btn-import" onclick="processCSV()" disabled class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-black text-xs opacity-50 cursor-not-allowed">Mulai Import</button></div>
         </div>
     </div>
 
-    <!-- Delete Modal -->
-    <div id="delete-modal" class="modal-bg fixed inset-0 flex items-center justify-center hidden p-4 z-[2000]">
-        <div class="card p-8 rounded-3xl max-w-sm w-full modal-content border-slate-700 shadow-2xl text-center">
-            <div class="w-16 h-16 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
-                <i data-lucide="trash-2" class="w-8 h-8"></i>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2">Hapus Aset?</h3>
-            <p class="text-sm text-slate-400 mb-6">Anda akan menghapus <span id="delete-name" class="text-white font-bold"></span>. Tindakan ini tidak dapat dibatalkan.</p>
-            <input type="hidden" id="delete-id">
-            <div class="flex gap-3">
-                <button onclick="closeModal('delete-modal')" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-bold text-sm transition">Batal</button>
-                <button onclick="confirmDelete()" class="flex-1 py-3 bg-red-600 hover:bg-red-500 text-white rounded-xl font-black text-sm transition shadow-lg shadow-red-600/20">Hapus</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-10 right-10 p-4 rounded-2xl bg-slate-800 text-white font-bold shadow-2xl border border-slate-700 transition-all duration-500 opacity-0 translate-y-10 pointer-events-none z-[3000] flex items-center space-x-3">
-        <div id="toast-icon-bg" class="p-2 rounded-lg bg-sky-500/20 text-sky-500">
-            <i id="toast-icon" data-lucide="check" class="w-5 h-5"></i>
-        </div>
-        <span id="toast-msg" class="text-sm">Notifikasi</span>
-    </div>
+    <!-- Notification & Toast Modals (Hidden) -->
+    <div id="notification-modal" class="modal-bg fixed inset-0 flex items-center justify-center hidden p-4 z-[3000]"><div class="card p-6 rounded-3xl max-w-lg w-full modal-content border-slate-700 shadow-2xl relative"><div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-4"><h3 class="text-lg font-bold text-white flex items-center gap-2"><i data-lucide="bell-ring" class="text-amber-500 w-5 h-5"></i> Peringatan Garansi</h3><button onclick="closeModal('notification-modal')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button></div><div id="warranty-list-full" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar"></div></div></div>
+    <div id="toast" class="fixed bottom-10 right-10 p-4 rounded-2xl bg-slate-800 text-white font-bold shadow-2xl border border-slate-700 transition-all duration-500 opacity-0 translate-y-10 z-[3000] flex items-center space-x-3"><div id="toast-icon-bg" class="p-2 rounded-lg bg-sky-500/20 text-sky-500"><i id="toast-icon" data-lucide="check" class="w-5 h-5"></i></div><span id="toast-msg" class="text-sm">Notifikasi</span></div>
 
     <script>
         const API = "http://127.0.0.1:5000/api";
-        let localData = [];
-        let filteredData = [];
-        let currentPage = 1;
-        const itemsPerPage = 15;
-        let chartInstance = null;
-        let csvContent = "";
+        let localData = [], filteredData = [], currentPage = 1, itemsPerPage = 15, chartInstance = null, currentUser = null, csvContent = "";
 
-        // --- INIT & NAVIGASI ---
-        function switchView(viewName) {
-            document.getElementById('view-dashboard').classList.add('hidden');
-            document.getElementById('view-assets').classList.add('hidden');
-            document.getElementById('nav-dashboard').classList.remove('active-nav', 'text-white', 'bg-sky-600');
-            document.getElementById('nav-assets').classList.remove('active-nav', 'text-white', 'bg-sky-600');
-            
-            document.getElementById('nav-dashboard').classList.add('text-slate-400');
-            document.getElementById('nav-assets').classList.add('text-slate-400');
+        // --- AUTH & MOCK LOGIN ---
+        document.getElementById('login-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            try {
+                const res = await fetch(`${API}/login`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username, password}) });
+                const data = await res.json();
+                if (res.ok) { localStorage.setItem('myit_token', data.token); localStorage.setItem('myit_user', JSON.stringify(data.user)); initApp(data.user); } 
+                else { document.getElementById('login-error').textContent = data.error; document.getElementById('login-error').classList.remove('hidden'); }
+            } catch(e) { console.error(e); }
+        };
 
-            if(viewName === 'dashboard') {
-                document.getElementById('view-dashboard').classList.remove('hidden');
-                document.getElementById('nav-dashboard').classList.add('active-nav', 'text-white');
-                document.getElementById('nav-dashboard').classList.remove('text-slate-400');
-                document.getElementById('page-title').textContent = "Dashboard";
-                loadDashboard();
-            } else {
-                document.getElementById('view-assets').classList.remove('hidden');
-                document.getElementById('nav-assets').classList.add('active-nav', 'text-white');
-                document.getElementById('nav-assets').classList.remove('text-slate-400');
-                document.getElementById('page-title').textContent = "Data Aset";
-                fetchAssets();
-            }
+        function mockLogin(type) {
+            let mockUser = type === 'google' ? { username: "google_staff", role: "editor" } : { username: "sso_viewer", role: "viewer" };
+            mockUser.created_at = new Date().toISOString();
+            localStorage.setItem('myit_token', 'mock_token_' + type); localStorage.setItem('myit_user', JSON.stringify(mockUser));
+            setTimeout(() => initApp(mockUser), 500);
+            showToast(`Login ${type.toUpperCase()} Berhasil`);
         }
 
-        // --- DASHBOARD LOGIC ---
+        function logout() { localStorage.removeItem('myit_token'); localStorage.removeItem('myit_user'); location.reload(); }
+        function checkAuth() { const t = localStorage.getItem('myit_token'), u = localStorage.getItem('myit_user'); if(t && u) initApp(JSON.parse(u)); else document.getElementById('login-page').classList.remove('hidden'); }
+        
+        function initApp(user) {
+            currentUser = user;
+            document.getElementById('login-page').classList.add('hidden'); document.getElementById('main-app').classList.remove('hidden');
+            document.getElementById('user-name').textContent = user.username; document.getElementById('user-initial').textContent = user.username.charAt(0).toUpperCase(); document.getElementById('current-user-role').textContent = user.role;
+            const sa = document.querySelectorAll('.role-superadmin'), ed = document.querySelectorAll('.role-editable');
+            if(user.role === 'superadmin') { sa.forEach(e=>e.classList.remove('hidden')); ed.forEach(e=>e.classList.remove('hidden')); }
+            else if(user.role === 'editor') ed.forEach(e=>e.classList.remove('hidden'));
+            loadDashboard(); lucide.createIcons();
+        }
+
+        function authFetch(url, opt={}) { if(!opt.headers) opt.headers={}; opt.headers['Authorization'] = localStorage.getItem('myit_token'); return fetch(url, opt); }
+        
+        // --- NAVIGATION ---
+        function switchView(view) {
+            ['dashboard', 'assets', 'users'].forEach(v => { document.getElementById(`view-${v}`).classList.add('hidden'); document.getElementById(`nav-${v}`).classList.remove('active-nav', 'text-white', 'bg-sky-600'); document.getElementById(`nav-${v}`).classList.add('text-slate-400'); });
+            document.getElementById(`view-${view}`).classList.remove('hidden');
+            const btn = document.getElementById(`nav-${view}`); btn.classList.add('active-nav', 'text-white'); btn.classList.remove('text-slate-400');
+            document.getElementById('page-title').textContent = view==='users'?'Manajemen User':(view==='assets'?'Data Aset':'Dashboard');
+            if(view==='assets') fetchAssets(); if(view==='users') fetchUsers(); if(view==='dashboard') loadDashboard();
+        }
+
+        // --- DASHBOARD ---
         async function loadDashboard() {
             try {
-                const res = await fetch(`${API}/dashboard`);
-                const data = await res.json();
-                
-                animateValue('stat-incoming', 0, data.incoming_month, 1000);
+                const res = await authFetch(`${API}/dashboard`); const data = await res.json();
                 animateValue('stat-total', 0, data.total, 1000);
-                animateValue('stat-disposed', 0, data.disposed, 1000);
-
                 renderChart(data.categories);
-
-                const alertContainer = document.getElementById('warranty-list-dashboard');
-                const fullList = document.getElementById('warranty-list-full');
-                const badge = document.getElementById('notif-badge');
-                
-                let html = '';
+                const list = document.getElementById('warranty-list-dashboard'), badge = document.getElementById('notif-badge'), full = document.getElementById('warranty-list-full');
                 if(data.warranty_alerts.length > 0) {
-                    badge.textContent = data.warranty_alerts.length;
-                    badge.classList.remove('hidden');
-                    
-                    data.warranty_alerts.forEach(item => {
-                        const row = `
-                            <div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-xl border border-slate-700/50 hover:bg-slate-700/50 transition cursor-pointer" onclick="goToAsset('${item.id}')">
-                                <div>
-                                    <div class="font-bold text-slate-200 text-sm">${item.name}</div>
-                                    <div class="text-[10px] text-slate-500 font-mono">${item.serial_number}</div>
-                                </div>
-                                <div class="text-right">
-                                    <div class="text-xs font-bold text-amber-500">${item.days_left} Hari</div>
-                                    <div class="text-[9px] text-slate-500">Lagi</div>
-                                </div>
-                            </div>
-                        `;
-                        html += row;
-                    });
-                } else {
-                    html = '<div class="text-center text-slate-500 text-sm py-4">Semua garansi aman.</div>';
-                    badge.classList.add('hidden');
-                }
-                
-                alertContainer.innerHTML = html;
-                fullList.innerHTML = html;
-
-                updateStatus(true);
-            } catch (e) { console.error(e); updateStatus(false); }
+                    badge.textContent = data.warranty_alerts.length; badge.classList.remove('hidden');
+                    const html = data.warranty_alerts.map(i => `<div class="flex justify-between p-3 bg-slate-800/50 rounded-xl border border-slate-700/50"><div><div class="font-bold text-slate-200 text-xs">${i.name}</div><div class="text-[9px] text-slate-500 font-mono">${i.serial_number}</div></div><div class="text-right text-xs font-bold text-amber-500">${i.days_left} Hari</div></div>`).join('');
+                    list.innerHTML = html; full.innerHTML = html;
+                } else { list.innerHTML = '<div class="text-center text-slate-500 text-sm py-10">Aman.</div>'; badge.classList.add('hidden'); }
+            } catch(e){}
         }
 
-        function renderChart(categories) {
-            const ctx = document.getElementById('categoryChart').getContext('2d');
-            if(chartInstance) chartInstance.destroy();
-            
-            chartInstance = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(categories),
-                    datasets: [{
-                        data: Object.values(categories),
-                        backgroundColor: ['#0ea5e9', '#6366f1', '#8b5cf6', '#d946ef', '#f43f5e', '#f59e0b', '#10b981'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'right', labels: { color: '#94a3b8', font: {size: 10} } }
-                    }
-                }
-            });
-        }
-
-        // --- ASSET LIST LOGIC ---
-        async function fetchAssets() {
-            try {
-                const res = await fetch(`${API}/assets`);
-                localData = await res.json();
-                filteredData = localData;
-                currentPage = 1;
-                renderTable();
-                updateStatus(true);
-            } catch (e) { updateStatus(false); }
-        }
-
+        // --- ASSETS ---
+        async function fetchAssets() { try { const res = await authFetch(`${API}/assets`); localData = await res.json(); filteredData = localData; renderTable(); } catch(e){} }
         function renderTable() {
-            const list = document.getElementById('assets-list');
-            
-            const start = (currentPage - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
-            const pageData = filteredData.slice(start, end);
-            
+            const list = document.getElementById('assets-list'), start = (currentPage-1)*itemsPerPage, pageData = filteredData.slice(start, start+itemsPerPage);
             document.getElementById('curr-page').textContent = currentPage;
-            document.getElementById('btn-prev').disabled = currentPage === 1;
-            document.getElementById('btn-next').disabled = end >= filteredData.length;
-
-            if (pageData.length === 0) {
-                list.innerHTML = '<tr><td colspan="6" class="p-10 text-center text-slate-500">Tidak ada data.</td></tr>';
-                return;
-            }
-
             list.innerHTML = pageData.map(a => `
-                <tr class="hover:bg-slate-800/40 transition border-b border-slate-800/50">
-                    <td class="p-6">
-                        <div class="font-bold text-white text-sm">${a.name}</div>
-                        <div class="text-[10px] text-slate-500 font-mono">${a.serial_number}</div>
-                    </td>
+                <tr class="hover:bg-slate-800/40 border-b border-slate-800/50">
+                    <td class="p-6"><div class="font-bold text-white text-sm">${a.name}</div><div class="text-[10px] text-slate-500 font-mono">${a.serial_number}</div></td>
                     <td class="p-6"><span class="px-2 py-1 bg-slate-800 rounded text-[10px] text-slate-300 font-bold uppercase">${a.category}</span></td>
-                    <td class="p-6">
-                        <div class="text-xs text-slate-300">${a.location}</div>
-                        <div class="text-[10px] text-slate-500">${a.user || '-'}</div>
-                    </td>
-                    <td class="p-6 text-xs text-slate-400">
-                        <div>Pinjam: ${formatDate(a.loan_date)}</div>
-                        <div class="${isExpiring(a.warranty_date) ? 'text-amber-500 font-bold' : ''}">Garansi: ${formatDate(a.warranty_date)}</div>
-                    </td>
-                    <td class="p-6 text-center"><span class="px-3 py-1 bg-slate-700 rounded-full text-[10px] font-bold text-white">${a.status}</span></td>
-                    <td class="p-6 text-right">
-                        <button onclick="openEdit('${a.id}')" class="p-2 bg-indigo-500/20 text-indigo-400 rounded hover:bg-indigo-500 hover:text-white transition"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
-                        <button onclick="openDelete('${a.id}', '${a.name}')" class="p-2 bg-red-500/20 text-red-400 rounded hover:bg-red-500 hover:text-white transition ml-2"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    </td>
-                </tr>
-            `).join('');
+                    <td class="p-6"><div class="text-xs text-slate-300">${a.location}</div><div class="text-[10px] text-slate-500">${a.user||'-'}</div>${a.user_email?`<div class="text-[9px] text-sky-500/70">${a.user_email}</div>`:''}</td>
+                    <td class="p-6 text-center"><span class="px-3 py-1 ${a.status==='In Use'?'bg-emerald-500/10 text-emerald-400':(a.status==='Broken'?'bg-red-500/10 text-red-400':'bg-slate-500/10 text-slate-400')} rounded-full text-[10px] font-bold uppercase">${a.status}</span></td>
+                    <td class="p-6 text-right role-editable ${currentUser.role==='viewer'?'hidden':''}"><button onclick="openEdit('${a.id}')" class="p-2 bg-indigo-500/20 text-indigo-400 rounded"><i data-lucide="edit-2" class="w-4 h-4"></i></button><button onclick="deleteAsset('${a.id}')" class="p-2 bg-red-500/20 text-red-400 rounded ml-2"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
+                </tr>`).join('');
             lucide.createIcons();
         }
 
-        // --- UTILS ---
+        // --- CRUD & CSV Helpers (Simplified) ---
         function openEdit(id) {
             const a = localData.find(x => x.id === id);
-            if(!a) return;
-            document.getElementById('edit-id').value = a.id;
-            document.getElementById('edit-name').value = a.name;
-            document.getElementById('edit-sn').value = a.serial_number;
-            document.getElementById('edit-category').value = a.category;
-            document.getElementById('edit-location').value = a.location;
-            document.getElementById('edit-user').value = a.user;
-            document.getElementById('edit-email').value = a.user_email || "";
-            
-            document.getElementById('edit-purchase-date').value = a.purchase_date || "";
-            document.getElementById('edit-loan-date').value = a.loan_date || "";
-            document.getElementById('edit-warranty-date').value = a.warranty_date || "";
-            
-            document.getElementById('edit-status').value = a.status;
-            document.getElementById('modal-title').textContent = "Edit Aset";
-            openModal('edit-modal');
+            ['id','name','sn','category','location','user','email','status','purchase-date','loan-date','warranty-date'].forEach(k => document.getElementById(`edit-${k}`).value = a[k.replace('-','_')] || '');
+            document.getElementById('modal-title').textContent = "Edit Aset"; openModal('edit-modal');
         }
-
         document.getElementById('asset-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('edit-id').value;
-            const body = {
-                name: document.getElementById('edit-name').value,
-                serial_number: document.getElementById('edit-sn').value,
-                category: document.getElementById('edit-category').value,
-                location: document.getElementById('edit-location').value,
-                user: document.getElementById('edit-user').value,
-                user_email: document.getElementById('edit-email').value,
-                purchase_date: document.getElementById('edit-purchase-date').value,
-                loan_date: document.getElementById('edit-loan-date').value,
-                warranty_date: document.getElementById('edit-warranty-date').value,
-                status: document.getElementById('edit-status').value
-            };
-            const method = id ? 'PUT' : 'POST';
-            const url = id ? `${API}/assets/${id}` : `${API}/assets`;
-            
-            await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
-            closeModal('edit-modal');
-            fetchAssets();
+            e.preventDefault(); const id = document.getElementById('edit-id').value;
+            const body = {}; ['name','sn','category','location','user','email','purchase-date','loan-date','warranty-date','status'].forEach(k => body[k.replace('-','_')] = document.getElementById(`edit-${k}`).value);
+            body['serial_number'] = body['sn']; body['user_email'] = body['email'];
+            await authFetch(`${API}/assets${id ? '/'+id : ''}`, { method: id?'PUT':'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+            closeModal('edit-modal'); fetchAssets(); showToast("Data Disimpan");
         }
-
-        function openDelete(id, name) {
-            document.getElementById('delete-id').value = id;
-            document.getElementById('delete-name').textContent = name;
-            openModal('delete-modal');
-        }
-
-        async function confirmDelete() {
-            const id = document.getElementById('delete-id').value;
-            await fetch(`${API}/assets/${id}`, { method: 'DELETE' });
-            closeModal('delete-modal');
-            fetchAssets();
-        }
-
-        function filterAssets() {
-            const q = document.getElementById('search-input').value.toLowerCase();
-            filteredData = localData.filter(a => 
-                a.name.toLowerCase().includes(q) || a.serial_number.toLowerCase().includes(q) || (a.user && a.user.toLowerCase().includes(q))
-            );
-            currentPage = 1;
-            renderTable();
-        }
-
-        // --- CSV LOGIC ---
-        function handleCSV(e) {
-            const f = e.target.files[0];
-            if (!f) return;
-            document.getElementById('file-label').textContent = f.name;
-            const r = new FileReader();
-            r.onload = (ev) => { 
-                csvContent = ev.target.result; 
-                document.getElementById('btn-import').disabled = false;
-                document.getElementById('btn-import').classList.remove('opacity-50', 'cursor-not-allowed');
-            };
-            r.readAsText(f);
-        }
-
-        function downloadTemplate() {
-            const headers = "name,serial_number,category,location,user,user_email,loan_date,warranty_date,purchase_date";
-            const example = "MacBook Pro,SN-12345,Laptop,Lantai 1,Budi,budi@email.com,2023-01-01,2024-01-01,2022-12-25";
-            const csv = "data:text/csv;charset=utf-8," + encodeURI(headers + "\n" + example);
-            const link = document.createElement("a");
-            link.href = csv;
-            link.download = "template_import_aset.csv";
-            link.click();
-        }
-
-        async function processCSV() {
-            if (!csvContent) return;
-            const lines = csvContent.split('\n');
-            let success = 0;
-            let start = (lines[0].toLowerCase().includes('name') && lines[0].toLowerCase().includes('serial')) ? 1 : 0;
-            
-            for (let i = start; i < lines.length; i++) {
-                const c = lines[i].split(',');
-                if (c.length < 2) continue;
-                try {
-                    await fetch(`${API}/assets`, { 
-                        method:'POST', 
-                        headers:{'Content-Type':'application/json'}, 
-                        body:JSON.stringify({
-                            name: c[0]?.trim(), 
-                            serial_number: c[1]?.trim(), 
-                            category: c[2]?.trim() || 'Uncategorized', 
-                            location: c[3]?.trim() || 'Gudang', 
-                            user: c[4]?.trim() || '',
-                            user_email: c[5]?.trim() || '',
-                            loan_date: c[6]?.trim() || '',
-                            warranty_date: c[7]?.trim() || '',
-                            purchase_date: c[8]?.trim() || ''
-                        }) 
-                    });
-                    success++;
-                } catch(e) {}
-            }
-            closeModal('import-modal');
-            showToast(`Import selesai: ${success} data masuk.`);
-            fetchAssets();
-        }
-
-        function exportCSV(mode='all') {
-            let dataToExport = localData;
-            let filename = 'inventory_all';
-
-            if (mode === 'disposed') {
-                dataToExport = localData.filter(i => i.status === 'Disposed');
-                filename = 'inventory_outgoing_disposed';
-            }
-
-            if (dataToExport.length === 0) return showToast("Tidak ada data untuk diexport", "error");
-            
-            let csv = "Name,Serial Number,Category,Location,User,Email,Status,Loan Date,Warranty Expiry,Purchase Date\n";
-            dataToExport.forEach(row => {
-                csv += `"${row.name}","${row.serial_number}","${row.category}","${row.location}","${row.user||''}","${row.user_email||''}","${row.status}","${row.loan_date||''}","${row.warranty_date||''}","${row.purchase_date||''}"\n`;
-            });
-            
-            const link = document.createElement("a");
-            link.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
-            link.download = `myit_${filename}_${new Date().toISOString().slice(0,10)}.csv`;
-            link.click();
-        }
-
-        function nextPage() { currentPage++; renderTable(); }
-        function prevPage() { currentPage--; renderTable(); }
-
-        function openModal(id, isAdd=false) {
-            const el = document.getElementById(id);
-            el.classList.remove('hidden');
-            if(isAdd) {
-                document.getElementById('asset-form').reset();
-                document.getElementById('edit-id').value = "";
-                document.getElementById('modal-title').textContent = "Tambah Aset";
-            }
-            setTimeout(() => el.querySelector('.modal-content').classList.add('modal-open'), 10);
-        }
-
-        function closeModal(id) {
-            const el = document.getElementById(id);
-            el.querySelector('.modal-content').classList.remove('modal-open');
-            setTimeout(() => el.classList.add('hidden'), 300);
-        }
-
-        function updateStatus(ok) {
-            document.getElementById('status-dot').className = ok ? "w-2 h-2 bg-green-500 rounded-full animate-pulse" : "w-2 h-2 bg-red-500 rounded-full";
-            document.getElementById('status-text').textContent = ok ? "API ONLINE" : "OFFLINE";
-        }
-
-        function formatDate(str) { return str ? new Date(str).toLocaleDateString('id-ID') : '-'; }
+        async function deleteAsset(id) { if(confirm("Hapus?")) { await authFetch(`${API}/assets/${id}`, { method:'DELETE'}); fetchAssets(); } }
         
-        function isExpiring(dateStr) {
-            if(!dateStr) return false;
-            const diff = new Date(dateStr) - new Date();
-            return diff > 0 && diff < (30 * 24 * 60 * 60 * 1000);
-        }
+        function handleCSV(e) { const f=e.target.files[0]; if(!f)return; document.getElementById('file-label').textContent=f.name; const r=new FileReader(); r.onload=ev=>{csvContent=ev.target.result;document.getElementById('btn-import').disabled=false; document.getElementById('btn-import').classList.remove('opacity-50','cursor-not-allowed');}; r.readAsText(f); }
+        async function processCSV() { if(!csvContent)return; const l=csvContent.split('\n'); let s=0; const start=(l[0].toLowerCase().includes('name'))?1:0; for(let i=start;i<l.length;i++){ const c=l[i].split(','); if(c.length<2)continue; try{ await authFetch(`${API}/assets`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name:c[0]?.trim(), serial_number:c[1]?.trim(), category:c[2]?.trim()||'Other', location:c[3]?.trim()||'Gudang', user:c[4]?.trim()||'', user_email:c[5]?.trim()||'', loan_date:c[6]?.trim()||'', warranty_date:c[7]?.trim()||'', purchase_date:c[8]?.trim()||''}) }); s++; }catch(e){} } closeModal('import-modal'); showToast(`Import: ${s} data`); fetchAssets(); }
+        function downloadTemplate() { const csv = "name,serial_number,category,location,user,user_email,loan_date,warranty_date,purchase_date\nLaptop Dell,SN123,Laptop,Lantai 1,Budi,budi@email.com,2023-01-01,2024-01-01,2022-12-31"; const link=document.createElement('a'); link.href='data:text/csv;charset=utf-8,'+encodeURI(csv); link.download='template.csv'; link.click(); }
+        function exportCSV(mode='all') { let d=mode==='disposed'?localData.filter(i=>i.status==='Disposed'):localData; let c="Name,Serial,Category,Location,User,Email,Status\n"; d.forEach(r=>{c+=`"${r.name}","${r.serial_number}","${r.category}","${r.location}","${r.user||''}","${r.user_email||''}","${r.status}"\n`}); const l=document.createElement('a'); l.href='data:text/csv;charset=utf-8,'+encodeURI(c); l.download=`export_${mode}.csv`; l.click(); }
 
-        function animateValue(id, start, end, duration) {
-            let obj = document.getElementById(id);
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                obj.innerHTML = Math.floor(progress * (end - start) + start);
-                if (progress < 1) window.requestAnimationFrame(step);
-            };
-            window.requestAnimationFrame(step);
-        }
+        // --- USER MGMT (Superadmin) ---
+        async function fetchUsers() { const res = await authFetch(`${API}/users`); const users = await res.json(); document.getElementById('users-list').innerHTML = users.map(u => `<tr class="border-b border-slate-800/50"><td class="p-5 font-bold text-white">${u.username}</td><td class="p-5"><span class="px-2 py-1 bg-purple-900/30 text-purple-400 rounded text-xs uppercase">${u.role}</span></td><td class="p-5 text-right">${u.role!=='superadmin'?`<button onclick="deleteUser('${u.id}')" class="text-red-400 hover:text-white"><i data-lucide="trash-2" class="w-4 h-4"></i></button>`:''}</td></tr>`).join(''); lucide.createIcons(); }
+        document.getElementById('user-form').onsubmit = async (e) => { e.preventDefault(); const body={username:document.getElementById('new-username').value,password:document.getElementById('new-password').value,role:document.getElementById('new-role').value}; await authFetch(`${API}/users`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)}); fetchUsers(); };
+        async function deleteUser(id) { if(confirm("Hapus user?")) { await authFetch(`${API}/users/${id}`, {method:'DELETE'}); fetchUsers(); } }
 
-        function goToAsset(id) {
-            closeModal('notification-modal');
-            switchView('assets');
-        }
+        // --- GENERIC UTILS ---
+        function openModal(id, isAdd=false) { document.getElementById(id).classList.remove('hidden'); if(isAdd){ document.getElementById('asset-form').reset(); document.getElementById('edit-id').value=""; document.getElementById('modal-title').textContent="Tambah Aset"; } setTimeout(()=>document.querySelector(`#${id} .modal-content`).classList.add('modal-open'),10); }
+        function closeModal(id) { document.querySelector(`#${id} .modal-content`).classList.remove('modal-open'); setTimeout(()=>document.getElementById(id).classList.add('hidden'),300); }
+        function showToast(m, t='success') { const x=document.getElementById('toast'); document.getElementById('toast-msg').textContent=m; document.getElementById('toast-icon-bg').className=`p-2 rounded-lg ${t==='error'?'bg-red-500/20 text-red-500':'bg-emerald-500/20 text-emerald-500'}`; x.classList.remove('opacity-0','translate-y-10'); setTimeout(()=>x.classList.add('opacity-0','translate-y-10'),3000); }
+        function filterAssets() { const q=document.getElementById('search-input').value.toLowerCase(); filteredData=localData.filter(a=>a.name.toLowerCase().includes(q)||a.serial_number.toLowerCase().includes(q)||(a.user&&a.user.toLowerCase().includes(q))); currentPage=1; renderTable(); }
+        function nextPage() { currentPage++; renderTable(); } function prevPage() { currentPage--; renderTable(); }
+        function renderChart(cat) { const ctx=document.getElementById('categoryChart').getContext('2d'); if(chartInstance)chartInstance.destroy(); chartInstance=new Chart(ctx,{type:'doughnut',data:{labels:Object.keys(cat),datasets:[{data:Object.values(cat),backgroundColor:['#0ea5e9','#6366f1','#8b5cf6','#d946ef','#f43f5e','#f59e0b','#10b981'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:'#94a3b8'}}}}}); }
+        function animateValue(id,s,e,d){ let o=document.getElementById(id),st=null; const step=ts=>{if(!st)st=ts; const p=Math.min((ts-st)/d,1); o.innerHTML=Math.floor(p*(e-s)+s); if(p<1)window.requestAnimationFrame(step);}; window.requestAnimationFrame(step); }
 
-        function showToast(m, type="success") {
-            const t = document.getElementById('toast');
-            document.getElementById('toast-msg').textContent = m;
-            document.getElementById('toast-icon-bg').className = `p-2 rounded-lg ${type==='error'?'bg-red-500/20 text-red-500':'bg-emerald-500/20 text-emerald-500'}`;
-            t.classList.remove('opacity-0', 'translate-y-10');
-            setTimeout(() => t.classList.add('opacity-0', 'translate-y-10'), 3000);
-        }
-
-        const dz = document.getElementById('drop-zone');
-        ['dragenter', 'dragover'].forEach(n => dz.addEventListener(n, e => { e.preventDefault(); dz.classList.add('drag-over'); }));
-        ['dragleave', 'drop'].forEach(n => dz.addEventListener(n, e => { 
-            e.preventDefault(); 
-            dz.classList.remove('drag-over');
-            if (n === 'drop') {
-                const dt = e.dataTransfer;
-                document.getElementById('csv-input').files = dt.files;
-                handleCSV({target: {files: dt.files}});
-            }
-        }));
-
-        window.onload = () => { lucide.createIcons(); loadDashboard(); };
+        window.onload = checkAuth;
     </script>
 </body>
 </html>
