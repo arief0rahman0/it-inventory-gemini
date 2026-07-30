@@ -14,137 +14,351 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .card { background-color: #1e293b; border: 1px solid #334155; }
-        .active-nav { background-color: #0ea5e9; color: white; }
-        .modal-bg { background-color: rgba(0, 0, 0, 0.85); backdrop-filter: blur(4px); }
-        .transition-all { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        * { box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+        
+        .card { 
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+            border-color: rgba(51, 65, 85, 0.7);
+        }
+        
+        .active-nav { 
+            background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+        }
+        
+        .modal-bg { 
+            background: rgba(0, 0, 0, 0.85); 
+            backdrop-filter: blur(8px);
+        }
+        
+        .transition-all { 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        
+        /* Modern Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { 
+            background: linear-gradient(180deg, #334155 0%, #475569 100%); 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover { 
+            background: linear-gradient(180deg, #475569 0%, #64748b 100%); 
+        }
 
-        input, select { background-color: #0f172a !important; border-color: #334155 !important; color: white !important; }
-        input:focus, select:focus { border-color: #0ea5e9 !important; outline: 2px solid rgba(14, 165, 233, 0.3) !important; }
+        input, select { 
+            background: rgba(15, 23, 42, 0.8) !important; 
+            border: 1px solid rgba(51, 65, 85, 0.6) !important; 
+            color: white !important;
+            backdrop-filter: blur(4px);
+        }
         
-        .modal-content { transform: scale(0.95); opacity: 0; transition: all 0.3s ease-out; }
-        .modal-content.modal-open { transform: scale(1); opacity: 1; }
+        input:focus, select:focus { 
+            border-color: #0ea5e9 !important; 
+            outline: none !important;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2), 0 0 20px rgba(14, 165, 233, 0.1) !important;
+        }
+        
+        .modal-content { 
+            transform: scale(0.95) translateY(10px); 
+            opacity: 0; 
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .modal-content.modal-open { 
+            transform: scale(1) translateY(0); 
+            opacity: 1; 
+        }
         
         .notification-badge {
             position: absolute; top: -2px; right: -2px;
-            background-color: #ef4444; color: white;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
             font-size: 0.6rem; width: 16px; height: 16px;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             border: 2px solid #1e293b;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .dropdown-menu {
-            opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease-in-out;
+            opacity: 0; visibility: hidden; transform: translateY(-10px); 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        
         .group:hover .dropdown-menu {
             opacity: 1; visibility: visible; transform: translateY(0);
         }
+        
         .hidden { display: none !important; }
+        
+        /* Modern Button Gradients */
+        .btn-primary {
+            background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+        
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        /* Animation Classes */
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Glass Effect */
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Glow Effects */
+        .glow-blue {
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.3), 0 0 40px rgba(14, 165, 233, 0.1);
+        }
+        
+        .glow-purple {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3), 0 0 40px rgba(139, 92, 246, 0.1);
+        }
+        
+        .glow-green {
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3), 0 0 40px rgba(16, 185, 129, 0.1);
+        }
+        
+        /* Status Indicators */
+        .status-online {
+            animation: statusPulse 2s infinite;
+        }
+        
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Table Row Hover */
+        tr {
+            transition: all 0.2s ease;
+        }
+        
+        tr:hover {
+            background: rgba(51, 65, 85, 0.3);
+            transform: scale(1.01);
+        }
+        
+        /* Sidebar Gradient */
+        aside {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 27, 75, 0.95) 100%);
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Nav Item Hover */
+        nav button {
+            transition: all 0.3s ease;
+        }
+        
+        nav button:hover {
+            background: rgba(51, 65, 85, 0.5);
+            transform: translateX(4px);
+        }
+        
+        /* Stat Card Gradient */
+        .stat-card {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+        }
+        
+        /* Custom Range Slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            background: rgba(51, 65, 85, 0.5);
+            border-radius: 4px;
+            height: 6px;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.4);
+        }
     </style>
 </head>
 <body>
 
     <!-- ================= LOGIN PAGE ================= -->
-    <div id="login-page" class="min-h-screen flex items-center justify-center bg-slate-900 p-4">
-        <div class="card p-8 rounded-3xl w-full max-w-sm shadow-2xl border-slate-700 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-sky-500/10 rounded-full blur-3xl -mr-16 -mt-16"></div>
-            
-            <div class="text-center mb-8 relative z-10">
-                <div class="bg-sky-500 w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-sky-500/30">
+    <div id="login-page" class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+        <!-- Animated Background Elements -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/20 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+            <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
+        </div>
+        
+        <div class="card p-8 rounded-3xl w-full max-w-sm relative z-10 animate-slide-up">
+            <div class="text-center mb-8">
+                <div class="bg-gradient-to-br from-sky-500 to-indigo-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg glow-blue">
                     <i data-lucide="shield-check" class="text-white w-8 h-8"></i>
                 </div>
-                <h1 class="text-2xl font-black text-white tracking-tight">MyIT Login</h1>
-                <p class="text-slate-400 text-sm mt-2">Masuk untuk mengelola inventaris</p>
+                <h1 class="text-3xl font-black text-white tracking-tight mb-2">MyIT Login</h1>
+                <p class="text-slate-400 text-sm">Masuk untuk mengelola inventaris</p>
             </div>
             
-            <form id="login-form" class="space-y-5 relative z-10">
-                <div class="space-y-1">
-                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Username</label>
+            <form id="login-form" class="space-y-5">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Username</label>
                     <div class="relative">
-                        <i data-lucide="user" class="absolute left-3 top-3.5 w-4 h-4 text-slate-500"></i>
-                        <input type="text" id="login-username" class="w-full pl-10 p-3 rounded-xl border text-sm focus:border-sky-500 transition-colors" placeholder="admin" required>
+                        <i data-lucide="user" class="absolute left-4 top-3.5 w-4 h-4 text-slate-500"></i>
+                        <input type="text" id="login-username" class="w-full pl-12 pr-4 py-3 rounded-xl border text-sm transition-all duration-300" placeholder="admin" required>
                     </div>
                 </div>
-                <div class="space-y-1">
-                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Password</label>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Password</label>
                     <div class="relative">
-                        <i data-lucide="lock" class="absolute left-3 top-3.5 w-4 h-4 text-slate-500"></i>
-                        <input type="password" id="login-password" class="w-full pl-10 p-3 rounded-xl border text-sm focus:border-sky-500 transition-colors" placeholder="••••••" required>
+                        <i data-lucide="lock" class="absolute left-4 top-3.5 w-4 h-4 text-slate-500"></i>
+                        <input type="password" id="login-password" class="w-full pl-12 pr-4 py-3 rounded-xl border text-sm transition-all duration-300" placeholder="••••••" required>
                     </div>
                 </div>
-                <button type="submit" class="w-full py-3 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-xl shadow-lg shadow-sky-500/20 transition transform hover:-translate-y-0.5 active:translate-y-0">Masuk Aplikasi</button>
+                <button type="submit" class="w-full py-3 btn-primary text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95">
+                    Masuk Aplikasi
+                </button>
             </form>
 
             <div class="relative my-6">
-                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-700"></div></div>
-                <div class="relative flex justify-center text-[10px] uppercase font-bold tracking-widest"><span class="bg-slate-900 px-2 text-slate-500">Atau masuk dengan</span></div>
+                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-700/50"></div></div>
+                <div class="relative flex justify-center text-xs uppercase font-bold tracking-widest"><span class="bg-slate-900/80 px-3 text-slate-500">Atau masuk dengan</span></div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3 relative z-10">
-                <button onclick="mockLogin('google')" class="flex items-center justify-center gap-2 bg-white text-slate-900 py-2.5 rounded-xl font-bold text-xs hover:bg-gray-100 transition shadow-lg transform hover:-translate-y-0.5">
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="mockLogin('google')" class="flex items-center justify-center gap-2 bg-white text-slate-900 py-3 rounded-xl font-bold text-xs hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg">
                     <svg class="w-4 h-4" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
                     Google
                 </button>
-                <button onclick="mockLogin('sso')" class="flex items-center justify-center gap-2 bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-xs hover:bg-indigo-500 transition shadow-lg shadow-indigo-500/20 transform hover:-translate-y-0.5">
-                    <i data-lucide="key-round" class="w-3.5 h-3.5"></i> SSO Login
+                <button onclick="mockLogin('sso')" class="flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-bold text-xs hover:from-indigo-500 hover:to-purple-500 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg">
+                    <i data-lucide="key-round" class="w-4 h-4"></i> SSO Login
                 </button>
             </div>
-            <div id="login-error" class="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-xl text-center text-xs mt-6 hidden font-medium"></div>
-            <div class="mt-8 pt-6 border-t border-slate-700/50 text-center text-[10px] text-slate-400 font-mono">admin/admin123 • staff/staff123 • viewer/viewer123</div>
+            <div id="login-error" class="bg-red-500/10 border border-red-500/30 text-red-400 p-3 rounded-xl text-center text-xs mt-6 hidden font-medium backdrop-blur-sm"></div>
+            <div class="mt-8 pt-6 border-t border-slate-700/50 text-center text-xs text-slate-400 font-mono">admin/admin123 • staff/staff123 • viewer/viewer123</div>
         </div>
     </div>
 
     <!-- ================= MAIN APP ================= -->
     <div id="main-app" class="grid grid-cols-1 md:grid-cols-[260px_1fr] min-h-screen hidden transition-opacity duration-500">
         <!-- Sidebar -->
-        <aside class="p-6 bg-slate-900 border-r border-slate-800 flex flex-col fixed md:relative h-full z-40 w-64">
+        <aside class="p-6 border-r border-slate-800/50 flex flex-col fixed md:relative h-full z-40 w-64">
             <div class="mb-10 flex items-center space-x-3">
-                <div class="bg-sky-500 p-2 rounded-lg shadow-lg shadow-sky-500/30">
+                <div class="bg-gradient-to-br from-sky-500 to-indigo-600 p-2.5 rounded-xl shadow-lg glow-blue">
                     <i data-lucide="shield-check" class="text-white w-6 h-6"></i>
                 </div>
                 <div>
                     <h1 class="text-xl font-black text-white tracking-tight">MyIT-INV</h1>
-                    <div id="current-user-role" class="text-[9px] text-sky-400 uppercase tracking-widest font-black bg-sky-900/30 px-1.5 py-0.5 rounded inline-block mt-1">LOADING...</div>
+                    <div id="current-user-role" class="text-[9px] text-sky-400 uppercase tracking-widest font-black bg-sky-900/30 px-2 py-0.5 rounded inline-block mt-1">LOADING...</div>
                 </div>
             </div>
             
             <nav class="space-y-2 flex-grow">
-                <div class="text-[10px] uppercase font-bold text-slate-500 px-3 mb-2">Menu Utama</div>
+                <div class="text-xs font-bold text-slate-500 uppercase tracking-wider px-3 mb-3">Menu Utama</div>
                 <button onclick="switchView('dashboard')" id="nav-dashboard" class="w-full flex items-center space-x-3 p-3 rounded-xl active-nav transition-all text-left group">
                     <i data-lucide="layout-grid" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
                     <span class="font-bold text-sm">Dashboard</span>
                 </button>
-                <button onclick="switchView('assets')" id="nav-assets" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition-all text-left group">
+                <button onclick="switchView('assets')" id="nav-assets" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-white transition-all text-left group">
                     <i data-lucide="list" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
                     <span class="font-bold text-sm">Data Aset</span>
                 </button>
+                <button onclick="switchView('employees')" id="nav-employees" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-emerald-400 transition-all text-left group">
+                    <i data-lucide="users" class="w-5 h-5 group-hover:scale-110 transition-transform text-emerald-500"></i>
+                    <span class="font-bold text-sm">Karyawan</span>
+                </button>
                 
                 <div class="role-superadmin hidden mt-6">
-                    <div class="text-[10px] uppercase font-bold text-slate-500 px-3 mb-2">Admin Zone</div>
-                    <button onclick="switchView('users')" id="nav-users" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-purple-400 transition-all text-left group">
+                    <div class="text-xs font-bold text-slate-500 uppercase tracking-wider px-3 mb-3">Admin Zone</div>
+                    <button onclick="switchView('users')" id="nav-users" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-purple-400 transition-all text-left group">
                         <i data-lucide="users" class="w-5 h-5 group-hover:scale-110 transition-transform text-purple-500"></i>
                         <span class="font-bold text-sm">Manajemen User</span>
+                    </button>
+                    <button onclick="switchView('audit')" id="nav-audit" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-amber-400 transition-all text-left group">
+                        <i data-lucide="shield-alert" class="w-5 h-5 group-hover:scale-110 transition-transform text-amber-500"></i>
+                        <span class="font-bold text-sm">Audit Log</span>
                     </button>
                 </div>
             </nav>
 
-            <div class="mt-auto pt-6 border-t border-slate-800">
-                <div class="flex items-center gap-3 mb-4 px-2 bg-slate-800/50 p-2 rounded-xl border border-slate-700/50">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-sky-500 to-indigo-500 flex items-center justify-center text-xs font-bold text-white shadow-lg" id="user-initial">U</div>
+            <div class="mt-auto pt-6 border-t border-slate-800/50">
+                <div class="flex items-center gap-3 mb-4 px-3 bg-slate-800/50 p-3 rounded-xl border border-slate-700/50 backdrop-blur-sm">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-sm font-bold text-white shadow-lg" id="user-initial">U</div>
                     <div class="overflow-hidden">
                         <p class="text-sm font-bold text-white truncate" id="user-name">User</p>
-                        <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span><p class="text-[10px] text-slate-400 truncate">Online</p></div>
+                        <div class="flex items-center gap-1.5"><span class="w-2 h-2 bg-emerald-500 rounded-full status-online"></span><p class="text-xs text-slate-400 truncate">Online</p></div>
                     </div>
                 </div>
-                <button onclick="logout()" class="w-full py-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition border border-red-500/20 hover:border-red-500/40">
-                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i><span>Keluar</span>
+                <button onclick="logout()" class="w-full py-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition-all duration-300 border border-red-500/20 hover:border-red-500/40 transform hover:scale-105 active:scale-95">
+                    <i data-lucide="log-out" class="w-4 h-4"></i><span>Keluar</span>
                 </button>
             </div>
         </aside>
@@ -156,8 +370,8 @@
                     <h2 class="text-3xl font-black text-white tracking-tight" id="page-title">Dashboard</h2>
                     <p class="text-slate-400 text-sm mt-1">Sistem Informasi Manajemen Aset</p>
                 </div>
-                <div class="relative cursor-pointer hover:scale-105 transition" onclick="openModal('notification-modal')">
-                    <div class="p-3 bg-slate-800 rounded-xl hover:bg-slate-700 transition border border-slate-700"><i data-lucide="bell" class="w-5 h-5 text-slate-300"></i></div>
+                <div class="relative cursor-pointer transform hover:scale-105 transition-all duration-300" onclick="openModal('notification-modal')">
+                    <div class="p-3 bg-slate-800/50 rounded-xl hover:bg-slate-700/50 transition-all duration-300 border border-slate-700/50 backdrop-blur-sm"><i data-lucide="bell" class="w-5 h-5 text-slate-300"></i></div>
                     <div id="notif-badge" class="notification-badge hidden">0</div>
                 </div>
             </header>
@@ -166,45 +380,45 @@
             <div id="view-dashboard" class="space-y-6 animate-fade-in">
                 <div class="grid grid-cols-1 gap-6">
                     <!-- Hanya Menampilkan Total Aset -->
-                    <div class="card p-6 rounded-2xl border-l-4 border-l-sky-500 relative overflow-hidden group hover:bg-slate-800/50 transition">
-                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2">Total Aset Aktif</div>
-                        <div class="text-5xl font-black text-white tracking-tighter" id="stat-total">0</div>
-                        <i data-lucide="server" class="absolute right-4 bottom-4 text-sky-500/10 w-24 h-24 group-hover:scale-110 transition-transform"></i>
+                    <div class="card p-8 rounded-2xl border-l-4 border-l-sky-500 relative overflow-hidden group stat-card animate-slide-up">
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Total Aset Aktif</div>
+                        <div class="text-6xl font-black text-white tracking-tighter" id="stat-total">0</div>
+                        <i data-lucide="server" class="absolute right-6 bottom-6 text-sky-500/20 w-32 h-32 group-hover:scale-110 transition-transform duration-500"></i>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="card p-6 rounded-2xl">
+                    <div class="card p-6 rounded-2xl animate-slide-up" style="animation-delay: 0.1s;">
                         <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Distribusi Kategori</h3>
                         <div class="h-64 flex justify-center"><canvas id="categoryChart"></canvas></div>
                     </div>
-                    <div class="card p-6 rounded-2xl">
+                    <div class="card p-6 rounded-2xl animate-slide-up" style="animation-delay: 0.2s;">
                         <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="alert-triangle" class="text-amber-500 w-4 h-4"></i> Peringatan Garansi (30 Hari)</h3>
-                        <div id="warranty-list-dashboard" class="space-y-3 overflow-y-auto flex-grow h-64 pr-2 custom-scrollbar"><div class="text-center text-slate-500 text-sm py-10">Memuat data...</div></div>
+                        <div id="warranty-list-dashboard" class="space-y-3 overflow-y-auto flex-grow h-64 pr-2"><div class="text-center text-slate-500 text-sm py-10">Memuat data...</div></div>
                     </div>
                 </div>
             </div>
 
             <!-- VIEW: LIST ASET -->
             <div id="view-assets" class="hidden animate-fade-in">
-                <div class="card p-4 rounded-2xl mb-6 flex flex-col md:flex-row gap-4 justify-between items-center bg-slate-800/50 backdrop-blur-md sticky top-0 z-20">
+                <div class="card p-4 rounded-2xl mb-6 flex flex-col md:flex-row gap-4 justify-between items-center glass sticky top-0 z-20">
                     <div class="relative w-full md:w-80">
-                        <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-500"></i>
-                        <input type="text" id="search-input" onkeyup="filterAssets()" placeholder="Cari aset..." class="w-full pl-10 pr-4 py-2 rounded-xl text-sm border bg-slate-900 border-slate-700 focus:border-sky-500 transition-colors">
+                        <i data-lucide="search" class="absolute left-4 top-3 w-4 h-4 text-slate-500"></i>
+                        <input type="text" id="search-input" onkeyup="filterAssets()" placeholder="Cari aset..." class="w-full pl-12 pr-4 py-3 rounded-xl text-sm border transition-all duration-300">
                     </div>
                     <div class="flex gap-2 relative">
                         <div class="role-editable hidden flex gap-2">
                             <!-- Import Barang Masuk -->
-                            <button onclick="openModal('import-modal')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition shadow-lg shadow-indigo-500/20">
-                                <i data-lucide="arrow-down-to-line" class="w-3.5 h-3.5"></i> Import Barang Masuk (CSV)
+                            <button onclick="openModal('import-modal')" class="perm-import-assets bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-4 py-3 rounded-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg">
+                                <i data-lucide="arrow-down-to-line" class="w-4 h-4"></i> Import CSV
                             </button>
-                            <button onclick="openModal('edit-modal', true)" class="bg-sky-600 hover:bg-sky-500 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition shadow-lg shadow-sky-500/20">
-                                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Tambah
+                            <button onclick="openModal('edit-modal', true)" class="btn-primary text-white px-4 py-3 rounded-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 transform hover:scale-105 active:scale-95">
+                                <i data-lucide="plus" class="w-4 h-4"></i> Tambah
                             </button>
                         </div>
                         
                         <!-- Export CSV (Langsung, tanpa dropdown) -->
-                        <button onclick="exportCSV('all')" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition border border-slate-600">
-                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV
+                        <button onclick="exportCSV('all')" class="bg-slate-700/50 hover:bg-slate-600/50 text-white px-4 py-3 rounded-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 border border-slate-600/50 transform hover:scale-105 active:scale-95 backdrop-blur-sm">
+                            <i data-lucide="download" class="w-4 h-4"></i> Export CSV
                         </button>
                     </div>
                 </div>
@@ -212,7 +426,7 @@
                 <div class="card rounded-2xl overflow-hidden shadow-xl border-0">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left">
-                            <thead class="bg-slate-800 text-slate-400 text-[10px] font-black uppercase tracking-widest sticky top-0">
+                            <thead class="bg-slate-800/50 text-slate-400 text-xs font-black uppercase tracking-widest sticky top-0 backdrop-blur-sm">
                                 <tr>
                                     <th class="p-5">Aset</th>
                                     <th class="p-5">Kategori</th>
@@ -224,34 +438,287 @@
                             <tbody id="assets-list" class="divide-y divide-slate-800/50 text-sm"></tbody>
                         </table>
                     </div>
-                    <div class="p-4 border-t border-slate-800 bg-slate-900/30 flex justify-between items-center">
+                    <div class="p-4 border-t border-slate-800/50 bg-slate-900/30 flex justify-between items-center backdrop-blur-sm">
                         <span class="text-xs text-slate-400">Halaman <span id="curr-page">1</span></span>
                         <div class="flex gap-2">
-                            <button onclick="prevPage()" class="p-2 bg-slate-800 rounded-lg hover:bg-slate-700"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
-                            <button onclick="nextPage()" class="p-2 bg-slate-800 rounded-lg hover:bg-slate-700"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                            <button onclick="prevPage()" class="p-2 bg-slate-800/50 rounded-lg hover:bg-slate-700/50 transition-all duration-300 transform hover:scale-105 active:scale-95"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                            <button onclick="nextPage()" class="p-2 bg-slate-800/50 rounded-lg hover:bg-slate-700/50 transition-all duration-300 transform hover:scale-105 active:scale-95"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: EMPLOYEES -->
+            <div id="view-employees" class="hidden animate-fade-in">
+                <div class="card p-6 rounded-2xl mb-6 border-l-4 border-l-emerald-500 bg-gradient-to-r from-slate-900 to-emerald-900/20 animate-slide-up">
+                    <h3 class="text-lg font-bold text-white mb-1">Daftar Karyawan</h3>
+                    <p class="text-xs text-slate-400">Kelola data karyawan perusahaan.</p>
+                </div>
+                
+                <!-- Employee Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 animate-slide-up" style="animation-delay: 0.1s;">
+                    <div class="card p-4 rounded-xl border border-slate-700/50">
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Total Karyawan</div>
+                        <div class="text-2xl font-black text-white" id="employee-total">0</div>
+                    </div>
+                    <div class="card p-4 rounded-xl border border-slate-700/50">
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Karyawan Aktif</div>
+                        <div class="text-2xl font-black text-emerald-400" id="employee-active">0</div>
+                    </div>
+                    <div class="card p-4 rounded-xl border border-slate-700/50">
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Departemen</div>
+                        <div class="text-2xl font-black text-sky-400" id="employee-departments">0</div>
+                    </div>
+                </div>
+                
+                <!-- Add Employee Form -->
+                <div class="card p-6 rounded-2xl mb-6 perm-create-employees animate-slide-up" style="animation-delay: 0.2s;">
+                    <form id="employee-form" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Employee ID</label>
+                            <input type="text" id="emp-id" required class="w-full p-2 rounded-lg border text-sm transition-all duration-300" placeholder="EMP001">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Nama</label>
+                            <input type="text" id="emp-name" required class="w-full p-2 rounded-lg border text-sm transition-all duration-300" placeholder="Nama Karyawan">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Email</label>
+                            <input type="email" id="emp-email" class="w-full p-2 rounded-lg border text-sm transition-all duration-300" placeholder="email@perusahaan.com">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Departemen</label>
+                            <select id="emp-department" required class="w-full p-2 rounded-lg border text-sm transition-all duration-300">
+                                <option value="">Pilih Departemen</option>
+                                <option value="IT">IT</option>
+                                <option value="HR">HR</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Operations">Operations</option>
+                                <option value="Sales">Sales</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Posisi</label>
+                            <input type="text" id="emp-position" class="w-full p-2 rounded-lg border text-sm transition-all duration-300" placeholder="Posisi">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Telepon</label>
+                            <input type="tel" id="emp-phone" class="w-full p-2 rounded-lg border text-sm transition-all duration-300" placeholder="0812-3456-7890">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Lokasi</label>
+                            <input type="text" id="emp-location" class="w-full p-2 rounded-lg border text-sm transition-all duration-300" placeholder="Kantor / Remote">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Status</label>
+                            <select id="emp-status" class="w-full p-2 rounded-lg border text-sm transition-all duration-300">
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                                <option value="On Leave">On Leave</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tanggal Masuk</label>
+                            <input type="date" id="emp-hire-date" class="w-full p-2 rounded-lg border text-sm transition-all duration-300">
+                        </div>
+                        <div class="flex items-end">
+                            <button type="submit" class="w-full md:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-6 py-2 rounded-lg font-bold text-sm transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg">
+                                <i data-lucide="plus" class="w-4 h-4 inline mr-2"></i> Tambah
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Employee Filters -->
+                <div class="card p-4 rounded-xl mb-6 animate-slide-up" style="animation-delay: 0.3s;">
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <div class="flex-1">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Search</label>
+                            <input type="text" id="emp-search" onkeyup="filterEmployees()" placeholder="Cari karyawan..." class="w-full p-2 rounded-lg border text-sm transition-all duration-300">
+                        </div>
+                        <div class="flex-1">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Filter Departemen</label>
+                            <select id="emp-dept-filter" onchange="filterEmployees()" class="w-full p-2 rounded-lg border text-sm transition-all duration-300">
+                                <option value="">Semua Departemen</option>
+                                <option value="IT">IT</option>
+                                <option value="HR">HR</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Operations">Operations</option>
+                                <option value="Sales">Sales</option>
+                            </select>
+                        </div>
+                        <div class="flex-1">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Filter Status</label>
+                            <select id="emp-status-filter" onchange="filterEmployees()" class="w-full p-2 rounded-lg border text-sm transition-all duration-300">
+                                <option value="">Semua Status</option>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                                <option value="On Leave">On Leave</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Employee Table -->
+                <div class="card rounded-2xl overflow-hidden shadow-xl border-0 animate-slide-up" style="animation-delay: 0.4s;">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-800/50 text-slate-400 text-xs font-black uppercase tracking-widest backdrop-blur-sm">
+                                <tr>
+                                    <th class="p-4">Employee ID</th>
+                                    <th class="p-4">Nama</th>
+                                    <th class="p-4">Email</th>
+                                    <th class="p-4">Departemen</th>
+                                    <th class="p-4">Posisi</th>
+                                    <th class="p-4">Telepon</th>
+                                    <th class="p-4">Status</th>
+                                    <th class="p-4 text-right perm-edit-employees hidden">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="employees-list" class="divide-y divide-slate-800/50 text-sm"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
             <!-- VIEW: USER MANAGEMENT -->
             <div id="view-users" class="hidden animate-fade-in">
-                <div class="card p-6 rounded-2xl mb-6 border-l-4 border-l-purple-500 bg-gradient-to-r from-slate-900 to-purple-900/20">
+                <div class="card p-6 rounded-2xl mb-6 border-l-4 border-l-purple-500 bg-gradient-to-r from-slate-900 to-purple-900/20 animate-slide-up">
                     <h3 class="text-lg font-bold text-white mb-1">Manajemen Pengguna</h3>
                     <p class="text-xs text-slate-400">Kelola akses pengguna.</p>
                 </div>
-                <div class="card p-6 rounded-2xl mb-6">
-                    <form id="user-form" class="flex flex-col md:flex-row gap-4 items-end">
-                        <div class="flex-1 w-full space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Username</label><input type="text" id="new-username" required class="w-full p-2.5 rounded-xl border text-sm"></div>
-                        <div class="flex-1 w-full space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Password</label><input type="password" id="new-password" required class="w-full p-2.5 rounded-xl border text-sm"></div>
-                        <div class="w-full md:w-48 space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Role</label>
-                            <select id="new-role" class="w-full p-2.5 rounded-xl border text-sm cursor-pointer"><option value="editor">Staff (Edit)</option><option value="viewer">Viewer (Read Only)</option><option value="superadmin">Superadmin</option></select>
+                
+                <!-- Role Info Panel -->
+                <div class="card p-6 rounded-2xl mb-6 role-superadmin hidden animate-slide-up" style="animation-delay: 0.1s;">
+                    <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Role & Permissions Info</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 backdrop-blur-sm hover:border-sky-500/30 transition-all duration-300">
+                            <div class="text-xs font-bold text-sky-400 uppercase mb-2">Viewer</div>
+                            <div class="text-xs text-slate-400 space-y-1">
+                                <div>• View Dashboard</div>
+                                <div>• View Assets</div>
+                                <div>• View Users</div>
+                            </div>
                         </div>
-                        <button type="submit" class="w-full md:w-auto bg-purple-600 hover:bg-purple-500 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition">Buat Akun</button>
+                        <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 backdrop-blur-sm hover:border-emerald-500/30 transition-all duration-300">
+                            <div class="text-xs font-bold text-emerald-400 uppercase mb-2">Editor</div>
+                            <div class="text-xs text-slate-400 space-y-1">
+                                <div>• All Viewer permissions</div>
+                                <div>• Create/Edit/Delete Assets</div>
+                                <div>• Import/Export CSV</div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 backdrop-blur-sm hover:border-purple-500/30 transition-all duration-300">
+                            <div class="text-xs font-bold text-purple-400 uppercase mb-2">Superadmin</div>
+                            <div class="text-xs text-slate-400 space-y-1">
+                                <div>• All Editor permissions</div>
+                                <div>• Create/Edit/Delete Users</div>
+                                <div>• Manage Roles</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card p-6 rounded-2xl mb-6 perm-create-users animate-slide-up" style="animation-delay: 0.2s;">
+                    <form id="user-form" class="flex flex-col md:flex-row gap-4 items-end">
+                        <div class="flex-1 w-full space-y-2"><label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Username</label><input type="text" id="new-username" required class="w-full p-3 rounded-xl border text-sm transition-all duration-300"></div>
+                        <div class="flex-1 w-full space-y-2"><label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Password</label><input type="password" id="new-password" required class="w-full p-3 rounded-xl border text-sm transition-all duration-300"></div>
+                        <div class="w-full md:w-48 space-y-2"><label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Role</label>
+                            <select id="new-role" class="w-full p-3 rounded-xl border text-sm cursor-pointer transition-all duration-300"><option value="editor">Staff (Edit)</option><option value="viewer">Viewer (Read Only)</option><option value="superadmin">Superadmin</option></select>
+                        </div>
+                        <button type="submit" class="w-full md:w-auto bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg">Buat Akun</button>
                     </form>
                 </div>
-                <div class="card rounded-2xl overflow-hidden shadow-xl border-0">
-                    <table class="w-full text-left"><thead class="bg-slate-800 text-slate-400 text-[10px] font-black uppercase tracking-widest"><tr><th class="p-5">Pengguna</th><th class="p-5">Role</th><th class="p-5">Dibuat Pada</th><th class="p-5 text-right">Aksi</th></tr></thead><tbody id="users-list" class="divide-y divide-slate-800/50 text-sm"></tbody></table>
+                <div class="card rounded-2xl overflow-hidden shadow-xl border-0 animate-slide-up" style="animation-delay: 0.3s;">
+                    <table class="w-full text-left"><thead class="bg-slate-800/50 text-slate-400 text-xs font-black uppercase tracking-widest backdrop-blur-sm"><tr><th class="p-5">Pengguna</th><th class="p-5">Role</th><th class="p-5">Dibuat Pada</th><th class="p-5 text-right">Aksi</th></tr></thead><tbody id="users-list" class="divide-y divide-slate-800/50 text-sm"></tbody></table>
+                </div>
+            </div>
+
+            <!-- VIEW: AUDIT LOG -->
+            <div id="view-audit" class="hidden animate-fade-in">
+                <div class="card p-6 rounded-2xl mb-6 border-l-4 border-l-amber-500 bg-gradient-to-r from-slate-900 to-amber-900/20 animate-slide-up">
+                    <h3 class="text-lg font-bold text-white mb-1">Audit Log</h3>
+                    <p class="text-xs text-slate-400">Riwayat aktivitas sistem dan keamanan.</p>
+                </div>
+                
+                <!-- Audit Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 animate-slide-up" style="animation-delay: 0.1s;">
+                    <div class="card p-4 rounded-xl border border-slate-700/50">
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Total Log</div>
+                        <div class="text-2xl font-black text-white" id="audit-total">0</div>
+                    </div>
+                    <div class="card p-4 rounded-xl border border-slate-700/50">
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Login Events</div>
+                        <div class="text-2xl font-black text-sky-400" id="audit-login">0</div>
+                    </div>
+                    <div class="card p-4 rounded-xl border border-slate-700/50">
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Asset Changes</div>
+                        <div class="text-2xl font-black text-emerald-400" id="audit-assets">0</div>
+                    </div>
+                </div>
+                
+                <!-- Filters -->
+                <div class="card p-4 rounded-xl mb-6 animate-slide-up" style="animation-delay: 0.2s;">
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <div class="flex-1">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Filter Action</label>
+                            <select id="audit-action-filter" class="w-full p-2 rounded-lg border text-sm transition-all duration-300" onchange="filterAuditLogs()">
+                                <option value="">All Actions</option>
+                                <option value="LOGIN">Login</option>
+                                <option value="LOGOUT">Logout</option>
+                                <option value="CREATE_ASSET">Create Asset</option>
+                                <option value="UPDATE_ASSET">Update Asset</option>
+                                <option value="DELETE_ASSET">Delete Asset</option>
+                                <option value="CREATE_USER">Create User</option>
+                                <option value="UPDATE_USER">Update User</option>
+                                <option value="DELETE_USER">Delete User</option>
+                                <option value="CREATE_EMPLOYEE">Create Employee</option>
+                                <option value="UPDATE_EMPLOYEE">Update Employee</option>
+                                <option value="DELETE_EMPLOYEE">Delete Employee</option>
+                            </select>
+                        </div>
+                        <div class="flex-1">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Filter Entity</label>
+                            <select id="audit-entity-filter" class="w-full p-2 rounded-lg border text-sm transition-all duration-300" onchange="filterAuditLogs()">
+                                <option value="">All Entities</option>
+                                <option value="asset">Asset</option>
+                                <option value="user">User</option>
+                                <option value="employee">Employee</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end">
+                            <button onclick="refreshAuditLogs()" class="w-full md:w-auto btn-primary text-white px-4 py-2 rounded-lg text-xs font-bold transition-all duration-300 transform hover:scale-105 active:scale-95">
+                                <i data-lucide="refresh-cw" class="w-4 h-4 inline mr-2"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Audit Log Table -->
+                <div class="card rounded-2xl overflow-hidden shadow-xl border-0 animate-slide-up" style="animation-delay: 0.3s;">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-800/50 text-slate-400 text-xs font-black uppercase tracking-widest backdrop-blur-sm">
+                                <tr>
+                                    <th class="p-4">Timestamp</th>
+                                    <th class="p-4">User</th>
+                                    <th class="p-4">Action</th>
+                                    <th class="p-4">Entity</th>
+                                    <th class="p-4">Details</th>
+                                    <th class="p-4">IP Address</th>
+                                </tr>
+                            </thead>
+                            <tbody id="audit-logs-list" class="divide-y divide-slate-800/50 text-sm"></tbody>
+                        </table>
+                    </div>
+                    <div class="p-4 border-t border-slate-800/50 bg-slate-900/30 flex justify-between items-center backdrop-blur-sm">
+                        <span class="text-xs text-slate-400">Showing recent <span id="audit-count">0</span> logs</span>
+                        <div class="flex gap-2">
+                            <button onclick="loadMoreAuditLogs()" class="p-2 bg-slate-800/50 rounded-lg hover:bg-slate-700/50 transition-all duration-300 transform hover:scale-105 active:scale-95 text-xs font-bold text-slate-300">Load More</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -259,57 +726,62 @@
 
     <!-- Modals untuk Asset -->
     <div id="edit-modal" class="modal-bg fixed inset-0 flex items-center justify-center hidden p-4 z-[2000]">
-        <div class="card p-8 rounded-3xl max-w-2xl w-full modal-content border-slate-700 shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
-            <h3 class="text-xl font-bold mb-6 text-white flex items-center space-x-2 border-b border-slate-700 pb-4"><i data-lucide="edit-3" class="text-sky-500"></i><span id="modal-title">Edit Aset</span></h3>
+        <div class="card p-8 rounded-3xl max-w-2xl w-full modal-content border-slate-700/50 shadow-2xl max-h-[90vh] overflow-y-auto backdrop-blur-xl">
+            <h3 class="text-xl font-bold mb-6 text-white flex items-center space-x-2 border-b border-slate-700/50 pb-4"><i data-lucide="edit-3" class="text-sky-500"></i><span id="modal-title">Edit Aset</span></h3>
             <form id="asset-form" class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <input type="hidden" id="edit-id">
-                <input type="text" id="edit-name" required class="w-full p-3 rounded-xl border text-sm" placeholder="Nama Aset">
-                <input type="text" id="edit-sn" required class="w-full p-3 rounded-xl border text-sm font-mono" placeholder="Serial Number">
-                <select id="edit-category" class="w-full p-3 rounded-xl border text-sm">
+                <input type="text" id="edit-name" required class="w-full p-3 rounded-xl border text-sm transition-all duration-300" placeholder="Nama Aset">
+                <input type="text" id="edit-sn" required class="w-full p-3 rounded-xl border text-sm font-mono transition-all duration-300" placeholder="Serial Number">
+                <select id="edit-category" class="w-full p-3 rounded-xl border text-sm transition-all duration-300">
                     <option value="Laptop">Laptop</option><option value="Desktop">Desktop</option><option value="Server">Server</option><option value="Network">Network</option><option value="Printer">Printer</option><option value="Software License">Software License</option>
                 </select>
                 <!-- Datalist untuk Lokasi -->
-                <div class="space-y-1">
-                    <input type="text" id="edit-location" list="location-list" required class="w-full p-3 rounded-xl border text-sm" placeholder="Pilih atau Ketik Lokasi">
+                <div class="space-y-2">
+                    <input type="text" id="edit-location" list="location-list" required class="w-full p-3 rounded-xl border text-sm transition-all duration-300" placeholder="Pilih atau Ketik Lokasi">
                     <datalist id="location-list">
                         <option value="Gudang Utama"><option value="Ruang Server"><option value="Lobby"><option value="Lantai 1"><option value="Lantai 2"><option value="Lantai 3"><option value="Ruang Meeting">
                     </datalist>
                 </div>
-                <input type="text" id="edit-user" class="w-full p-3 rounded-xl border text-sm" placeholder="Pengguna">
-                <input type="email" id="edit-email" class="w-full p-3 rounded-xl border text-sm" placeholder="Email">
-                <div class="space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Tgl Beli</label><input type="date" id="edit-purchase-date" class="w-full p-3 rounded-xl border text-sm text-slate-300"></div>
-                <div class="space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Tgl Pinjam</label><input type="date" id="edit-loan-date" class="w-full p-3 rounded-xl border text-sm text-slate-300"></div>
-                <div class="space-y-1"><label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Garansi Berakhir</label><input type="date" id="edit-warranty-date" class="w-full p-3 rounded-xl border text-sm text-slate-300"></div>
-                <select id="edit-status" class="w-full p-3 rounded-xl border text-sm"><option value="In Use">In Use</option><option value="Maintenance">Maintenance</option><option value="Disposed">Disposed</option></select>
-                <div class="col-span-full flex gap-3 mt-4"><button type="button" onclick="closeModal('edit-modal')" class="flex-1 py-3 bg-slate-800 rounded-xl font-bold text-sm">Batal</button><button type="submit" class="flex-1 py-3 bg-sky-500 hover:bg-sky-400 text-slate-900 font-black rounded-xl text-sm">Simpan</button></div>
+                <input type="text" id="edit-user" class="w-full p-3 rounded-xl border text-sm transition-all duration-300" placeholder="Pengguna">
+                <input type="email" id="edit-email" class="w-full p-3 rounded-xl border text-sm transition-all duration-300" placeholder="Email">
+                <div class="space-y-2"><label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Tgl Beli</label><input type="date" id="edit-purchase-date" class="w-full p-3 rounded-xl border text-sm text-slate-300 transition-all duration-300"></div>
+                <div class="space-y-2"><label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Tgl Pinjam</label><input type="date" id="edit-loan-date" class="w-full p-3 rounded-xl border text-sm text-slate-300 transition-all duration-300"></div>
+                <div class="space-y-2"><label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Garansi Berakhir</label><input type="date" id="edit-warranty-date" class="w-full p-3 rounded-xl border text-sm text-slate-300 transition-all duration-300"></div>
+                <select id="edit-status" class="w-full p-3 rounded-xl border text-sm transition-all duration-300"><option value="In Use">In Use</option><option value="Maintenance">Maintenance</option><option value="Disposed">Disposed</option></select>
+                <div class="col-span-full flex gap-3 mt-4"><button type="button" onclick="closeModal('edit-modal')" class="flex-1 py-3 bg-slate-800/50 hover:bg-slate-700/50 rounded-xl font-bold text-sm transition-all duration-300 border border-slate-700/50">Batal</button><button type="submit" class="flex-1 py-3 btn-primary text-white font-black rounded-xl text-sm transition-all duration-300 transform hover:scale-105 active:scale-95">Simpan</button></div>
             </form>
         </div>
     </div>
 
     <!-- Import Modal -->
     <div id="import-modal" class="modal-bg fixed inset-0 flex items-center justify-center hidden p-4 z-[2000]">
-        <div class="card p-8 rounded-3xl max-w-md w-full modal-content border-slate-700 shadow-2xl">
+        <div class="card p-8 rounded-3xl max-w-md w-full modal-content border-slate-700/50 shadow-2xl backdrop-blur-xl">
             <h3 class="text-xl font-bold mb-2 flex items-center space-x-2 text-white"><i data-lucide="file-spreadsheet" class="text-indigo-500"></i><span>Import File CSV</span></h3>
             <div class="flex justify-between items-center mb-6 gap-2">
-                <p class="text-xs text-slate-400 font-mono bg-slate-900 p-2 rounded border border-slate-800 flex-grow">name, sn, category, location, user, email, loan, warranty, purchase</p>
-                <button onclick="downloadTemplate()" class="bg-slate-800 hover:bg-slate-700 text-sky-400 p-2.5 rounded-xl border border-slate-700" title="Download Template"><i data-lucide="file-down" class="w-5 h-5"></i></button>
+                <p class="text-xs text-slate-400 font-mono bg-slate-900/50 p-2 rounded border border-slate-700/50 flex-grow backdrop-blur-sm">name, sn, category, location, user, email, loan, warranty, purchase</p>
+                <button onclick="downloadTemplate()" class="bg-slate-800/50 hover:bg-slate-700/50 text-sky-400 p-2.5 rounded-xl border border-slate-700/50 transition-all duration-300 transform hover:scale-105 active:scale-95" title="Download Template"><i data-lucide="file-down" class="w-5 h-5"></i></button>
             </div>
-            <div id="drop-zone" class="drop-zone rounded-2xl py-12 flex flex-col items-center cursor-pointer hover:border-sky-500 transition mb-6 bg-slate-800/50" onclick="document.getElementById('csv-input').click()">
-                <div class="bg-slate-800 p-3 rounded-full mb-3"><i data-lucide="cloud-upload" class="w-8 h-8 text-sky-500"></i></div>
+            <div id="drop-zone" class="drop-zone rounded-2xl py-12 flex flex-col items-center cursor-pointer hover:border-sky-500 transition-all duration-300 mb-6 bg-slate-800/50 border-2 border-dashed border-slate-700/50" onclick="document.getElementById('csv-input').click()">
+                <div class="bg-slate-800/50 p-3 rounded-full mb-3"><i data-lucide="cloud-upload" class="w-8 h-8 text-sky-500"></i></div>
                 <p class="text-xs font-bold text-slate-300" id="file-label">Klik atau seret file CSV ke sini</p>
                 <input type="file" id="csv-input" accept=".csv" class="hidden" onchange="handleCSV(event)">
             </div>
-            <div class="flex gap-3"><button onclick="closeModal('import-modal')" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-bold text-xs">Batal</button><button id="btn-import" onclick="processCSV()" disabled class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-black text-xs opacity-50 cursor-not-allowed">Mulai Import</button></div>
+            <div class="flex gap-3"><button onclick="closeModal('import-modal')" class="flex-1 py-3 bg-slate-800/50 hover:bg-slate-700/50 text-slate-300 rounded-xl font-bold text-xs transition-all duration-300 border border-slate-700/50">Batal</button><button id="btn-import" onclick="processCSV()" disabled class="flex-1 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl font-black text-xs opacity-50 cursor-not-allowed transition-all duration-300">Mulai Import</button></div>
         </div>
     </div>
 
     <!-- Notification & Toast Modals (Hidden) -->
-    <div id="notification-modal" class="modal-bg fixed inset-0 flex items-center justify-center hidden p-4 z-[3000]"><div class="card p-6 rounded-3xl max-w-lg w-full modal-content border-slate-700 shadow-2xl relative"><div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-4"><h3 class="text-lg font-bold text-white flex items-center gap-2"><i data-lucide="bell-ring" class="text-amber-500 w-5 h-5"></i> Peringatan Garansi</h3><button onclick="closeModal('notification-modal')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button></div><div id="warranty-list-full" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar"></div></div></div>
-    <div id="toast" class="fixed bottom-10 right-10 p-4 rounded-2xl bg-slate-800 text-white font-bold shadow-2xl border border-slate-700 transition-all duration-500 opacity-0 translate-y-10 z-[3000] flex items-center space-x-3"><div id="toast-icon-bg" class="p-2 rounded-lg bg-sky-500/20 text-sky-500"><i id="toast-icon" data-lucide="check" class="w-5 h-5"></i></div><span id="toast-msg" class="text-sm">Notifikasi</span></div>
+    <div id="notification-modal" class="modal-bg fixed inset-0 flex items-center justify-center hidden p-4 z-[3000]"><div class="card p-6 rounded-3xl max-w-lg w-full modal-content border-slate-700/50 shadow-2xl relative backdrop-blur-xl"><div class="flex justify-between items-center mb-4 border-b border-slate-700/50 pb-4"><h3 class="text-lg font-bold text-white flex items-center gap-2"><i data-lucide="bell-ring" class="text-amber-500 w-5 h-5"></i> Peringatan Garansi</h3><button onclick="closeModal('notification-modal')" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button></div><div id="warranty-list-full" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2"></div></div></div>
+    <div id="toast" class="fixed bottom-10 right-10 p-4 rounded-2xl bg-slate-800/80 text-white font-bold shadow-2xl border border-slate-700/50 transition-all duration-500 opacity-0 translate-y-10 z-[3000] flex items-center space-x-3 backdrop-blur-xl"><div id="toast-icon-bg" class="p-2 rounded-lg bg-sky-500/20 text-sky-500"><i id="toast-icon" data-lucide="check" class="w-5 h-5"></i></div><span id="toast-msg" class="text-sm">Notifikasi</span></div>
 
     <script>
         const API = "http://127.0.0.1:5000/api";
-        let localData = [], filteredData = [], currentPage = 1, itemsPerPage = 15, chartInstance = null, currentUser = null, csvContent = "";
+        const PERMISSIONS = {
+            'viewer': ['view_dashboard', 'view_assets', 'view_users', 'view_employees'],
+            'editor': ['view_dashboard', 'view_assets', 'view_users', 'view_employees', 'create_assets', 'edit_assets', 'delete_assets', 'import_assets', 'export_assets'],
+            'superadmin': ['view_dashboard', 'view_assets', 'view_users', 'view_employees', 'create_assets', 'edit_assets', 'delete_assets', 'import_assets', 'export_assets', 'create_users', 'edit_users', 'delete_users', 'manage_roles', 'view_audit_logs', 'create_employees', 'edit_employees', 'delete_employees']
+        };
+        let localData = [], filteredData = [], currentPage = 1, itemsPerPage = 15, chartInstance = null, currentUser = null, csvContent = "", auditLogs = [], auditOffset = 0, employeesData = [];
 
         // --- AUTH & MOCK LOGIN ---
         document.getElementById('login-form').onsubmit = async (e) => {
@@ -327,6 +799,8 @@
         function mockLogin(type) {
             let mockUser = type === 'google' ? { username: "google_staff", role: "editor" } : { username: "sso_viewer", role: "viewer" };
             mockUser.created_at = new Date().toISOString();
+            // Add permissions for mock users
+            mockUser.permissions = PERMISSIONS[mockUser.role] || [];
             localStorage.setItem('myit_token', 'mock_token_' + type); localStorage.setItem('myit_user', JSON.stringify(mockUser));
             setTimeout(() => initApp(mockUser), 500);
             showToast(`Login ${type.toUpperCase()} Berhasil`);
@@ -339,9 +813,41 @@
             currentUser = user;
             document.getElementById('login-page').classList.add('hidden'); document.getElementById('main-app').classList.remove('hidden');
             document.getElementById('user-name').textContent = user.username; document.getElementById('user-initial').textContent = user.username.charAt(0).toUpperCase(); document.getElementById('current-user-role').textContent = user.role;
+            
+            // Enhanced RBAC UI controls
+            const permissions = user.permissions || [];
             const sa = document.querySelectorAll('.role-superadmin'), ed = document.querySelectorAll('.role-editable');
-            if(user.role === 'superadmin') { sa.forEach(e=>e.classList.remove('hidden')); ed.forEach(e=>e.classList.remove('hidden')); }
-            else if(user.role === 'editor') ed.forEach(e=>e.classList.remove('hidden'));
+            
+            // Role-based visibility
+            if(user.role === 'superadmin') { 
+                sa.forEach(e=>e.classList.remove('hidden')); 
+                ed.forEach(e=>e.classList.remove('hidden')); 
+            } else if(user.role === 'editor') {
+                ed.forEach(e=>e.classList.remove('hidden'));
+            }
+            
+            // Permission-based fine-grained control
+            if(!permissions.includes('create_users')) {
+                document.querySelectorAll('.perm-create-users').forEach(e=>e.classList.add('hidden'));
+            }
+            if(!permissions.includes('delete_users')) {
+                document.querySelectorAll('.perm-delete-users').forEach(e=>e.classList.add('hidden'));
+            }
+            if(!permissions.includes('import_assets')) {
+                document.querySelectorAll('.perm-import-assets').forEach(e=>e.classList.add('hidden'));
+            }
+            if(!permissions.includes('view_audit_logs')) {
+                // Hide audit log nav button specifically
+                const auditNav = document.getElementById('nav-audit');
+                if(auditNav) auditNav.classList.add('hidden');
+            }
+            if(!permissions.includes('create_employees')) {
+                document.querySelectorAll('.perm-create-employees').forEach(e=>e.classList.add('hidden'));
+            }
+            if(!permissions.includes('edit_employees')) {
+                document.querySelectorAll('.perm-edit-employees').forEach(e=>e.classList.add('hidden'));
+            }
+            
             loadDashboard(); lucide.createIcons();
         }
 
@@ -349,11 +855,11 @@
         
         // --- NAVIGATION ---
         function switchView(view) {
-            ['dashboard', 'assets', 'users'].forEach(v => { document.getElementById(`view-${v}`).classList.add('hidden'); document.getElementById(`nav-${v}`).classList.remove('active-nav', 'text-white', 'bg-sky-600'); document.getElementById(`nav-${v}`).classList.add('text-slate-400'); });
+            ['dashboard', 'assets', 'employees', 'users', 'audit'].forEach(v => { document.getElementById(`view-${v}`).classList.add('hidden'); document.getElementById(`nav-${v}`).classList.remove('active-nav', 'text-white', 'bg-sky-600'); document.getElementById(`nav-${v}`).classList.add('text-slate-400'); });
             document.getElementById(`view-${view}`).classList.remove('hidden');
             const btn = document.getElementById(`nav-${view}`); btn.classList.add('active-nav', 'text-white'); btn.classList.remove('text-slate-400');
-            document.getElementById('page-title').textContent = view==='users'?'Manajemen User':(view==='assets'?'Data Aset':'Dashboard');
-            if(view==='assets') fetchAssets(); if(view==='users') fetchUsers(); if(view==='dashboard') loadDashboard();
+            document.getElementById('page-title').textContent = view==='users'?'Manajemen User':(view==='assets'?'Data Aset':(view==='employees'?'Daftar Karyawan':(view==='audit'?'Audit Log':'Dashboard')));
+            if(view==='assets') fetchAssets(); if(view==='users') fetchUsers(); if(view==='dashboard') loadDashboard(); if(view==='audit') loadAuditLogs(); if(view==='employees') loadEmployees();
         }
 
         // --- DASHBOARD ---
@@ -408,9 +914,243 @@
         function exportCSV(mode='all') { let d=mode==='disposed'?localData.filter(i=>i.status==='Disposed'):localData; let c="Name,Serial,Category,Location,User,Email,Status\n"; d.forEach(r=>{c+=`"${r.name}","${r.serial_number}","${r.category}","${r.location}","${r.user||''}","${r.user_email||''}","${r.status}"\n`}); const l=document.createElement('a'); l.href='data:text/csv;charset=utf-8,'+encodeURI(c); l.download=`export_${mode}.csv`; l.click(); }
 
         // --- USER MGMT (Superadmin) ---
-        async function fetchUsers() { const res = await authFetch(`${API}/users`); const users = await res.json(); document.getElementById('users-list').innerHTML = users.map(u => `<tr class="border-b border-slate-800/50"><td class="p-5 font-bold text-white">${u.username}</td><td class="p-5"><span class="px-2 py-1 bg-purple-900/30 text-purple-400 rounded text-xs uppercase">${u.role}</span></td><td class="p-5 text-right">${u.role!=='superadmin'?`<button onclick="deleteUser('${u.id}')" class="text-red-400 hover:text-white"><i data-lucide="trash-2" class="w-4 h-4"></i></button>`:''}</td></tr>`).join(''); lucide.createIcons(); }
+        async function fetchUsers() { 
+            const res = await authFetch(`${API}/users`); 
+            const users = await res.json(); 
+            const canDelete = currentUser.permissions && currentUser.permissions.includes('delete_users');
+            document.getElementById('users-list').innerHTML = users.map(u => `<tr class="border-b border-slate-800/50"><td class="p-5 font-bold text-white">${u.username}</td><td class="p-5"><span class="px-2 py-1 bg-purple-900/30 text-purple-400 rounded text-xs uppercase">${u.role}</span></td><td class="p-5 text-xs text-slate-400">${new Date(u.created_at).toLocaleDateString()}</td><td class="p-5 text-right">${(u.role!=='superadmin' && canDelete)?`<button onclick="deleteUser('${u.id}')" class="perm-delete-users text-red-400 hover:text-white"><i data-lucide="trash-2" class="w-4 h-4"></i></button>`:''}</td></tr>`).join(''); 
+            lucide.createIcons(); 
+        }
         document.getElementById('user-form').onsubmit = async (e) => { e.preventDefault(); const body={username:document.getElementById('new-username').value,password:document.getElementById('new-password').value,role:document.getElementById('new-role').value}; await authFetch(`${API}/users`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)}); fetchUsers(); };
         async function deleteUser(id) { if(confirm("Hapus user?")) { await authFetch(`${API}/users/${id}`, {method:'DELETE'}); fetchUsers(); } }
+
+        // --- AUDIT LOG (Superadmin) ---
+        async function loadAuditLogs() {
+            try {
+                const actionFilter = document.getElementById('audit-action-filter').value;
+                const entityFilter = document.getElementById('audit-entity-filter').value;
+                
+                let url = `${API}/audit-logs?limit=50&offset=${auditOffset}`;
+                if(actionFilter) url += `&action=${actionFilter}`;
+                if(entityFilter) url += `&entity_type=${entityFilter}`;
+                
+                const res = await authFetch(url);
+                const logs = await res.json();
+                
+                // Load stats
+                const statsRes = await authFetch(`${API}/audit-logs/stats`);
+                const stats = await statsRes.json();
+                
+                // Update stats
+                document.getElementById('audit-total').textContent = logs.length;
+                document.getElementById('audit-login').textContent = stats.action_stats.filter(s => s.action.includes('LOGIN')).reduce((a, b) => a + b.count, 0);
+                document.getElementById('audit-assets').textContent = stats.action_stats.filter(s => s.action.includes('ASSET')).reduce((a, b) => a + b.count, 0);
+                
+                // Render logs
+                renderAuditLogs(logs);
+                
+                auditLogs = logs;
+                document.getElementById('audit-count').textContent = logs.length;
+                
+            } catch(e) {
+                console.error('Audit log error:', e);
+                document.getElementById('audit-logs-list').innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-500">Error loading audit logs</td></tr>';
+            }
+        }
+
+        function renderAuditLogs(logs) {
+            const list = document.getElementById('audit-logs-list');
+            
+            if(logs.length === 0) {
+                list.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-500">No audit logs found</td></tr>';
+                return;
+            }
+            
+            list.innerHTML = logs.map(log => {
+                const timestamp = new Date(log.timestamp).toLocaleString();
+                const actionColors = {
+                    'LOGIN': 'text-sky-400',
+                    'LOGOUT': 'text-slate-400',
+                    'CREATE_ASSET': 'text-emerald-400',
+                    'UPDATE_ASSET': 'text-amber-400',
+                    'DELETE_ASSET': 'text-red-400',
+                    'CREATE_USER': 'text-purple-400',
+                    'UPDATE_USER': 'text-indigo-400',
+                    'DELETE_USER': 'text-red-400',
+                    'CREATE_EMPLOYEE': 'text-emerald-400',
+                    'UPDATE_EMPLOYEE': 'text-amber-400',
+                    'DELETE_EMPLOYEE': 'text-red-400',
+                    'LOGIN_FAILED': 'text-red-400'
+                };
+                
+                const actionColor = actionColors[log.action] || 'text-slate-300';
+                const details = log.details ? JSON.parse(log.details) : null;
+                const detailsText = details ? Object.entries(details).map(([k, v]) => `${k}: ${v}`).join(', ') : '-';
+                
+                return `
+                    <tr class="hover:bg-slate-800/40 border-b border-slate-800/50">
+                        <td class="p-4 text-xs text-slate-400">${timestamp}</td>
+                        <td class="p-4 font-bold text-white text-sm">${log.username || 'System'}</td>
+                        <td class="p-4 text-xs font-bold ${actionColor}">${log.action}</td>
+                        <td class="p-4 text-xs text-slate-300">${log.entity_type || '-'}</td>
+                        <td class="p-4 text-xs text-slate-400 max-w-xs truncate" title="${detailsText}">${detailsText}</td>
+                        <td class="p-4 text-xs text-slate-500 font-mono">${log.ip_address || '-'}</td>
+                    </tr>
+                `;
+            }).join('');
+            
+            lucide.createIcons();
+        }
+
+        function filterAuditLogs() {
+            auditOffset = 0;
+            loadAuditLogs();
+        }
+
+        function refreshAuditLogs() {
+            auditOffset = 0;
+            loadAuditLogs();
+        }
+
+        function loadMoreAuditLogs() {
+            auditOffset += 50;
+            loadAuditLogs();
+        }
+
+        // --- EMPLOYEE MANAGEMENT ---
+        async function loadEmployees() {
+            try {
+                const res = await authFetch(`${API}/employees`);
+                const employees = await res.json();
+                
+                // Load stats
+                const statsRes = await authFetch(`${API}/employees/stats`);
+                const stats = await statsRes.json();
+                
+                // Update stats
+                document.getElementById('employee-total').textContent = stats.total;
+                document.getElementById('employee-active').textContent = stats.status_stats.find(s => s.status === 'Active')?.count || 0;
+                document.getElementById('employee-departments').textContent = stats.department_stats.length;
+                
+                // Render employees
+                renderEmployees(employees);
+                
+                employeesData = employees;
+                
+            } catch(e) {
+                console.error('Employee error:', e);
+                document.getElementById('employees-list').innerHTML = '<tr><td colspan="8" class="p-4 text-center text-slate-500">Error loading employees</td></tr>';
+            }
+        }
+
+        function renderEmployees(employees) {
+            const list = document.getElementById('employees-list');
+            
+            if(employees.length === 0) {
+                list.innerHTML = '<tr><td colspan="8" class="p-4 text-center text-slate-500">Tidak ada data karyawan</td></tr>';
+                return;
+            }
+            
+            const canEdit = currentUser.permissions && currentUser.permissions.includes('edit_employees');
+            
+            list.innerHTML = employees.map(emp => {
+                const statusColors = {
+                    'Active': 'bg-emerald-500/10 text-emerald-400',
+                    'Inactive': 'bg-red-500/10 text-red-400',
+                    'On Leave': 'bg-amber-500/10 text-amber-400'
+                };
+                
+                const statusColor = statusColors[emp.status] || 'bg-slate-500/10 text-slate-400';
+                
+                return `
+                    <tr class="hover:bg-slate-800/40 border-b border-slate-800/50">
+                        <td class="p-4 font-bold text-white text-sm">${emp.employee_id}</td>
+                        <td class="p-4 font-bold text-white text-sm">${emp.name}</td>
+                        <td class="p-4 text-xs text-slate-300">${emp.email || '-'}</td>
+                        <td class="p-4 text-xs text-slate-300">${emp.department}</td>
+                        <td class="p-4 text-xs text-slate-300">${emp.position || '-'}</td>
+                        <td class="p-4 text-xs text-slate-300">${emp.phone || '-'}</td>
+                        <td class="p-4 text-center"><span class="px-2 py-1 ${statusColor} rounded text-xs font-bold uppercase">${emp.status}</span></td>
+                        <td class="p-4 text-right perm-edit-employees ${!canEdit ? 'hidden' : ''}">
+                            <button onclick="editEmployee('${emp.id}')" class="p-2 bg-indigo-500/20 text-indigo-400 rounded"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                            <button onclick="deleteEmployee('${emp.id}')" class="p-2 bg-red-500/20 text-red-400 rounded ml-2"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            lucide.createIcons();
+        }
+
+        function filterEmployees() {
+            const search = document.getElementById('emp-search').value;
+            const deptFilter = document.getElementById('emp-dept-filter').value;
+            const statusFilter = document.getElementById('emp-status-filter').value;
+            
+            let filtered = employeesData;
+            
+            if(search) {
+                filtered = filtered.filter(emp => 
+                    emp.name.toLowerCase().includes(search.toLowerCase()) ||
+                    emp.employee_id.toLowerCase().includes(search.toLowerCase()) ||
+                    (emp.email && emp.email.toLowerCase().includes(search.toLowerCase()))
+                );
+            }
+            
+            if(deptFilter) {
+                filtered = filtered.filter(emp => emp.department === deptFilter);
+            }
+            
+            if(statusFilter) {
+                filtered = filtered.filter(emp => emp.status === statusFilter);
+            }
+            
+            renderEmployees(filtered);
+        }
+
+        document.getElementById('employee-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const body = {
+                employee_id: document.getElementById('emp-id').value,
+                name: document.getElementById('emp-name').value,
+                email: document.getElementById('emp-email').value,
+                department: document.getElementById('emp-department').value,
+                position: document.getElementById('emp-position').value,
+                phone: document.getElementById('emp-phone').value,
+                location: document.getElementById('emp-location').value,
+                status: document.getElementById('emp-status').value,
+                hire_date: document.getElementById('emp-hire-date').value
+            };
+            
+            await authFetch(`${API}/employees`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(body)
+            });
+            
+            document.getElementById('employee-form').reset();
+            loadEmployees();
+            showToast('Karyawan berhasil ditambahkan');
+        };
+
+        function editEmployee(id) {
+            const emp = employeesData.find(e => e.id === id);
+            if(emp) {
+                document.getElementById('emp-id').value = emp.employee_id;
+                document.getElementById('emp-name').value = emp.name;
+                document.getElementById('emp-department').value = emp.department;
+                // For simplicity, just reusing the create form - in production you'd want a proper edit modal
+                showToast('Edit functionality needs modal implementation');
+            }
+        }
+
+        async function deleteEmployee(id) {
+            if(confirm('Hapus karyawan ini?')) {
+                await authFetch(`${API}/employees/${id}`, {method: 'DELETE'});
+                loadEmployees();
+                showToast('Karyawan berhasil dihapus');
+            }
+        }
 
         // --- GENERIC UTILS ---
         function openModal(id, isAdd=false) { document.getElementById(id).classList.remove('hidden'); if(isAdd){ document.getElementById('asset-form').reset(); document.getElementById('edit-id').value=""; document.getElementById('modal-title').textContent="Tambah Aset"; } setTimeout(()=>document.querySelector(`#${id} .modal-content`).classList.add('modal-open'),10); }
