@@ -310,39 +310,56 @@
     <!-- ================= MAIN APP ================= -->
     <div id="main-app" class="grid grid-cols-1 md:grid-cols-[260px_1fr] min-h-screen hidden transition-opacity duration-500">
         <!-- Sidebar -->
-        <aside class="p-6 border-r border-slate-800/50 flex flex-col fixed md:relative h-full z-40 w-64">
-            <div class="mb-10 flex items-center space-x-3">
-                <div class="bg-gradient-to-br from-sky-500 to-indigo-600 p-2.5 rounded-xl shadow-lg glow-blue">
-                    <i data-lucide="shield-check" class="text-white w-6 h-6"></i>
+        <aside id="sidebar" class="p-6 border-r border-slate-800/50 flex flex-col fixed md:relative h-full z-40 w-64 bg-[#0f172a] md:bg-transparent transform -translate-x-full md:translate-x-0 transition-transform duration-300 left-0 top-0">
+            <div class="mb-10 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-br from-sky-500 to-indigo-600 p-2.5 rounded-xl shadow-lg glow-blue">
+                        <i data-lucide="shield-check" class="text-white w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-black text-white tracking-tight">MyIT-INV</h1>
+                        <div id="current-user-role" class="text-[9px] text-sky-400 uppercase tracking-widest font-black bg-sky-900/30 px-2 py-0.5 rounded inline-block mt-1">LOADING...</div>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-xl font-black text-white tracking-tight">MyIT-INV</h1>
-                    <div id="current-user-role" class="text-[9px] text-sky-400 uppercase tracking-widest font-black bg-sky-900/30 px-2 py-0.5 rounded inline-block mt-1">LOADING...</div>
-                </div>
+                <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
             </div>
             
             <nav class="space-y-2 flex-grow">
                 <div class="text-xs font-bold text-slate-500 uppercase tracking-wider px-3 mb-3">Menu Utama</div>
-                <button onclick="switchView('dashboard')" id="nav-dashboard" class="w-full flex items-center space-x-3 p-3 rounded-xl active-nav transition-all text-left group">
+                <button onclick="switchView('dashboard'); if(window.innerWidth<768) toggleSidebar();" id="nav-dashboard" class="w-full flex items-center space-x-3 p-3 rounded-xl active-nav transition-all text-left group">
                     <i data-lucide="layout-grid" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
                     <span class="font-bold text-sm">Dashboard</span>
                 </button>
-                <button onclick="switchView('assets')" id="nav-assets" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-white transition-all text-left group">
+                <button onclick="switchView('assets'); if(window.innerWidth<768) toggleSidebar();" id="nav-assets" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-white transition-all text-left group">
                     <i data-lucide="list" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
                     <span class="font-bold text-sm">Data Aset</span>
                 </button>
-                <button onclick="switchView('employees')" id="nav-employees" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-emerald-400 transition-all text-left group">
+                <button onclick="switchView('employees'); if(window.innerWidth<768) toggleSidebar();" id="nav-employees" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-emerald-400 transition-all text-left group">
                     <i data-lucide="users" class="w-5 h-5 group-hover:scale-110 transition-transform text-emerald-500"></i>
                     <span class="font-bold text-sm">Karyawan</span>
+                </button>
+                <a href="/tanda-terima" id="nav-tandaterima" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-pink-400 transition-all text-left group">
+                    <i data-lucide="file-text" class="w-5 h-5 group-hover:scale-110 transition-transform text-pink-500"></i>
+                    <span class="font-bold text-sm">Tanda Terima</span>
+                </a>
+                <button onclick="switchView('email'); if(window.innerWidth<768) toggleSidebar();" id="nav-email" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-indigo-400 transition-all text-left group">
+                    <i data-lucide="mail" class="w-5 h-5 group-hover:scale-110 transition-transform text-indigo-500"></i>
+                    <span class="font-bold text-sm">Kirim Email</span>
+                </button>
+                <button onclick="switchView('report'); if(window.innerWidth<768) toggleSidebar();" id="nav-report" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-orange-400 transition-all text-left group">
+                    <i data-lucide="pie-chart" class="w-5 h-5 group-hover:scale-110 transition-transform text-orange-500"></i>
+                    <span class="font-bold text-sm">Laporan</span>
                 </button>
                 
                 <div class="role-superadmin hidden mt-6">
                     <div class="text-xs font-bold text-slate-500 uppercase tracking-wider px-3 mb-3">Admin Zone</div>
-                    <button onclick="switchView('users')" id="nav-users" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-purple-400 transition-all text-left group">
+                    <button onclick="switchView('users'); if(window.innerWidth<768) toggleSidebar();" id="nav-users" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-purple-400 transition-all text-left group">
                         <i data-lucide="users" class="w-5 h-5 group-hover:scale-110 transition-transform text-purple-500"></i>
                         <span class="font-bold text-sm">Manajemen User</span>
                     </button>
-                    <button onclick="switchView('audit')" id="nav-audit" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-amber-400 transition-all text-left group">
+                    <button onclick="switchView('audit'); if(window.innerWidth<768) toggleSidebar();" id="nav-audit" class="w-full flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-amber-400 transition-all text-left group">
                         <i data-lucide="shield-alert" class="w-5 h-5 group-hover:scale-110 transition-transform text-amber-500"></i>
                         <span class="font-bold text-sm">Audit Log</span>
                     </button>
@@ -364,11 +381,16 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="p-6 md:p-10 overflow-y-auto relative h-screen">
+        <main class="p-4 md:p-10 overflow-y-auto relative h-screen w-full">
             <header class="mb-8 flex justify-between items-center">
-                <div>
-                    <h2 class="text-3xl font-black text-white tracking-tight" id="page-title">Dashboard</h2>
-                    <p class="text-slate-400 text-sm mt-1">Sistem Informasi Manajemen Aset</p>
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleSidebar()" class="md:hidden p-2 bg-slate-800/50 rounded-xl border border-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-700/50 transition-all">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight" id="page-title">Dashboard</h2>
+                        <p class="text-slate-400 text-xs md:text-sm mt-1 hidden md:block">Sistem Informasi Manajemen Aset</p>
+                    </div>
                 </div>
                 <div class="relative cursor-pointer transform hover:scale-105 transition-all duration-300" onclick="openModal('notification-modal')">
                     <div class="p-3 bg-slate-800/50 rounded-xl hover:bg-slate-700/50 transition-all duration-300 border border-slate-700/50 backdrop-blur-sm"><i data-lucide="bell" class="w-5 h-5 text-slate-300"></i></div>
@@ -376,20 +398,38 @@
                 </div>
             </header>
 
-            <!-- VIEW: DASHBOARD (REVISI: Hapus Barang Masuk/Keluar) -->
+            <!-- VIEW: DASHBOARD -->
             <div id="view-dashboard" class="space-y-6 animate-fade-in">
-                <div class="grid grid-cols-1 gap-6">
-                    <!-- Hanya Menampilkan Total Aset -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="card p-8 rounded-2xl border-l-4 border-l-sky-500 relative overflow-hidden group stat-card animate-slide-up">
                         <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Total Aset Aktif</div>
-                        <div class="text-6xl font-black text-white tracking-tighter" id="stat-total">0</div>
-                        <i data-lucide="server" class="absolute right-6 bottom-6 text-sky-500/20 w-32 h-32 group-hover:scale-110 transition-transform duration-500"></i>
+                        <div class="text-5xl font-black text-white tracking-tighter" id="stat-total">0</div>
+                        <i data-lucide="server" class="absolute right-6 bottom-6 text-sky-500/20 w-24 h-24 group-hover:scale-110 transition-transform duration-500"></i>
+                    </div>
+                    <div class="card p-8 rounded-2xl border-l-4 border-l-emerald-500 relative overflow-hidden group stat-card animate-slide-up" style="animation-delay: 0.1s;">
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Aset Masuk (Bulan Ini)</div>
+                        <div class="text-5xl font-black text-white tracking-tighter" id="stat-incoming">0</div>
+                        <i data-lucide="arrow-down-circle" class="absolute right-6 bottom-6 text-emerald-500/20 w-24 h-24 group-hover:scale-110 transition-transform duration-500"></i>
+                    </div>
+                    <div class="card p-8 rounded-2xl border-l-4 border-l-red-500 relative overflow-hidden group stat-card animate-slide-up" style="animation-delay: 0.2s;">
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Aset Dihapus/Rusak</div>
+                        <div class="text-5xl font-black text-white tracking-tighter" id="stat-disposed">0</div>
+                        <i data-lucide="trash-2" class="absolute right-6 bottom-6 text-red-500/20 w-24 h-24 group-hover:scale-110 transition-transform duration-500"></i>
+                    </div>
+                    <div class="card p-8 rounded-2xl border-l-4 border-l-indigo-500 relative overflow-hidden group stat-card animate-slide-up" style="animation-delay: 0.3s;">
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Total Karyawan</div>
+                        <div class="text-5xl font-black text-white tracking-tighter" id="stat-employees">0</div>
+                        <i data-lucide="users" class="absolute right-6 bottom-6 text-indigo-500/20 w-24 h-24 group-hover:scale-110 transition-transform duration-500"></i>
                     </div>
                 </div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="card p-6 rounded-2xl animate-slide-up" style="animation-delay: 0.1s;">
-                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Distribusi Kategori</h3>
+                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Distribusi Aset</h3>
                         <div class="h-64 flex justify-center"><canvas id="categoryChart"></canvas></div>
+                    </div>
+                    <div class="card p-6 rounded-2xl animate-slide-up" style="animation-delay: 0.15s;">
+                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Distribusi Karyawan</h3>
+                        <div class="h-64 flex justify-center"><canvas id="employeeChart"></canvas></div>
                     </div>
                     <div class="card p-6 rounded-2xl animate-slide-up" style="animation-delay: 0.2s;">
                         <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="alert-triangle" class="text-amber-500 w-4 h-4"></i> Peringatan Garansi (30 Hari)</h3>
@@ -399,31 +439,75 @@
             </div>
 
             <!-- VIEW: LIST ASET -->
+            <!-- VIEW: LIST ASET -->
             <div id="view-assets" class="hidden animate-fade-in">
-                <div class="card p-4 rounded-2xl mb-6 flex flex-col md:flex-row gap-4 justify-between items-center glass sticky top-0 z-20">
-                    <div class="relative w-full md:w-80">
-                        <i data-lucide="search" class="absolute left-4 top-3 w-4 h-4 text-slate-500"></i>
-                        <input type="text" id="search-input" onkeyup="filterAssets()" placeholder="Cari aset..." class="w-full pl-12 pr-4 py-3 rounded-xl text-sm border transition-all duration-300">
+                <div class="card p-6 rounded-2xl mb-6 border-l-4 border-l-sky-500 bg-gradient-to-r from-slate-900 to-sky-900/20 animate-slide-up">
+                    <h3 class="text-lg font-bold text-white mb-1">Daftar Aset</h3>
+                    <p class="text-xs text-slate-400">Kelola data aset perusahaan.</p>
+                </div>
+                
+                <!-- Asset Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 animate-slide-up" style="animation-delay: 0.1s;">
+                    <div class="card p-4 rounded-xl border border-slate-700/50">
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Total Aset</div>
+                        <div class="text-2xl font-black text-white" id="asset-total-stat">0</div>
                     </div>
-                    <div class="flex gap-2 relative">
-                        <div class="role-editable hidden flex gap-2">
-                            <!-- Import Barang Masuk -->
-                            <button onclick="openModal('import-modal')" class="perm-import-assets bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-4 py-3 rounded-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg">
-                                <i data-lucide="arrow-down-to-line" class="w-4 h-4"></i> Import CSV
-                            </button>
-                            <button onclick="openModal('edit-modal', true)" class="btn-primary text-white px-4 py-3 rounded-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 transform hover:scale-105 active:scale-95">
-                                <i data-lucide="plus" class="w-4 h-4"></i> Tambah
-                            </button>
-                        </div>
-                        
-                        <!-- Export CSV (Langsung, tanpa dropdown) -->
-                        <button onclick="exportCSV('all')" class="bg-slate-700/50 hover:bg-slate-600/50 text-white px-4 py-3 rounded-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 border border-slate-600/50 transform hover:scale-105 active:scale-95 backdrop-blur-sm">
-                            <i data-lucide="download" class="w-4 h-4"></i> Export CSV
-                        </button>
+                    <div class="card p-4 rounded-xl border border-slate-700/50">
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Aset Tersedia</div>
+                        <div class="text-2xl font-black text-emerald-400" id="asset-available-stat">0</div>
+                    </div>
+                    <div class="card p-4 rounded-xl border border-slate-700/50">
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Aset Dipinjam</div>
+                        <div class="text-2xl font-black text-sky-400" id="asset-borrowed-stat">0</div>
                     </div>
                 </div>
 
-                <div class="card rounded-2xl overflow-hidden shadow-xl border-0">
+                <!-- Asset Filters & Actions -->
+                <div class="card p-4 rounded-xl mb-6 animate-slide-up" style="animation-delay: 0.3s;">
+                    <div class="flex flex-col md:flex-row gap-4 justify-between items-end">
+                        <div class="flex-1 w-full">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Search</label>
+                            <input type="text" id="search-input" onkeyup="filterAssets()" placeholder="Cari aset..." class="w-full p-2 rounded-lg border text-sm transition-all duration-300">
+                        </div>
+                        <div class="flex-1 w-full">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Filter Kategori</label>
+                            <select id="asset-category-filter" onchange="filterAssets()" class="w-full p-2 rounded-lg border text-sm transition-all duration-300">
+                                <option value="">Semua Kategori</option>
+                                <option value="Laptop">Laptop</option>
+                                <option value="Desktop">Desktop</option>
+                                <option value="Server">Server</option>
+                                <option value="Network">Network</option>
+                                <option value="Printer">Printer</option>
+                                <option value="Software License">Software License</option>
+                            </select>
+                        </div>
+                        <div class="flex-1 w-full">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Filter Status</label>
+                            <select id="asset-status-filter" onchange="filterAssets()" class="w-full p-2 rounded-lg border text-sm transition-all duration-300">
+                                <option value="">Semua Status</option>
+                                <option value="Available">Available</option>
+                                <option value="In Use">In Use</option>
+                                <option value="Maintenance">Maintenance</option>
+                                <option value="Disposed">Disposed</option>
+                            </select>
+                        </div>
+                        <div class="flex gap-2 w-full md:w-auto">
+                            <div class="role-editable hidden flex gap-2">
+                                <button onclick="openModal('import-modal')" class="perm-import-assets bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg">
+                                    <i data-lucide="arrow-down-to-line" class="w-4 h-4"></i> Import CSV
+                                </button>
+                                <button onclick="openModal('edit-modal', true)" class="btn-primary text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all duration-300 transform hover:scale-105 active:scale-95">
+                                    <i data-lucide="plus" class="w-4 h-4"></i> Tambah
+                                </button>
+                            </div>
+                            <button onclick="exportCSV('all')" class="bg-slate-700/50 hover:bg-slate-600/50 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all duration-300 border border-slate-600/50 transform hover:scale-105 active:scale-95 backdrop-blur-sm">
+                                <i data-lucide="download" class="w-4 h-4"></i> Export CSV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card rounded-2xl overflow-hidden shadow-xl border-0 animate-slide-up" style="animation-delay: 0.4s;">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left">
                             <thead class="bg-slate-800/50 text-slate-400 text-xs font-black uppercase tracking-widest sticky top-0 backdrop-blur-sm">
@@ -471,73 +555,14 @@
                     </div>
                 </div>
                 
-                <!-- Add Employee Form -->
-                <div class="card p-6 rounded-2xl mb-6 perm-create-employees animate-slide-up" style="animation-delay: 0.2s;">
-                    <form id="employee-form" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Employee ID</label>
-                            <input type="text" id="emp-id" required class="w-full p-2 rounded-lg border text-sm transition-all duration-300" placeholder="EMP001">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Nama</label>
-                            <input type="text" id="emp-name" required class="w-full p-2 rounded-lg border text-sm transition-all duration-300" placeholder="Nama Karyawan">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Email</label>
-                            <input type="email" id="emp-email" class="w-full p-2 rounded-lg border text-sm transition-all duration-300" placeholder="email@perusahaan.com">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Departemen</label>
-                            <select id="emp-department" required class="w-full p-2 rounded-lg border text-sm transition-all duration-300">
-                                <option value="">Pilih Departemen</option>
-                                <option value="IT">IT</option>
-                                <option value="HR">HR</option>
-                                <option value="Finance">Finance</option>
-                                <option value="Marketing">Marketing</option>
-                                <option value="Operations">Operations</option>
-                                <option value="Sales">Sales</option>
-                            </select>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Posisi</label>
-                            <input type="text" id="emp-position" class="w-full p-2 rounded-lg border text-sm transition-all duration-300" placeholder="Posisi">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Telepon</label>
-                            <input type="tel" id="emp-phone" class="w-full p-2 rounded-lg border text-sm transition-all duration-300" placeholder="0812-3456-7890">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Lokasi</label>
-                            <input type="text" id="emp-location" class="w-full p-2 rounded-lg border text-sm transition-all duration-300" placeholder="Kantor / Remote">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Status</label>
-                            <select id="emp-status" class="w-full p-2 rounded-lg border text-sm transition-all duration-300">
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
-                                <option value="On Leave">On Leave</option>
-                            </select>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tanggal Masuk</label>
-                            <input type="date" id="emp-hire-date" class="w-full p-2 rounded-lg border text-sm transition-all duration-300">
-                        </div>
-                        <div class="flex items-end">
-                            <button type="submit" class="w-full md:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-6 py-2 rounded-lg font-bold text-sm transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg">
-                                <i data-lucide="plus" class="w-4 h-4 inline mr-2"></i> Tambah
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                
-                <!-- Employee Filters -->
+                <!-- Employee Filters & Actions -->
                 <div class="card p-4 rounded-xl mb-6 animate-slide-up" style="animation-delay: 0.3s;">
-                    <div class="flex flex-col md:flex-row gap-4">
-                        <div class="flex-1">
+                    <div class="flex flex-col md:flex-row gap-4 justify-between items-end">
+                        <div class="flex-1 w-full">
                             <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Search</label>
                             <input type="text" id="emp-search" onkeyup="filterEmployees()" placeholder="Cari karyawan..." class="w-full p-2 rounded-lg border text-sm transition-all duration-300">
                         </div>
-                        <div class="flex-1">
+                        <div class="flex-1 w-full">
                             <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Filter Departemen</label>
                             <select id="emp-dept-filter" onchange="filterEmployees()" class="w-full p-2 rounded-lg border text-sm transition-all duration-300">
                                 <option value="">Semua Departemen</option>
@@ -549,7 +574,7 @@
                                 <option value="Sales">Sales</option>
                             </select>
                         </div>
-                        <div class="flex-1">
+                        <div class="flex-1 w-full">
                             <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Filter Status</label>
                             <select id="emp-status-filter" onchange="filterEmployees()" class="w-full p-2 rounded-lg border text-sm transition-all duration-300">
                                 <option value="">Semua Status</option>
@@ -557,6 +582,19 @@
                                 <option value="Inactive">Inactive</option>
                                 <option value="On Leave">On Leave</option>
                             </select>
+                        </div>
+                        <div class="flex gap-2 w-full md:w-auto">
+                            <div class="role-editable hidden flex gap-2">
+                                <button onclick="openModal('import-employee-modal')" class="perm-create-employees bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg">
+                                    <i data-lucide="arrow-down-to-line" class="w-4 h-4"></i> Import CSV
+                                </button>
+                                <button onclick="openModal('employee-modal', true)" class="perm-create-employees bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg">
+                                    <i data-lucide="plus" class="w-4 h-4"></i> Tambah Karyawan
+                                </button>
+                            </div>
+                            <button onclick="exportEmployeeCSV()" class="bg-slate-700/50 hover:bg-slate-600/50 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all duration-300 border border-slate-600/50 transform hover:scale-105 active:scale-95 backdrop-blur-sm">
+                                <i data-lucide="download" class="w-4 h-4"></i> Export CSV
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -721,6 +759,352 @@
                     </div>
                 </div>
             </div>
+            <!-- VIEW: REPORT -->
+            <div id="view-report" class="hidden animate-fade-in">
+                <div class="card p-6 rounded-2xl mb-6 border-l-4 border-l-orange-500 bg-gradient-to-r from-slate-900 to-orange-900/20 animate-slide-up">
+                    <h3 class="text-lg font-bold text-white mb-1">Laporan Sistem</h3>
+                    <p class="text-xs text-slate-400">Ringkasan lengkap dan unduh data inventaris atau karyawan.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 animate-slide-up" style="animation-delay: 0.1s;">
+                    <!-- Report Assets -->
+                    <div class="card p-6 rounded-2xl flex flex-col items-center text-center">
+                        <div class="bg-sky-500/20 p-4 rounded-full mb-4">
+                            <i data-lucide="server" class="w-10 h-10 text-sky-500"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-2">Laporan Aset</h4>
+                        <p class="text-sm text-slate-400 mb-6">Unduh daftar lengkap semua aset TI beserta status dan riwayat penggunanya ke format CSV.</p>
+                        <button onclick="exportCSV('all')" class="w-full btn-primary text-white py-3 rounded-xl font-bold flex justify-center items-center gap-2 transition-transform transform hover:scale-105 active:scale-95 shadow-lg">
+                            <i data-lucide="download" class="w-5 h-5"></i> Cetak Laporan Aset
+                        </button>
+                    </div>
+
+                    <!-- Report Employees -->
+                    <div class="card p-6 rounded-2xl flex flex-col items-center text-center">
+                        <div class="bg-emerald-500/20 p-4 rounded-full mb-4">
+                            <i data-lucide="users" class="w-10 h-10 text-emerald-500"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-2">Laporan Karyawan</h4>
+                        <p class="text-sm text-slate-400 mb-6">Unduh data keseluruhan karyawan aktif maupun inaktif beserta jabatannya ke format CSV.</p>
+                        <button onclick="exportEmployeeCSV()" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white py-3 rounded-xl font-bold flex justify-center items-center gap-2 transition-transform transform hover:scale-105 active:scale-95 shadow-lg">
+                            <i data-lucide="download" class="w-5 h-5"></i> Cetak Laporan Karyawan
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: EMAIL -->
+            <div id="view-email" class="hidden animate-fade-in">
+                <div class="card p-6 rounded-2xl mb-6 border-l-4 border-l-indigo-500 bg-gradient-to-r from-slate-900 to-indigo-900/20 animate-slide-up">
+                    <h3 class="text-lg font-bold text-white mb-1">Kirim Email</h3>
+                    <p class="text-xs text-slate-400">Kirim pemberitahuan atau dokumen ke karyawan.</p>
+                </div>
+
+                <div class="card p-6 rounded-2xl animate-slide-up" style="animation-delay: 0.1s;">
+                    <form id="email-form" class="space-y-5" onsubmit="event.preventDefault(); alert('Fitur kirim email belum diintegrasikan dengan backend.');">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Kirim Ke (Email)</label>
+                                <div class="relative">
+                                    <i data-lucide="user" class="absolute left-4 top-3.5 w-4 h-4 text-slate-500"></i>
+                                    <input type="email" id="email-to" required class="w-full pl-12 pr-4 py-3 rounded-xl border text-sm transition-all duration-300" placeholder="nama@perusahaan.com">
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">CC (Opsional)</label>
+                                <div class="relative">
+                                    <i data-lucide="users" class="absolute left-4 top-3.5 w-4 h-4 text-slate-500"></i>
+                                    <input type="text" id="email-cc" class="w-full pl-12 pr-4 py-3 rounded-xl border text-sm transition-all duration-300" placeholder="email1@perusahaan.com, email2@perusahaan.com">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <div class="space-y-2 md:col-span-1">
+                                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Pilih Template</label>
+                                <select id="email-template" class="w-full p-3 rounded-xl border text-sm transition-all duration-300" onchange="loadEmailTemplate()">
+                                    <option value="">-- Pilih Template --</option>
+                                    <option value="bast">Berita Acara Serah Terima (BAST)</option>
+                                    <option value="return">Pengembalian Aset</option>
+                                    <option value="warning">Peringatan Pemeliharaan</option>
+                                </select>
+                            </div>
+                            <div class="space-y-2 md:col-span-2">
+                                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Subjek</label>
+                                <input type="text" id="email-subject" required class="w-full p-3 rounded-xl border text-sm transition-all duration-300" placeholder="Subjek Email">
+                            </div>
+                        </div>
+
+                        <!-- BAST Dynamic Fields -->
+                        <div id="bast-fields" class="hidden space-y-4 p-5 rounded-xl border border-indigo-500/30 bg-indigo-900/10 animate-fade-in">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i data-lucide="file-text" class="w-4 h-4 text-indigo-400"></i>
+                                <h4 class="text-sm font-bold text-indigo-300 uppercase tracking-wider">Data BAST</h4>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Nama Penerima <span class="text-red-400">*</span></label>
+                                    <input type="text" id="bast-nama" class="w-full p-2.5 rounded-lg border text-sm transition-all duration-300 bg-slate-900 border-slate-600 text-slate-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" placeholder="Nama lengkap penerima">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Asset IT <span class="text-red-400">*</span></label>
+                                    <input type="text" id="bast-asset" class="w-full p-2.5 rounded-lg border text-sm transition-all duration-300 bg-slate-900 border-slate-600 text-slate-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" placeholder="cth: Laptop" value="Laptop">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="space-y-1">
+                                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Merk / Brand</label>
+                                    <input type="text" id="bast-merk" class="w-full p-2.5 rounded-lg border text-sm transition-all duration-300 bg-slate-900 border-slate-600 text-slate-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" placeholder="cth: Dell">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Model</label>
+                                    <input type="text" id="bast-model" class="w-full p-2.5 rounded-lg border text-sm transition-all duration-300 bg-slate-900 border-slate-600 text-slate-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" placeholder="cth: Dell Pro 14 PC14250">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Nomer Serial</label>
+                                    <input type="text" id="bast-serial" class="w-full p-2.5 rounded-lg border text-sm transition-all duration-300 bg-slate-900 border-slate-600 text-slate-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" placeholder="cth: 4KRT8J4">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Aksesoris</label>
+                                    <input type="text" id="bast-aksesoris" class="w-full p-2.5 rounded-lg border text-sm transition-all duration-300 bg-slate-900 border-slate-600 text-slate-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" placeholder="cth: Adaptor Charger" value="Adaptor Charger">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Dipersiapkan Oleh</label>
+                                    <input type="text" id="bast-prepared" class="w-full p-2.5 rounded-lg border text-sm transition-all duration-300 bg-slate-900 border-slate-600 text-slate-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" placeholder="Nama yang mempersiapkan" value="Hari Gunawan">
+                                </div>
+                            </div>
+
+                            <div class="space-y-1">
+                                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Alamat Pengiriman</label>
+                                <input type="text" id="bast-alamat" class="w-full p-2.5 rounded-lg border text-sm transition-all duration-300 bg-slate-900 border-slate-600 text-slate-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" placeholder="Alamat lengkap tujuan pengiriman" value="OLX Ampera - Jl. Ampera Raya No.137, Kec. Ps. Minggu, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12560, Indonesia">
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="space-y-1">
+                                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Tanggal Pengiriman</label>
+                                    <input type="date" id="bast-tgl-kirim" class="w-full p-2.5 rounded-lg border text-sm transition-all duration-300 bg-slate-900 border-slate-600 text-slate-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Dikirim Oleh</label>
+                                    <input type="text" id="bast-dikirim" class="w-full p-2.5 rounded-lg border text-sm transition-all duration-300 bg-slate-900 border-slate-600 text-slate-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" placeholder="Nama pengirim / kurir">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Estimasi Kedatangan</label>
+                                    <input type="date" id="bast-estimasi" class="w-full p-2.5 rounded-lg border text-sm transition-all duration-300 bg-slate-900 border-slate-600 text-slate-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                                </div>
+                            </div>
+
+                            <div class="pt-3 border-t border-slate-700/30">
+                                <button type="button" onclick="applyBastTemplate()" class="bg-gradient-to-r from-indigo-600 to-sky-600 hover:from-indigo-500 hover:to-sky-500 text-white px-5 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg">
+                                    <i data-lucide="zap" class="w-3.5 h-3.5"></i> Generate Template
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Pesan / Konten</label>
+                            <div id="email-body" contenteditable="true" class="w-full p-4 rounded-xl border text-sm transition-all duration-300 overflow-y-auto" style="min-height: 450px; color: #1e293b !important; background: #f8fafc !important; font-family: Arial, Helvetica, sans-serif !important; outline: none; line-height: 1.6;"></div>
+                            <input type="hidden" id="email-body-hidden" required>
+                        </div>
+
+                        <div class="space-y-3">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Lampiran Dokumen</label>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Pilih dari Database -->
+                                <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4">
+                                    <label class="flex items-center gap-2 text-sm font-medium text-slate-300 mb-2">
+                                        <i data-lucide="database" class="w-4 h-4 text-sky-400"></i>
+                                        Pilih dari Database
+                                    </label>
+                                    <select class="w-full p-2.5 rounded-lg border text-sm transition-all duration-300 bg-slate-900 border-slate-600 text-slate-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+                                        <option value="">-- Pilih Dokumen --</option>
+                                        <option value="doc1">Self IT Activation Guidance.pdf</option>
+                                        <option value="doc2">Quality Control Checklist.pdf</option>
+                                        <option value="doc3">Daftar Aset Karyawan (CSV)</option>
+                                    </select>
+                                    <p class="text-[10px] text-slate-500 mt-2">*Dokumen diambil dari master data sistem</p>
+                                </div>
+
+                                <!-- Upload dari Laptop -->
+                                <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4">
+                                    <label class="flex items-center gap-2 text-sm font-medium text-slate-300 mb-2">
+                                        <i data-lucide="upload-cloud" class="w-4 h-4 text-emerald-400"></i>
+                                        Upload Tanda Terima (Laptop)
+                                    </label>
+                                    <input type="file" accept=".pdf,.doc,.docx,.jpg,.png" class="w-full text-sm text-slate-400
+                                        file:mr-4 file:py-2 file:px-4
+                                        file:rounded-lg file:border-0
+                                        file:text-sm file:font-semibold
+                                        file:bg-emerald-500/20 file:text-emerald-400
+                                        hover:file:bg-emerald-500/30 transition-all cursor-pointer"
+                                    >
+                                    <p class="text-[10px] text-slate-500 mt-2">*Format: PDF, Word, atau Gambar (Maks 5MB)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-700/50 flex justify-end">
+                            <button type="submit" onclick="document.getElementById('email-body-hidden').value = document.getElementById('email-body').innerHTML" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-8 py-3 rounded-xl font-bold text-sm flex items-center gap-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg">
+                                <i data-lucide="send" class="w-4 h-4"></i> Kirim Email
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <script>
+                    function formatDateBast(dateStr) {
+                        if (!dateStr) return '-';
+                        const d = new Date(dateStr);
+                        const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+                        return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+                    }
+
+                    function loadEmailTemplate() {
+                        const template = document.getElementById('email-template').value;
+                        const subject = document.getElementById('email-subject');
+                        const body = document.getElementById('email-body');
+                        const bastFields = document.getElementById('bast-fields');
+
+                        // Show/hide BAST fields
+                        if (template === 'bast') {
+                            bastFields.classList.remove('hidden');
+                            // Set default dates to today
+                            const today = new Date().toISOString().split('T')[0];
+                            if (!document.getElementById('bast-tgl-kirim').value) document.getElementById('bast-tgl-kirim').value = today;
+                            if (!document.getElementById('bast-estimasi').value) document.getElementById('bast-estimasi').value = today;
+                            subject.value = "";
+                            body.innerHTML = '<p style="color: #94a3b8; font-style: italic;">Silakan isi data BAST di atas, lalu klik tombol "Generate Template" untuk mengisi konten email otomatis.</p>';
+                            if (typeof lucide !== 'undefined') lucide.createIcons();
+                        } else {
+                            bastFields.classList.add('hidden');
+                            if (template === 'return') {
+                                subject.value = "Konfirmasi Pengembalian Aset IT";
+                                body.innerHTML = "<p>Yth. Bapak/Ibu,</p><p>Email ini sebagai konfirmasi bahwa kami telah menerima pengembalian perangkat IT Anda secara lengkap. Status aset kini telah diperbarui di sistem kami.</p><p>Terima kasih atas kerjasamanya,<br>Tim IT</p>";
+                            } else if (template === 'warning') {
+                                subject.value = "Peringatan Pemeliharaan Rutin Aset IT";
+                                body.innerHTML = "<p>Yth. Bapak/Ibu,</p><p>Sebagai informasi, perangkat IT yang Anda gunakan akan memasuki masa pemeliharaan (maintenance) rutin pada minggu depan. Mohon untuk mem-backup data-data penting Anda terlebih dahulu guna mencegah kehilangan data.</p><p>Terima kasih,<br>Tim IT</p>";
+                            } else {
+                                subject.value = "";
+                                body.innerHTML = "";
+                            }
+                        }
+                    }
+
+                    function applyBastTemplate() {
+                        const nama = document.getElementById('bast-nama').value.trim();
+                        const asset = document.getElementById('bast-asset').value.trim();
+                        const merk = document.getElementById('bast-merk').value.trim();
+                        const model = document.getElementById('bast-model').value.trim();
+                        const serial = document.getElementById('bast-serial').value.trim();
+                        const aksesoris = document.getElementById('bast-aksesoris').value.trim();
+                        const prepared = document.getElementById('bast-prepared').value.trim();
+                        const alamat = document.getElementById('bast-alamat').value.trim();
+                        const tglKirim = document.getElementById('bast-tgl-kirim').value;
+                        const dikirim = document.getElementById('bast-dikirim').value.trim();
+                        const estimasi = document.getElementById('bast-estimasi').value;
+
+                        if (!nama) { alert('Nama Penerima wajib diisi!'); document.getElementById('bast-nama').focus(); return; }
+                        if (!asset) { alert('Asset IT wajib diisi!'); document.getElementById('bast-asset').focus(); return; }
+
+                        const tglKirimFormatted = formatDateBast(tglKirim);
+                        const estimasiFormatted = formatDateBast(estimasi);
+
+                        // Set subject
+                        document.getElementById('email-subject').value = `Allocate & Delivery IT Asset To ${nama} - (${asset})`;
+
+                        // Set body
+                        document.getElementById('email-body').innerHTML = `
+<p style="margin-bottom: 12px;">YTH, Bpk/Ibu ${nama},</p>
+
+<p style="margin-bottom: 16px;">Sebuah Aset IT telah dialokasikan kepada anda serta sudah disiapkan oleh tim Business IT (BIT) Indonesia dengan detail dibawah ini :</p>
+
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+    <tr><td style="width: 150px; padding: 2px 0;">Asset IT</td><td style="width: 20px; padding: 2px 0;">:</td><td style="padding: 2px 0;">${asset}</td></tr>
+    <tr><td style="padding: 2px 0;">Merk</td><td style="padding: 2px 0;">:</td><td style="padding: 2px 0;">${merk || '-'}</td></tr>
+    <tr><td style="padding: 2px 0;">Model</td><td style="padding: 2px 0;">:</td><td style="padding: 2px 0;">${model || '-'}</td></tr>
+    <tr><td style="padding: 2px 0;">Nomer Serial</td><td style="padding: 2px 0;">:</td><td style="padding: 2px 0;">${serial || '-'}</td></tr>
+    <tr><td style="padding: 2px 0;">Aksesoris</td><td style="padding: 2px 0;">:</td><td style="padding: 2px 0;">${aksesoris || '-'}</td></tr>
+</table>
+
+<p style="margin-bottom: 16px;">Aset dipersiapkan oleh :</p>
+
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+    <tr><td style="width: 150px; padding: 2px 0;">Dipersiapkan oleh</td><td style="width: 20px; padding: 2px 0;">:</td><td style="padding: 2px 0;">${prepared || '-'}</td></tr>
+    <tr><td style="padding: 2px 0; vertical-align: top;">Alamat Pengiriman</td><td style="padding: 2px 0; vertical-align: top;">:</td><td style="padding: 2px 0;">${alamat || '-'}</td></tr>
+    <tr><td style="padding: 2px 0;">Tanggal Pengiriman</td><td style="padding: 2px 0;">:</td><td style="padding: 2px 0;">${tglKirimFormatted}</td></tr>
+    <tr><td style="padding: 2px 0;">Dikirim Oleh</td><td style="padding: 2px 0;">:</td><td style="padding: 2px 0;">${dikirim || '-'}</td></tr>
+    <tr><td style="padding: 2px 0;">Estimasi Kedatangan</td><td style="padding: 2px 0;">:</td><td style="padding: 2px 0;">${estimasiFormatted}</td></tr>
+</table>
+
+<p style="margin-bottom: 8px;">Terlampir Dokumen :</p>
+<ul style="margin-top: 0; margin-bottom: 16px; padding-left: 20px;">
+  <li style="margin-bottom: 4px;">Tanda Terima Peralatan Perusahaan (IT Asset Receipt).</li>
+  <li style="margin-bottom: 4px;">Self IT Activation Guidance.</li>
+  <li style="margin-bottom: 4px;">Quality Control Checklist.</li>
+</ul>
+
+<p style="margin-bottom: 8px;">Silakan ikuti petunjuk di bawah ini :</p>
+<ul style="margin-top: 0; margin-bottom: 24px; padding-left: 20px;">
+  <li style="margin-bottom: 4px;">Mengambil foto & Video ketika proses pembongkaran paket, untuk keperluan dokumentasi serah terima paket dari kurir kepada anda sebagai penerima.</li>
+  <li style="margin-bottom: 4px;">Menandatangani dokumen Tanda Tangan Peralatan Perusahaan (IT Asset Receipt), Memindai QR Kode dan Mengisi Form dan melampirkan Foto dokumen tanda terima sebagai proses finalisasi proses serah terima aset dan memberikan akses login ke aset.</li>
+  <li style="margin-bottom: 4px;">Aktivasi Akses IT (Akun Jumpcloud) & Aset IT, silahkan lihat dan pelajari tutorial bagaimana melakukan aktivasi aplikasi terinstall pada dokumen terlampir pada email ini berjudul Self IT Activation Guidance for New Hire.</li>
+</ul>
+
+<hr style="border: 0; border-top: 2px dashed #cbd5e1; margin: 30px 0;">
+
+<p style="margin-bottom: 12px;">Dear ${nama},</p>
+
+<p style="margin-bottom: 16px;">You have been assigned with IT Asset and has been prepared by Business IT (BIT) Indonesia with asset detail below :</p>
+
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+    <tr><td style="width: 150px; padding: 2px 0;">IT Asset</td><td style="width: 20px; padding: 2px 0;">:</td><td style="padding: 2px 0;">${asset}</td></tr>
+    <tr><td style="padding: 2px 0;">Brand</td><td style="padding: 2px 0;">:</td><td style="padding: 2px 0;">${merk || '-'}</td></tr>
+    <tr><td style="padding: 2px 0;">Model</td><td style="padding: 2px 0;">:</td><td style="padding: 2px 0;">${model || '-'}</td></tr>
+    <tr><td style="padding: 2px 0;">Serial Number</td><td style="padding: 2px 0;">:</td><td style="padding: 2px 0;">${serial || '-'}</td></tr>
+    <tr><td style="padding: 2px 0;">Accessories</td><td style="padding: 2px 0;">:</td><td style="padding: 2px 0;">${aksesoris || '-'}</td></tr>
+</table>
+
+<p style="margin-bottom: 16px;">Asset will be prepared and deliver with :</p>
+
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+    <tr><td style="width: 150px; padding: 2px 0;">Prepared By</td><td style="width: 20px; padding: 2px 0;">:</td><td style="padding: 2px 0;">${prepared || '-'}</td></tr>
+    <tr><td style="padding: 2px 0; vertical-align: top;">Delivery Address</td><td style="padding: 2px 0; vertical-align: top;">:</td><td style="padding: 2px 0;">${alamat || '-'}</td></tr>
+    <tr><td style="padding: 2px 0;">Delivery Date</td><td style="padding: 2px 0;">:</td><td style="padding: 2px 0;">${tglKirimFormatted}</td></tr>
+    <tr><td style="padding: 2px 0;">Deliver By</td><td style="padding: 2px 0;">:</td><td style="padding: 2px 0;">${dikirim || '-'}</td></tr>
+    <tr><td style="padding: 2px 0;">Arrival Estimation</td><td style="padding: 2px 0;">:</td><td style="padding: 2px 0;">${estimasiFormatted}</td></tr>
+</table>
+
+<p style="margin-bottom: 8px;">Attach also documents of :</p>
+<ul style="margin-top: 0; margin-bottom: 16px; padding-left: 20px;">
+  <li style="margin-bottom: 4px;">Tanda Terima Peralatan Perusahaan (IT Asset Receipt).</li>
+  <li style="margin-bottom: 4px;">Self IT Activation Guidance.</li>
+  <li style="margin-bottom: 4px;">Quality Control Checklist.</li>
+</ul>
+
+<p style="margin-bottom: 8px;">Please follow the instructions below :</p>
+<ul style="margin-top: 0; margin-bottom: 24px; padding-left: 20px;">
+  <li style="margin-bottom: 4px;">Take Photos & Videos When Unboxing the package, for package handover documentation from Courier into You As Recipient.</li>
+  <li style="margin-bottom: 4px;">Sign Doc of Tanda Terima Peralatan Perusahaan (IT Asset Receipt), Scan, and Send back within this email for finalizing the IT Asset Handover process and Grant Access to your Laptop.</li>
+  <li style="margin-bottom: 4px;">Activate your IT Access & Asset, please see the Tutorial attached in this email with the title Self IT Activation Guidance for New Hire.</li>
+</ul>
+
+<p style="margin-bottom: 16px;">Best regards,<br><br><b>${prepared || 'Hari Gunawan'}</b><br>BIT Operations Engineer</p>
+<p style="margin-bottom: 12px;"><img src="logo.jpg" alt="Logo" style="width: 120px; height: auto;"></p>
+
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 8px;">
+    <tr><td style="width: 60px; padding: 2px 0;">Mobile</td><td style="width: 20px; padding: 2px 0;">:</td><td style="padding: 2px 0;">+62 895-3199-1289</td></tr>
+    <tr><td style="padding: 2px 0;">Email</td><td style="padding: 2px 0;">:</td><td style="padding: 2px 0;">hari.gunawan@admo.astra.co.id</td></tr>
+</table>
+<p style="color: #64748b; font-size: 0.9em;">Jl. Ampera Raya No. 137 Ragunan, Pasar Minggu, Jakarta Selatan 12560, Indonesia</p>
+                        `;
+                    }
+                </script>
+            </div>
         </main>
     </div>
 
@@ -753,6 +1137,60 @@
         </div>
     </div>
 
+    <!-- Modal untuk Karyawan -->
+    <div id="employee-modal" class="modal-bg fixed inset-0 flex items-center justify-center hidden p-4 z-[2000]">
+        <div class="card p-8 rounded-3xl max-w-2xl w-full modal-content border-slate-700/50 shadow-2xl max-h-[90vh] overflow-y-auto backdrop-blur-xl">
+            <h3 class="text-xl font-bold mb-6 text-white flex items-center space-x-2 border-b border-slate-700/50 pb-4"><i data-lucide="user-plus" class="text-emerald-500"></i><span id="employee-modal-title">Tambah Karyawan</span></h3>
+            <form id="employee-form" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <input type="hidden" id="edit-emp-db-id">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Employee ID</label>
+                    <input type="text" id="emp-id" required class="w-full p-3 rounded-xl border text-sm transition-all duration-300" placeholder="EMP001">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Nama</label>
+                    <input type="text" id="emp-name" required class="w-full p-3 rounded-xl border text-sm transition-all duration-300" placeholder="Nama Karyawan">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Email</label>
+                    <input type="email" id="emp-email" class="w-full p-3 rounded-xl border text-sm transition-all duration-300" placeholder="email@perusahaan.com">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Departemen</label>
+                    <select id="emp-department" required class="w-full p-3 rounded-xl border text-sm transition-all duration-300">
+                        <option value="">Pilih Departemen</option><option value="IT">IT</option><option value="HR">HR</option><option value="Finance">Finance</option><option value="Marketing">Marketing</option><option value="Operations">Operations</option><option value="Sales">Sales</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Posisi</label>
+                    <input type="text" id="emp-position" class="w-full p-3 rounded-xl border text-sm transition-all duration-300" placeholder="Posisi">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Telepon</label>
+                    <input type="tel" id="emp-phone" class="w-full p-3 rounded-xl border text-sm transition-all duration-300" placeholder="0812-3456-7890">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Lokasi</label>
+                    <input type="text" id="emp-location" class="w-full p-3 rounded-xl border text-sm transition-all duration-300" placeholder="Kantor / Remote">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Status</label>
+                    <select id="emp-status" class="w-full p-3 rounded-xl border text-sm transition-all duration-300">
+                        <option value="Active">Active</option><option value="Inactive">Inactive</option><option value="On Leave">On Leave</option>
+                    </select>
+                </div>
+                <div class="space-y-2 col-span-full">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Tanggal Masuk</label>
+                    <input type="date" id="emp-hire-date" class="w-full p-3 rounded-xl border text-sm text-slate-300 transition-all duration-300">
+                </div>
+                <div class="col-span-full flex gap-3 mt-4">
+                    <button type="button" onclick="closeModal('employee-modal')" class="flex-1 py-3 bg-slate-800/50 hover:bg-slate-700/50 rounded-xl font-bold text-sm transition-all duration-300 border border-slate-700/50">Batal</button>
+                    <button type="submit" class="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black rounded-xl text-sm transition-all duration-300 transform hover:scale-105 active:scale-95">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Import Modal -->
     <div id="import-modal" class="modal-bg fixed inset-0 flex items-center justify-center hidden p-4 z-[2000]">
         <div class="card p-8 rounded-3xl max-w-md w-full modal-content border-slate-700/50 shadow-2xl backdrop-blur-xl">
@@ -770,18 +1208,45 @@
         </div>
     </div>
 
+    <!-- Import Employee Modal -->
+    <div id="import-employee-modal" class="modal-bg fixed inset-0 flex items-center justify-center hidden p-4 z-[2000]">
+        <div class="card p-8 rounded-3xl max-w-md w-full modal-content border-slate-700/50 shadow-2xl backdrop-blur-xl">
+            <h3 class="text-xl font-bold mb-2 flex items-center space-x-2 text-white"><i data-lucide="file-spreadsheet" class="text-emerald-500"></i><span>Import Karyawan CSV</span></h3>
+            <div class="flex justify-between items-center mb-6 gap-2">
+                <p class="text-xs text-slate-400 font-mono bg-slate-900/50 p-2 rounded border border-slate-700/50 flex-grow backdrop-blur-sm">emp_id, name, email, dept, position, phone, location, status, hire_date</p>
+                <button onclick="downloadEmployeeTemplate()" class="bg-slate-800/50 hover:bg-slate-700/50 text-emerald-400 p-2.5 rounded-xl border border-slate-700/50 transition-all duration-300 transform hover:scale-105 active:scale-95" title="Download Template"><i data-lucide="file-down" class="w-5 h-5"></i></button>
+            </div>
+            <div id="drop-zone-emp" class="drop-zone rounded-2xl py-12 flex flex-col items-center cursor-pointer hover:border-emerald-500 transition-all duration-300 mb-6 bg-slate-800/50 border-2 border-dashed border-slate-700/50" onclick="document.getElementById('csv-emp-input').click()">
+                <div class="bg-slate-800/50 p-3 rounded-full mb-3"><i data-lucide="cloud-upload" class="w-8 h-8 text-emerald-500"></i></div>
+                <p class="text-xs font-bold text-slate-300" id="file-emp-label">Klik atau seret file CSV ke sini</p>
+                <input type="file" id="csv-emp-input" accept=".csv" class="hidden" onchange="handleEmployeeCSV(event)">
+            </div>
+            <div class="flex gap-3"><button onclick="closeModal('import-employee-modal')" class="flex-1 py-3 bg-slate-800/50 hover:bg-slate-700/50 text-slate-300 rounded-xl font-bold text-xs transition-all duration-300 border border-slate-700/50">Batal</button><button id="btn-emp-import" onclick="processEmployeeCSV()" disabled class="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl font-black text-xs opacity-50 cursor-not-allowed transition-all duration-300">Mulai Import</button></div>
+        </div>
+    </div>
+
     <!-- Notification & Toast Modals (Hidden) -->
     <div id="notification-modal" class="modal-bg fixed inset-0 flex items-center justify-center hidden p-4 z-[3000]"><div class="card p-6 rounded-3xl max-w-lg w-full modal-content border-slate-700/50 shadow-2xl relative backdrop-blur-xl"><div class="flex justify-between items-center mb-4 border-b border-slate-700/50 pb-4"><h3 class="text-lg font-bold text-white flex items-center gap-2"><i data-lucide="bell-ring" class="text-amber-500 w-5 h-5"></i> Peringatan Garansi</h3><button onclick="closeModal('notification-modal')" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button></div><div id="warranty-list-full" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2"></div></div></div>
     <div id="toast" class="fixed bottom-10 right-10 p-4 rounded-2xl bg-slate-800/80 text-white font-bold shadow-2xl border border-slate-700/50 transition-all duration-500 opacity-0 translate-y-10 z-[3000] flex items-center space-x-3 backdrop-blur-xl"><div id="toast-icon-bg" class="p-2 rounded-lg bg-sky-500/20 text-sky-500"><i id="toast-icon" data-lucide="check" class="w-5 h-5"></i></div><span id="toast-msg" class="text-sm">Notifikasi</span></div>
 
     <script>
-        const API = "http://127.0.0.1:5000/api";
+        const API = "/api";
         const PERMISSIONS = {
             'viewer': ['view_dashboard', 'view_assets', 'view_users', 'view_employees'],
             'editor': ['view_dashboard', 'view_assets', 'view_users', 'view_employees', 'create_assets', 'edit_assets', 'delete_assets', 'import_assets', 'export_assets'],
             'superadmin': ['view_dashboard', 'view_assets', 'view_users', 'view_employees', 'create_assets', 'edit_assets', 'delete_assets', 'import_assets', 'export_assets', 'create_users', 'edit_users', 'delete_users', 'manage_roles', 'view_audit_logs', 'create_employees', 'edit_employees', 'delete_employees']
         };
-        let localData = [], filteredData = [], currentPage = 1, itemsPerPage = 15, chartInstance = null, currentUser = null, csvContent = "", auditLogs = [], auditOffset = 0, employeesData = [];
+
+        let localData = [], filteredData = [], currentPage = 1, itemsPerPage = 15, chartInstance = null, currentUser = null, csvContent = "", auditLogs = [], auditOffset = 0, employeesData = []; 
+        
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+            }
+        }
 
         // --- AUTH & MOCK LOGIN ---
         document.getElementById('login-form').onsubmit = async (e) => {
@@ -855,11 +1320,12 @@
         
         // --- NAVIGATION ---
         function switchView(view) {
-            ['dashboard', 'assets', 'employees', 'users', 'audit'].forEach(v => { document.getElementById(`view-${v}`).classList.add('hidden'); document.getElementById(`nav-${v}`).classList.remove('active-nav', 'text-white', 'bg-sky-600'); document.getElementById(`nav-${v}`).classList.add('text-slate-400'); });
+            ['dashboard', 'assets', 'employees', 'users', 'audit', 'email', 'report'].forEach(v => { const viewEl = document.getElementById(`view-${v}`); const navEl = document.getElementById(`nav-${v}`); if(viewEl) viewEl.classList.add('hidden'); if(navEl) { navEl.classList.remove('active-nav', 'text-white', 'bg-sky-600'); navEl.classList.add('text-slate-400'); } });
             document.getElementById(`view-${view}`).classList.remove('hidden');
-            const btn = document.getElementById(`nav-${view}`); btn.classList.add('active-nav', 'text-white'); btn.classList.remove('text-slate-400');
-            document.getElementById('page-title').textContent = view==='users'?'Manajemen User':(view==='assets'?'Data Aset':(view==='employees'?'Daftar Karyawan':(view==='audit'?'Audit Log':'Dashboard')));
+            const btn = document.getElementById(`nav-${view}`); if(btn) { btn.classList.add('active-nav', 'text-white'); btn.classList.remove('text-slate-400'); }
+            document.getElementById('page-title').textContent = view==='users'?'Manajemen User':(view==='assets'?'Data Aset':(view==='employees'?'Daftar Karyawan':(view==='audit'?'Audit Log':(view==='email'?'Kirim Email':(view==='report'?'Laporan Sistem':'Dashboard')))));
             if(view==='assets') fetchAssets(); if(view==='users') fetchUsers(); if(view==='dashboard') loadDashboard(); if(view==='audit') loadAuditLogs(); if(view==='employees') loadEmployees();
+            if(view==='report') { if(localData.length === 0) fetchAssets(); if(employeesData.length === 0) loadEmployees(); }
         }
 
         // --- DASHBOARD ---
@@ -867,7 +1333,11 @@
             try {
                 const res = await authFetch(`${API}/dashboard`); const data = await res.json();
                 animateValue('stat-total', 0, data.total, 1000);
+                animateValue('stat-incoming', 0, data.incoming_month, 1000);
+                animateValue('stat-disposed', 0, data.disposed, 1000);
+                animateValue('stat-employees', 0, data.total_employees, 1000);
                 renderChart(data.categories);
+                if (data.employee_departments) renderEmployeeChart(data.employee_departments);
                 const list = document.getElementById('warranty-list-dashboard'), badge = document.getElementById('notif-badge'), full = document.getElementById('warranty-list-full');
                 if(data.warranty_alerts.length > 0) {
                     badge.textContent = data.warranty_alerts.length; badge.classList.remove('hidden');
@@ -878,7 +1348,15 @@
         }
 
         // --- ASSETS ---
-        async function fetchAssets() { try { const res = await authFetch(`${API}/assets`); localData = await res.json(); filteredData = localData; renderTable(); } catch(e){} }
+        async function fetchAssets() { try { const res = await authFetch(`${API}/assets`); localData = await res.json(); filteredData = localData; updateAssetStats(); renderTable(); } catch(e){} }
+        function updateAssetStats() {
+            const totalEl = document.getElementById('asset-total-stat');
+            const availableEl = document.getElementById('asset-available-stat');
+            const borrowedEl = document.getElementById('asset-borrowed-stat');
+            if(totalEl) totalEl.textContent = localData.length;
+            if(availableEl) availableEl.textContent = localData.filter(a => a.status === 'Available' || a.status === 'Available').length;
+            if(borrowedEl) borrowedEl.textContent = localData.filter(a => a.status === 'In Use').length;
+        }
         function renderTable() {
             const list = document.getElementById('assets-list'), start = (currentPage-1)*itemsPerPage, pageData = filteredData.slice(start, start+itemsPerPage);
             document.getElementById('curr-page').textContent = currentPage;
@@ -912,6 +1390,12 @@
         async function processCSV() { if(!csvContent)return; const l=csvContent.split('\n'); let s=0; const start=(l[0].toLowerCase().includes('name'))?1:0; for(let i=start;i<l.length;i++){ const c=l[i].split(','); if(c.length<2)continue; try{ await authFetch(`${API}/assets`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name:c[0]?.trim(), serial_number:c[1]?.trim(), category:c[2]?.trim()||'Other', location:c[3]?.trim()||'Gudang', user:c[4]?.trim()||'', user_email:c[5]?.trim()||'', loan_date:c[6]?.trim()||'', warranty_date:c[7]?.trim()||'', purchase_date:c[8]?.trim()||''}) }); s++; }catch(e){} } closeModal('import-modal'); showToast(`Import: ${s} data`); fetchAssets(); }
         function downloadTemplate() { const csv = "name,serial_number,category,location,user,user_email,loan_date,warranty_date,purchase_date\nLaptop Dell,SN123,Laptop,Lantai 1,Budi,budi@email.com,2023-01-01,2024-01-01,2022-12-31"; const link=document.createElement('a'); link.href='data:text/csv;charset=utf-8,'+encodeURI(csv); link.download='template.csv'; link.click(); }
         function exportCSV(mode='all') { let d=mode==='disposed'?localData.filter(i=>i.status==='Disposed'):localData; let c="Name,Serial,Category,Location,User,Email,Status\n"; d.forEach(r=>{c+=`"${r.name}","${r.serial_number}","${r.category}","${r.location}","${r.user||''}","${r.user_email||''}","${r.status}"\n`}); const l=document.createElement('a'); l.href='data:text/csv;charset=utf-8,'+encodeURI(c); l.download=`export_${mode}.csv`; l.click(); }
+        
+        let csvEmpContent = "";
+        function handleEmployeeCSV(e) { const f=e.target.files[0]; if(!f)return; document.getElementById('file-emp-label').textContent=f.name; const r=new FileReader(); r.onload=ev=>{csvEmpContent=ev.target.result;document.getElementById('btn-emp-import').disabled=false; document.getElementById('btn-emp-import').classList.remove('opacity-50','cursor-not-allowed');}; r.readAsText(f); }
+        async function processEmployeeCSV() { if(!csvEmpContent)return; const l=csvEmpContent.split('\n'); let s=0; const start=(l[0].toLowerCase().includes('name')||l[0].toLowerCase().includes('emp'))?1:0; for(let i=start;i<l.length;i++){ const c=l[i].split(','); if(c.length<2)continue; try{ await authFetch(`${API}/employees`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({employee_id:c[0]?.trim(), name:c[1]?.trim(), email:c[2]?.trim()||'', department:c[3]?.trim()||'IT', position:c[4]?.trim()||'', phone:c[5]?.trim()||'', location:c[6]?.trim()||'', status:c[7]?.trim()||'Active', hire_date:c[8]?.trim()||''}) }); s++; }catch(e){} } closeModal('import-employee-modal'); showToast(`Import: ${s} data karyawan`); loadEmployees(); }
+        function downloadEmployeeTemplate() { const csv = "employee_id,name,email,department,position,phone,location,status,hire_date\nEMP001,Budi Santoso,budi@email.com,IT,Staff,081234567,Jakarta,Active,2023-01-01"; const link=document.createElement('a'); link.href='data:text/csv;charset=utf-8,'+encodeURI(csv); link.download='template_karyawan.csv'; link.click(); }
+        function exportEmployeeCSV() { let c="Employee ID,Name,Email,Department,Position,Phone,Location,Status,Hire Date\n"; employeesData.forEach(r=>{c+=`"${r.employee_id}","${r.name}","${r.email||''}","${r.department}","${r.position||''}","${r.phone||''}","${r.location||''}","${r.status}","${r.hire_date||''}"\n`}); const l=document.createElement('a'); l.href='data:text/csv;charset=utf-8,'+encodeURI(c); l.download=`export_karyawan.csv`; l.click(); }
 
         // --- USER MGMT (Superadmin) ---
         async function fetchUsers() { 
@@ -1110,6 +1594,7 @@
 
         document.getElementById('employee-form').onsubmit = async (e) => {
             e.preventDefault();
+            const dbId = document.getElementById('edit-emp-db-id').value;
             const body = {
                 employee_id: document.getElementById('emp-id').value,
                 name: document.getElementById('emp-name').value,
@@ -1122,25 +1607,35 @@
                 hire_date: document.getElementById('emp-hire-date').value
             };
             
-            await authFetch(`${API}/employees`, {
-                method: 'POST',
+            const method = dbId ? 'PUT' : 'POST';
+            const url = dbId ? `${API}/employees/${dbId}` : `${API}/employees`;
+            
+            await authFetch(url, {
+                method: method,
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(body)
             });
             
-            document.getElementById('employee-form').reset();
+            closeModal('employee-modal');
             loadEmployees();
-            showToast('Karyawan berhasil ditambahkan');
+            showToast(dbId ? 'Karyawan berhasil diupdate' : 'Karyawan berhasil ditambahkan');
         };
 
         function editEmployee(id) {
             const emp = employeesData.find(e => e.id === id);
             if(emp) {
+                document.getElementById('edit-emp-db-id').value = emp.id;
                 document.getElementById('emp-id').value = emp.employee_id;
                 document.getElementById('emp-name').value = emp.name;
+                document.getElementById('emp-email').value = emp.email || '';
                 document.getElementById('emp-department').value = emp.department;
-                // For simplicity, just reusing the create form - in production you'd want a proper edit modal
-                showToast('Edit functionality needs modal implementation');
+                document.getElementById('emp-position').value = emp.position || '';
+                document.getElementById('emp-phone').value = emp.phone || '';
+                document.getElementById('emp-location').value = emp.location || '';
+                document.getElementById('emp-status').value = emp.status || 'Active';
+                document.getElementById('emp-hire-date').value = emp.hire_date || '';
+                document.getElementById('employee-modal-title').textContent="Edit Karyawan";
+                openModal('employee-modal');
             }
         }
 
@@ -1153,12 +1648,39 @@
         }
 
         // --- GENERIC UTILS ---
-        function openModal(id, isAdd=false) { document.getElementById(id).classList.remove('hidden'); if(isAdd){ document.getElementById('asset-form').reset(); document.getElementById('edit-id').value=""; document.getElementById('modal-title').textContent="Tambah Aset"; } setTimeout(()=>document.querySelector(`#${id} .modal-content`).classList.add('modal-open'),10); }
+        function openModal(id, isAdd=false) {
+            document.getElementById(id).classList.remove('hidden');
+            if(isAdd) {
+                if(id === 'edit-modal') {
+                    document.getElementById('asset-form').reset();
+                    document.getElementById('edit-id').value="";
+                    document.getElementById('modal-title').textContent="Tambah Aset";
+                } else if(id === 'employee-modal') {
+                    document.getElementById('employee-form').reset();
+                    document.getElementById('edit-emp-db-id').value="";
+                    document.getElementById('employee-modal-title').textContent="Tambah Karyawan";
+                }
+            }
+            setTimeout(()=>document.querySelector(`#${id} .modal-content`).classList.add('modal-open'),10);
+        }
         function closeModal(id) { document.querySelector(`#${id} .modal-content`).classList.remove('modal-open'); setTimeout(()=>document.getElementById(id).classList.add('hidden'),300); }
         function showToast(m, t='success') { const x=document.getElementById('toast'); document.getElementById('toast-msg').textContent=m; document.getElementById('toast-icon-bg').className=`p-2 rounded-lg ${t==='error'?'bg-red-500/20 text-red-500':'bg-emerald-500/20 text-emerald-500'}`; x.classList.remove('opacity-0','translate-y-10'); setTimeout(()=>x.classList.add('opacity-0','translate-y-10'),3000); }
-        function filterAssets() { const q=document.getElementById('search-input').value.toLowerCase(); filteredData=localData.filter(a=>a.name.toLowerCase().includes(q)||a.serial_number.toLowerCase().includes(q)||(a.user&&a.user.toLowerCase().includes(q))); currentPage=1; renderTable(); }
+        function filterAssets() {
+            const q = document.getElementById('search-input').value.toLowerCase();
+            const cat = document.getElementById('asset-category-filter') ? document.getElementById('asset-category-filter').value : '';
+            const status = document.getElementById('asset-status-filter') ? document.getElementById('asset-status-filter').value : '';
+            filteredData = localData.filter(a => {
+                const matchQ = a.name.toLowerCase().includes(q) || a.serial_number.toLowerCase().includes(q) || (a.user && a.user.toLowerCase().includes(q));
+                const matchCat = cat === '' || a.category === cat;
+                const matchStatus = status === '' || a.status === status;
+                return matchQ && matchCat && matchStatus;
+            });
+            currentPage = 1;
+            renderTable();
+        }
         function nextPage() { currentPage++; renderTable(); } function prevPage() { currentPage--; renderTable(); }
         function renderChart(cat) { const ctx=document.getElementById('categoryChart').getContext('2d'); if(chartInstance)chartInstance.destroy(); chartInstance=new Chart(ctx,{type:'doughnut',data:{labels:Object.keys(cat),datasets:[{data:Object.values(cat),backgroundColor:['#0ea5e9','#6366f1','#8b5cf6','#d946ef','#f43f5e','#f59e0b','#10b981'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:'#94a3b8'}}}}}); }
+        function renderEmployeeChart(dept) { const ctx=document.getElementById('employeeChart').getContext('2d'); if(window.employeeChartInstance)window.employeeChartInstance.destroy(); window.employeeChartInstance=new Chart(ctx,{type:'doughnut',data:{labels:Object.keys(dept),datasets:[{data:Object.values(dept),backgroundColor:['#10b981','#34d399','#059669','#047857','#064e3b','#6ee7b7'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:'#94a3b8'}}}}}); }
         function animateValue(id,s,e,d){ let o=document.getElementById(id),st=null; const step=ts=>{if(!st)st=ts; const p=Math.min((ts-st)/d,1); o.innerHTML=Math.floor(p*(e-s)+s); if(p<1)window.requestAnimationFrame(step);}; window.requestAnimationFrame(step); }
 
         window.onload = checkAuth;

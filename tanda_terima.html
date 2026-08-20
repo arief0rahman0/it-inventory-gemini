@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanda Terima Peralatan - MyIT-Inventory</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- html2pdf for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * { box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+        
+        .card { 
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+            border-color: rgba(51, 65, 85, 0.7);
+        }
+
+        input, select, textarea { 
+            background: rgba(15, 23, 42, 0.8) !important; 
+            border: 1px solid rgba(51, 65, 85, 0.6) !important; 
+            color: white !important;
+            backdrop-filter: blur(4px);
+        }
+        
+        input:focus, select:focus, textarea:focus { 
+            border-color: #0ea5e9 !important; 
+            outline: none !important;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2), 0 0 20px rgba(14, 165, 233, 0.1) !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+            transform: translateY(-2px);
+        }
+
+        /* Modern Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #334155 0%, #475569 100%); border-radius: 3px; }
+
+        /* Print styles */
+        @media print {
+            @page {
+                size: A4;
+                margin: 1.5cm;
+            }
+            body { 
+                background: white !important; 
+                color: black !important; 
+                min-height: auto;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .no-print { display: none !important; }
+            .print-area {
+                background: white !important;
+                border: none !important;
+                box-shadow: none !important;
+                color: black !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                max-width: 100% !important;
+            }
+            .print-area * {
+                color: black !important;
+                border-color: #333 !important;
+            }
+            .print-area .bg-slate-800, .print-area .bg-slate-800\/50 {
+                background: #e5e7eb !important;
+            }
+            .print-area table {
+                border-color: #333 !important;
+            }
+            .print-area th {
+                background: #e5e7eb !important;
+                color: black !important;
+            }
+            .print-area .signature-line {
+                border-color: black !important;
+            }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-6">
+    <!-- Navbar (No Print) -->
+    <nav class="flex flex-wrap justify-between items-center mb-8 no-print card p-4 rounded-xl">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-sky-500 to-indigo-500 flex items-center justify-center shadow-lg">
+                <i data-lucide="file-text" class="text-white w-6 h-6"></i>
+            </div>
+            <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-indigo-400">
+                Tanda Terima Peralatan
+            </h1>
+        </div>
+        <div class="flex gap-3 mt-3 md:mt-0">
+            <a href="/" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition-colors flex items-center gap-2 text-sm">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
+            </a>
+            <button onclick="window.print()" class="btn-primary px-4 py-2 rounded-lg text-white font-medium flex items-center gap-2 transition-all text-sm">
+                <i data-lucide="printer" class="w-4 h-4"></i> Cetak
+            </button>
+        </div>
+    </nav>
+
+    <!-- Generator Form (No Print) -->
+    <div class="card p-6 rounded-2xl mb-8 no-print max-w-4xl mx-auto">
+        <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+            <i data-lucide="settings" class="w-5 h-5 text-sky-400"></i> Buat Tanda Terima
+        </h2>
+
+        <!-- Data Penerima -->
+        <div class="mb-6">
+            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Data Penerima</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Pilih Karyawan</label>
+                    <select id="employeeSelect" class="w-full px-4 py-3 rounded-xl transition-all" onchange="onEmployeeChange()">
+                        <option value="">-- Pilih Karyawan --</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Nama Perusahaan</label>
+                    <select id="inputCompany" class="w-full px-4 py-3 rounded-xl transition-all" onchange="updatePreview()">
+                        <option value="PT. Astra Digital Mobil">PT. Astra Digital Mobil</option>
+                        <option value="PT. Tokobagus">PT. Tokobagus</option>
+                        <option value="PT. Serasi Mitra Mobil" selected>PT. Serasi Mitra Mobil</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">No. KTP / KITAS</label>
+                    <input type="text" id="inputKtp" class="w-full px-4 py-3 rounded-xl transition-all" placeholder="Masukkan No. KTP / KITAS" oninput="updatePreview()">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Email</label>
+                    <input type="text" id="inputEmail" class="w-full px-4 py-3 rounded-xl transition-all" placeholder="email@company.com" oninput="updatePreview()">
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Peralatan -->
+        <div class="mb-6">
+            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Data Peralatan</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Pilih Asset</label>
+                    <select id="assetSelect" class="w-full px-4 py-3 rounded-xl transition-all" onchange="onAssetChange()">
+                        <option value="">-- Pilih Asset --</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Jenis Peralatan</label>
+                    <select id="inputJenis" class="w-full px-4 py-3 rounded-xl transition-all" onchange="updatePreview()">
+                        <option value="">-- Pilih Jenis Peralatan --</option>
+                        <option value="Laptop">Laptop</option>
+                        <option value="Desktop / PC">Desktop / PC</option>
+                        <option value="Monitor">Monitor</option>
+                        <option value="Smartphone">Smartphone</option>
+                        <option value="Tablet">Tablet</option>
+                        <option value="Aksesoris IT">Aksesoris IT</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Kondisi</label>
+                    <select id="inputKondisi" class="w-full px-4 py-3 rounded-xl transition-all" onchange="updatePreview()">
+                        <option value="Baik">Baik</option>
+                        <option value="Baik (Baru)">Baik (Baru)</option>
+                        <option value="Baik (Bekas)">Baik (Bekas)</option>
+                        <option value="Cukup">Cukup</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Kelengkapan</label>
+                    <select id="inputKelengkapan" class="w-full px-4 py-3 rounded-xl transition-all" onchange="updatePreview()">
+                        <option value="">-- Pilih Kelengkapan --</option>
+                        <option value="Adaptor Charger">Adaptor Charger</option>
+                        <option value="Tas & Adaptor Charger">Tas & Adaptor Charger</option>
+                        <option value="Mouse, Tas & Adaptor Charger">Mouse, Tas & Adaptor Charger</option>
+                        <option value="Box & Adaptor Charger">Box & Adaptor Charger</option>
+                        <option value="Unit Saja (Tanpa Aksesoris)">Unit Saja (Tanpa Aksesoris)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Penggantian dari (Opsional)</label>
+                    <input type="text" id="inputPenggantian" class="w-full px-4 py-3 rounded-xl transition-all" placeholder="Kosongkan jika bukan penggantian" oninput="updatePreview()">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Kota & Tanggal</label>
+                    <input type="text" id="inputKotaTanggal" class="w-full px-4 py-3 rounded-xl transition-all" placeholder="Jakarta, 19 Agustus 2026" oninput="updatePreview()">
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-end gap-3 pt-6 mt-4 border-t border-slate-700/50">
+            <button type="button" onclick="saveData()" class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold flex items-center gap-2 transition-all text-sm shadow-lg border border-slate-600">
+                <i data-lucide="database" class="w-4 h-4"></i> Simpan Data
+            </button>
+            <button type="button" onclick="saveAsPDF()" class="btn-success px-8 py-3 rounded-xl text-white font-bold flex items-center gap-2 transition-all text-sm shadow-lg hover:shadow-emerald-500/20">
+                <i data-lucide="download" class="w-4 h-4"></i> Unduh PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- ============ PRINT AREA / PREVIEW ============ -->
+    <div class="card p-8 md:p-12 rounded-2xl max-w-4xl mx-auto bg-white/5 print-area" id="receiptPreview" style="font-family: Cambria, 'Times New Roman', serif;">
+        
+        <!-- Header -->
+        <div class="mb-6">
+            <div class="mb-4">
+                <img src="/logo.jpg" alt="Logo Perusahaan" class="w-20 h-20 object-contain rounded">
+            </div>
+            <div class="text-center">
+                <h2 class="tracking-tight mb-1" style="font-family: 'Cambria Bold', Cambria, 'Times New Roman', serif; font-weight: bold; font-size: 26px;">TANDA TERIMA</h2>
+                <h3 class="tracking-tight text-slate-300" style="font-family: 'Cambria Bold', Cambria, 'Times New Roman', serif; font-weight: bold; font-size: 26px;">PERALATAN PERUSAHAAN</h3>
+            </div>
+        </div>
+
+        <!-- Data Penerima -->
+        <div class="mb-4 text-[15px] leading-relaxed">
+            <p class="mb-2">Dengan ini, Saya:</p>
+            <table class="ml-4 mb-4">
+                <tr>
+                    <td class="py-1.5 pr-2 font-medium flex items-start gap-2"><span>●</span> Nama Lengkap</td>
+                    <td class="px-3">:</td>
+                    <td class="font-semibold" id="prevNama">-</td>
+                </tr>
+                <tr>
+                    <td class="py-1.5 pr-2 font-medium flex items-start gap-2"><span>●</span> Nama Perusahaan</td>
+                    <td class="px-3">:</td>
+                    <td id="prevPerusahaan">PT. Serasi Mitra Mobil (SMM) ("Perusahaan")</td>
+                </tr>
+                <tr>
+                    <td class="py-1.5 pr-2 font-medium flex items-start gap-2"><span>●</span> KTP / KITAS ID</td>
+                    <td class="px-3">:</td>
+                    <td id="prevKtp">……………………………………………</td>
+                </tr>
+                <tr>
+                    <td class="py-1.5 pr-2 font-medium flex items-start gap-2"><span>●</span> Email</td>
+                    <td class="px-3">:</td>
+                    <td id="prevEmail">-</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Kalimat Pernyataan -->
+        <p class="mb-4 text-[15px] leading-relaxed text-justify">
+            Dengan ini Saya menyatakan bahwa saya telah menerima peralatan-peralatan Perusahaan di bawah ini
+            dalam kondisi dan keadaan sebagaimana disebutkan di bawah yang disediakan oleh Departemen
+            Business IT (BIT):
+        </p>
+
+        <!-- Tabel Detail Peralatan -->
+        <table class="w-full border-collapse border border-slate-600 mb-4 text-sm">
+            <thead>
+                <tr class="bg-slate-800">
+                    <th class="border border-slate-600 px-3 py-2 text-center w-12">NO.</th>
+                    <th class="border border-slate-600 px-3 py-2 text-left w-48">JENIS PERALATAN</th>
+                    <th class="border border-slate-600 px-3 py-2 text-left">SPESIFIKASI</th>
+                    <th class="border border-slate-600 px-3 py-2 text-center w-28">KONDISI</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="border border-slate-600 px-3 py-2 text-center align-top">1.</td>
+                    <td class="border border-slate-600 px-3 py-2 align-top" id="prevJenis">[Jenis Peralatan]</td>
+                    <td class="border border-slate-600 px-3 py-2 align-top">
+                        <div class="space-y-1">
+                            <p>Merk : <span id="prevMerk">-</span></p>
+                            <p>Model : <span id="prevModel">-</span></p>
+                            <p>No. Serial : <span id="prevSerial">-</span></p>
+                            <p>Kelengkapan : <span id="prevKelengkapan">-</span></p>
+                            <p class="mt-2">Penggantian dari : <span id="prevPenggantian">-</span></p>
+                        </div>
+                    </td>
+                    <td class="border border-slate-600 px-3 py-2 text-center align-top" id="prevKondisi">Baik</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Klausa Persetujuan -->
+        <p class="mb-6 text-[14px] leading-relaxed text-justify">
+            Saya dengan ini mengerti bahwa Peralatan yang disediakan untuk keperluan pekerjaan sebagaimana
+            disebutkan diatas tunduk pada Persetujuan Kebijakan IT yang telah saya tanda tangani. Apabila
+            dikemudian hari peralatan-peralatan Perusahaan tersebut rusak atau hilang akibat kelalaian saya,
+            baik karena suatu kecelakaan atau kelalaian, saya dengan ini menyetujui dan memberikan kuasa
+            penuh kepada Perusahaan untuk membebankan biaya penggantian atau perbaikan peralatan kantor
+            tersebut secara penuh sesuai dengan ketentuan yang ditetapkan oleh Perusahaan.
+        </p>
+
+        <!-- Tanda Tangan -->
+        <div class="mt-6 text-[15px] flex justify-between items-end gap-12">
+            <!-- Barcode Kiri -->
+            <div class="mb-2">
+                <img src="/barcode.png" alt="Barcode" class="w-[488px] h-auto object-contain">
+            </div>
+            <!-- Tanda Tangan Kanan -->
+            <div class="w-64">
+                <p class="mb-2 text-left" id="prevKotaTanggal">Jakarta, ………………………….2026</p>
+                <div class="w-full border-b border-slate-500 signature-line mb-2" style="min-height: 80px;"></div>
+                <p class="font-semibold text-center" id="prevSignName">( Nama Karyawan )</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        let employeesData = [];
+        let assetsData = [];
+
+        // Check Auth
+        const token = localStorage.getItem('myit_token');
+        if (!token) {
+            alert('Silakan login terlebih dahulu');
+            window.location.href = '/';
+        }
+
+        const headers = { 'Authorization': token };
+
+        // Set default kota & tanggal
+        const now = new Date();
+        const bulanIndo = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        const defaultTanggal = `Jakarta, ${now.getDate()} ${bulanIndo[now.getMonth()]} ${now.getFullYear()}`;
+        document.getElementById('inputKotaTanggal').value = defaultTanggal;
+        document.getElementById('prevKotaTanggal').textContent = defaultTanggal;
+
+        async function fetchData() {
+            try {
+                const [empRes, assetRes] = await Promise.all([
+                    fetch('/api/employees', { headers }),
+                    fetch('/api/assets', { headers })
+                ]);
+                
+                if (empRes.ok) employeesData = await empRes.json();
+                if (assetRes.ok) assetsData = await assetRes.json();
+
+                populateSelects();
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+
+        function populateSelects() {
+            const empSelect = document.getElementById('employeeSelect');
+            const assetSelect = document.getElementById('assetSelect');
+
+            employeesData.forEach(emp => {
+                const opt = document.createElement('option');
+                opt.value = emp.id;
+                opt.textContent = `${emp.name} (${emp.employee_id} - ${emp.department})`;
+                empSelect.appendChild(opt);
+            });
+
+            assetsData.forEach(asset => {
+                const opt = document.createElement('option');
+                opt.value = asset.id;
+                opt.textContent = `${asset.name} (SN: ${asset.serial_number})`;
+                assetSelect.appendChild(opt);
+            });
+        }
+
+        function onEmployeeChange() {
+            const empId = document.getElementById('employeeSelect').value;
+            const emp = employeesData.find(e => e.id === empId);
+            if (emp) {
+                document.getElementById('inputEmail').value = emp.email || '';
+            }
+            updatePreview();
+        }
+
+        function onAssetChange() {
+            const assetId = document.getElementById('assetSelect').value;
+            const asset = assetsData.find(a => a.id === assetId);
+            if (asset) {
+                document.getElementById('inputJenis').value = asset.category || '';
+            }
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const empId = document.getElementById('employeeSelect').value;
+            const assetId = document.getElementById('assetSelect').value;
+
+            const emp = employeesData.find(e => e.id === empId);
+            const asset = assetsData.find(a => a.id === assetId);
+
+            // Data penerima
+            document.getElementById('prevNama').textContent = emp ? emp.name : '-';
+            document.getElementById('prevSignName').textContent = emp ? emp.name : '( Nama Karyawan )';
+            document.getElementById('prevEmail').textContent = document.getElementById('inputEmail').value || (emp ? emp.email : '-');
+            document.getElementById('prevPerusahaan').textContent = document.getElementById('inputCompany').value ? document.getElementById('inputCompany').value + ' ("Perusahaan")' : '-';
+            
+            const ktpVal = document.getElementById('inputKtp').value;
+            document.getElementById('prevKtp').textContent = ktpVal || '……………………………………………';
+
+            // Data peralatan
+            const jenisVal = document.getElementById('inputJenis').value;
+            document.getElementById('prevJenis').textContent = jenisVal ? `[${jenisVal}]` : '[Jenis Peralatan]';
+            
+            if (asset) {
+                // Parse name for brand/model: try "Brand Model" pattern
+                const nameParts = asset.name.split(' ');
+                const brand = nameParts[0] || '-';
+                const model = nameParts.slice(1).join(' ') || asset.name;
+                
+                document.getElementById('prevMerk').textContent = brand;
+                document.getElementById('prevModel').textContent = model;
+                document.getElementById('prevSerial').textContent = asset.serial_number || '-';
+            } else {
+                document.getElementById('prevMerk').textContent = '-';
+                document.getElementById('prevModel').textContent = '-';
+                document.getElementById('prevSerial').textContent = '-';
+            }
+
+            document.getElementById('prevKelengkapan').textContent = document.getElementById('inputKelengkapan').value || '-';
+            document.getElementById('prevPenggantian').textContent = document.getElementById('inputPenggantian').value || '-';
+            document.getElementById('prevKondisi').textContent = document.getElementById('inputKondisi').value;
+            document.getElementById('prevKotaTanggal').textContent = document.getElementById('inputKotaTanggal').value || '-';
+        }
+
+        function saveAsPDF() {
+            const element = document.getElementById('receiptPreview');
+            const empName = document.getElementById('prevNama').textContent.replace(/ /g, '_');
+            const fileName = `Tanda_Terima_Aset_${empName}.pdf`;
+
+            // Opsi untuk html2pdf
+            const opt = {
+                margin:       10,
+                filename:     fileName,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Tambahkan class sementara untuk styling PDF jika perlu
+            element.classList.add('bg-white');
+            element.classList.remove('bg-white/5');
+            element.style.color = 'black';
+
+            // Mengenerate PDF
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Kembalikan ke styling awal
+                element.classList.remove('bg-white');
+                element.classList.add('bg-white/5');
+                element.style.color = '';
+            });
+        }
+
+        function saveData() {
+            alert('Data tanda terima siap untuk disimpan ke database (Fitur backend sedang dalam pengembangan).');
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>

@@ -560,7 +560,11 @@ def get_dashboard_stats():
     
     conn = get_db_connection()
     assets = conn.execute('SELECT * FROM assets').fetchall()
+    employees_count = conn.execute('SELECT COUNT(*) as count FROM employees').fetchone()['count']
+    emp_dept_rows = conn.execute('SELECT department, COUNT(*) as count FROM employees GROUP BY department').fetchall()
     conn.close()
+    
+    emp_departments = {row['department']: row['count'] for row in emp_dept_rows}
 
     # (Logika statistik sama seperti sebelumnya)
     total_assets = len(assets)
@@ -593,7 +597,9 @@ def get_dashboard_stats():
         "disposed": disposed_assets,
         "incoming_month": incoming_assets_month,
         "categories": category_counts,
-        "warranty_alerts": warranty_alerts
+        "warranty_alerts": warranty_alerts,
+        "total_employees": employees_count,
+        "employee_departments": emp_departments
     })
 
 @app.route('/api/assets', methods=['GET'])
@@ -678,11 +684,23 @@ def delete_asset(asset_id):
 def index():
     return send_from_directory('.', 'asset.html')
 
+@app.route('/logo.jpg')
+def logo():
+    return send_from_directory('.', 'logo.jpg')
+
+@app.route('/barcode.png')
+def barcode():
+    return send_from_directory('.', 'barcode.png')
+
+@app.route('/tanda-terima')
+def tanda_terima():
+    return send_from_directory('.', 'tanda_terima.html')
+
 @app.route('/health')
 def health():
     return jsonify({"status": "online", "db": os.path.abspath(DATABASE_NAME)})
 
 if __name__ == '__main__':
     init_db()
-    print("Server MyIT-Inventory berjalan di port 5000...")
-    app.run(debug=True, port=5000)
+    print("Server MyIT-Inventory berjalan di port 5001... Akses dari LAN pada http://<IP-KOMPUTER-ANDA>:5001")
+    app.run(host='0.0.0.0', debug=True, port=5001)
