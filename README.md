@@ -42,7 +42,6 @@ Aplikasi **Manajemen Inventaris IT** adalah platform berbasis web yang digunakan
 it-inventory-gemini/
 ├── app.py                    # Backend Flask — semua endpoint API & logika database
 ├── asset.html                # Frontend — antarmuka pengguna (SPA)
-├── Script_Generator_CSV.py   # Generator dummy data CSV untuk testing import
 ├── seed_dummy.py             # Script seeder — 30 dummy aset & karyawan
 ├── requirements.txt          # Dependensi Python
 ├── inventory.db              # Database SQLite (auto-generated)
@@ -129,19 +128,19 @@ it-inventory-gemini/
    ```
 
 5. **Akses di browser**
+   Untuk akses dari komputer yang sama:
    ```
-   http://127.0.0.1:5000/
+   http://localhost:5001/
+   ```
+   Untuk akses dari perangkat lain (via LAN/WiFi):
+   ```
+   http://<IP-KOMPUTER-ANDA>:5001/
    ```
 
 ### Opsional: Seed Dummy Data
 Jika ingin mengisi database dengan data contoh (30 aset & karyawan):
 ```bash
 python seed_dummy.py
-```
-
-### Opsional: Generate CSV untuk Import
-```bash
-python Script_Generator_CSV.py
 ```
 
 ---
