@@ -14,9 +14,10 @@ Aplikasi **Manajemen Inventaris IT** adalah platform berbasis web yang digunakan
 
 | Fitur | Deskripsi |
 |-------|-----------|
-| 📊 **Dashboard** | Ringkasan keseluruhan sistem — total aset, aset yang dipinjam, statistik kategori, dan grafik interaktif |
+| 📊 **Dashboard Eksekutif** | Ringkasan dengan **Health Score**, key insights otomatis, dan rekomendasi berbasis data untuk manajemen proaktif |
 | 💻 **Manajemen Aset** | CRUD lengkap untuk aset IT perusahaan (Laptop, Monitor, Printer, dll.) termasuk fitur cetak **Barcode** |
 | 👥 **Manajemen Karyawan** | Mengelola data karyawan/peminjam aset dengan informasi departemen dan kontak |
+| 📈 **Laporan Lengkap** | Dashboard laporan dengan grafik tren aset, distribusi kategori, usia aset, dan statistik garansi yang komprehensif |
 | 📋 **Laporan & Ekspor** | Unduh data aset dalam format **CSV**, rekap riwayat peminjaman, serta cetak laporan **PDF** |
 | 📝 **Audit Log** | Pencatatan aktivitas sistem yang aman — mencatat aksi tambah, ubah, atau hapus oleh pengguna |
 | 🔐 **RBAC** | Role-Based Access Control dengan 3 level: **Superadmin**, **Editor**, dan **Viewer** |
@@ -89,7 +90,8 @@ it-inventory-gemini/
 ### Dashboard & Audit
 | Method | Endpoint | Deskripsi |
 |--------|----------|-----------|
-| `GET` | `/api/dashboard` | Data statistik dashboard |
+| `GET` | `/api/dashboard` | Data statistik dashboard dengan executive summary |
+| `GET` | `/api/reports/summary` | Laporan lengkap dengan grafik dan analisis komprehensif |
 | `GET` | `/api/audit-logs` | Daftar audit log |
 | `GET` | `/api/audit-logs/stats` | Statistik audit log |
 | `GET` | `/health` | Health check endpoint |
@@ -145,6 +147,58 @@ python seed_dummy.py
 
 ---
 
+## 🎯 Fitur Executive Summary & Reporting
+
+### Dashboard Eksekutif
+Dashboard utama sekarang dilengkapi dengan **Executive Summary** yang memberikan:
+
+- **Health Score**: Indikator visual (0-100%) yang menunjukkan kesehatan keseluruhan sistem inventaris
+- **Key Insights**: 3 insight otomatis yang meliputi:
+  - Status garansi aset (kadaluarsa, akan kadaluarsa)
+  - Utilisasi aset (persentase digunakan vs tersedia)
+  - Rasio aset per karyawan
+- **Recommendations**: Saran tindakan proaktif berdasarkan analisis data
+- **Additional Stats**: Breakdown status aset (Available, In Use, Maintenance, Valid Warranty)
+
+### Dashboard Laporan
+Halaman laporan yang komprehensif dengan:
+
+- **Executive Summary**: Ringkasan eksekutif dengan health score dan insights
+- **Statistik Utama**: Total aset, status breakdown, total karyawan, peringatan garansi
+- **Grafik Interaktif**:
+  - Tren aset masuk (12 bulan terakhir)
+  - Distribusi aset per kategori
+  - Status aset (pie chart)
+  - Usia aset (polar area chart)
+  - Distribusi karyawan per departemen
+  - Distribusi lokasi aset
+- **Warranty Analysis**: Breakdown garansi (expired, expiring 30/90 days, valid)
+- **Top Users**: Daftar pengguna dengan aset terbanyak
+- **Recent Activity**: Log aktivitas terbaru
+
+### Health Score Calculation
+Health score dihitung berdasarkan:
+
+1. **Warranty Health** (jika data tersedia):
+   - Garansi valid + akan kadaluarsa 90 hari = skor tinggi
+   - Garansi kadaluarsa = penalti skor
+
+2. **Asset Utilization**:
+   - Utilisasi > 90% = skor menurun (overutilization)
+   - Utilisasi > 80% = skor sedikit menurun
+   - Disposal > 15% = penalti skor
+
+3. **Employee Coverage**:
+   - Rasio aset per karyawan < 0.5 = penalti skor
+
+**Status Classification**:
+- 90-100%: Excellent (Hijau)
+- 75-89%: Good (Biru)
+- 60-74%: Fair (Kuning)
+- < 60%: Needs Attention (Merah)
+
+---
+
 ## 🔑 Default Akun Login
 
 Database (`inventory.db`) akan terbuat otomatis saat pertama kali menjalankan `app.py`. Berikut akun default yang tersedia:
@@ -159,7 +213,8 @@ Database (`inventory.db`) akan terbuat otomatis saat pertama kali menjalankan `a
 
 | Aksi | Superadmin | Editor | Viewer |
 |------|:----------:|:------:|:------:|
-| Lihat Dashboard | ✅ | ✅ | ✅ |
+| Lihat Dashboard Eksekutif | ✅ | ✅ | ✅ |
+| Lihat Dashboard Laporan | ✅ | ✅ | ✅ |
 | Lihat Data Aset | ✅ | ✅ | ✅ |
 | Tambah/Edit/Hapus Aset | ✅ | ✅ | ❌ |
 | Kelola Karyawan | ✅ | ✅ | ❌ |
