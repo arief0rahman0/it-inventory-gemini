@@ -400,6 +400,51 @@
 
             <!-- VIEW: DASHBOARD -->
             <div id="view-dashboard" class="space-y-6 animate-fade-in">
+                <!-- Executive Summary -->
+                <div class="card p-6 rounded-2xl border-l-4 border-l-sky-500 animate-slide-up">
+                    <div class="flex flex-col lg:flex-row gap-6">
+                        <!-- Health Score -->
+                        <div class="lg:w-1/5">
+                            <div class="text-center">
+                                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Health Score</div>
+                                <div class="relative w-24 h-24 mx-auto">
+                                    <svg class="w-full h-full transform -rotate-90">
+                                        <circle cx="48" cy="48" r="40" stroke="rgba(51,65,85,0.5)" stroke-width="6" fill="none"/>
+                                        <circle id="dash-health-circle" cx="48" cy="48" r="40" stroke="#10b981" stroke-width="6" fill="none" 
+                                            stroke-dasharray="251.33" stroke-dashoffset="251.33" class="transition-all duration-1000"/>
+                                    </svg>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span id="dash-health-text" class="text-2xl font-black text-white">0%</span>
+                                    </div>
+                                </div>
+                                <div id="dash-overall-status" class="mt-2 px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-full text-xs font-bold inline-block">Excellent</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Key Insights & Recommendations -->
+                        <div class="lg:w-4/5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <div class="flex items-center gap-2 mb-3">
+                                    <i data-lucide="lightbulb" class="w-4 h-4 text-amber-400"></i>
+                                    <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Key Insights</h4>
+                                </div>
+                                <div id="dash-key-insights" class="space-y-2">
+                                    <!-- Insights will be populated here -->
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2 mb-3">
+                                    <i data-lucide="target" class="w-4 h-4 text-sky-400"></i>
+                                    <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Recommendations</h4>
+                                </div>
+                                <div id="dash-recommendations" class="space-y-2">
+                                    <!-- Recommendations will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="card p-8 rounded-2xl border-l-4 border-l-sky-500 relative overflow-hidden group stat-card animate-slide-up">
                         <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Total Aset Aktif</div>
@@ -434,6 +479,42 @@
                     <div class="card p-6 rounded-2xl animate-slide-up" style="animation-delay: 0.2s;">
                         <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="alert-triangle" class="text-amber-500 w-4 h-4"></i> Peringatan Garansi (30 Hari)</h3>
                         <div id="warranty-list-dashboard" class="space-y-3 overflow-y-auto flex-grow h-64 pr-2"><div class="text-center text-slate-500 text-sm py-10">Memuat data...</div></div>
+                    </div>
+                </div>
+                
+                <!-- Additional Summary Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-slide-up" style="animation-delay: 0.25s;">
+                    <div class="card p-6 rounded-2xl border-l-4 border-l-emerald-500">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Aset Tersedia</div>
+                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>
+                        </div>
+                        <div class="text-3xl font-black text-emerald-400" id="dash-available">0</div>
+                        <div class="text-xs text-slate-500 mt-2">Siap digunakan</div>
+                    </div>
+                    <div class="card p-6 rounded-2xl border-l-4 border-l-sky-500">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Aset Dipakai</div>
+                            <i data-lucide="user-check" class="w-5 h-5 text-sky-500"></i>
+                        </div>
+                        <div class="text-3xl font-black text-sky-400" id="dash-inuse">0</div>
+                        <div class="text-xs text-slate-500 mt-2">Sedang digunakan</div>
+                    </div>
+                    <div class="card p-6 rounded-2xl border-l-4 border-l-amber-500">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Maintenance</div>
+                            <i data-lucide="wrench" class="w-5 h-5 text-amber-500"></i>
+                        </div>
+                        <div class="text-3xl font-black text-amber-400" id="dash-maintenance">0</div>
+                        <div class="text-xs text-slate-500 mt-2">Dalam perbaikan</div>
+                    </div>
+                    <div class="card p-6 rounded-2xl border-l-4 border-l-purple-500">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Garansi Valid</div>
+                            <i data-lucide="shield-check" class="w-5 h-5 text-purple-500"></i>
+                        </div>
+                        <div class="text-3xl font-black text-purple-400" id="dash-warranty-valid">0</div>
+                        <div class="text-xs text-slate-500 mt-2">Masih berlaku</div>
                     </div>
                 </div>
             </div>
@@ -762,33 +843,215 @@
             <!-- VIEW: REPORT -->
             <div id="view-report" class="hidden animate-fade-in">
                 <div class="card p-6 rounded-2xl mb-6 border-l-4 border-l-orange-500 bg-gradient-to-r from-slate-900 to-orange-900/20 animate-slide-up">
-                    <h3 class="text-lg font-bold text-white mb-1">Laporan Sistem</h3>
-                    <p class="text-xs text-slate-400">Ringkasan lengkap dan unduh data inventaris atau karyawan.</p>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 animate-slide-up" style="animation-delay: 0.1s;">
-                    <!-- Report Assets -->
-                    <div class="card p-6 rounded-2xl flex flex-col items-center text-center">
-                        <div class="bg-sky-500/20 p-4 rounded-full mb-4">
-                            <i data-lucide="server" class="w-10 h-10 text-sky-500"></i>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-white mb-1">Dashboard Laporan</h3>
+                            <p class="text-xs text-slate-400">Ringkasan lengkap inventaris, karyawan, garansi, dan tren data.</p>
                         </div>
-                        <h4 class="text-lg font-bold text-white mb-2">Laporan Aset</h4>
-                        <p class="text-sm text-slate-400 mb-6">Unduh daftar lengkap semua aset TI beserta status dan riwayat penggunanya ke format CSV.</p>
-                        <button onclick="exportCSV('all')" class="w-full btn-primary text-white py-3 rounded-xl font-bold flex justify-center items-center gap-2 transition-transform transform hover:scale-105 active:scale-95 shadow-lg">
-                            <i data-lucide="download" class="w-5 h-5"></i> Cetak Laporan Aset
-                        </button>
+                        <div class="flex gap-2">
+                            <button onclick="exportCSV('all')" class="btn-primary text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all duration-300 transform hover:scale-105 active:scale-95">
+                                <i data-lucide="download" class="w-4 h-4"></i> Export Aset
+                            </button>
+                            <button onclick="exportEmployeeCSV()" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all duration-300 transform hover:scale-105 active:scale-95">
+                                <i data-lucide="download" class="w-4 h-4"></i> Export Karyawan
+                            </button>
+                            <button onclick="window.print()" class="bg-slate-700/50 hover:bg-slate-600/50 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all duration-300 border border-slate-600/50 transform hover:scale-105 active:scale-95">
+                                <i data-lucide="printer" class="w-4 h-4"></i> Print
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading Spinner -->
+                <div id="report-loading" class="flex flex-col items-center justify-center py-20">
+                    <div class="w-12 h-12 border-4 border-sky-500/30 border-t-sky-500 rounded-full animate-spin mb-4"></div>
+                    <p class="text-slate-400 text-sm">Memuat data laporan...</p>
+                </div>
+
+                <!-- Report Content (hidden until loaded) -->
+                <div id="report-content" class="hidden space-y-6">
+
+                    <!-- Executive Summary Section -->
+                    <div class="card p-6 rounded-2xl border-l-4 border-l-sky-500 animate-slide-up" style="animation-delay: 0.05s;">
+                        <div class="flex flex-col lg:flex-row gap-6">
+                            <!-- Health Score -->
+                            <div class="lg:w-1/4">
+                                <div class="text-center">
+                                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Health Score</div>
+                                    <div class="relative w-32 h-32 mx-auto">
+                                        <svg class="w-full h-full transform -rotate-90">
+                                            <circle cx="64" cy="64" r="56" stroke="rgba(51,65,85,0.5)" stroke-width="8" fill="none"/>
+                                            <circle id="health-score-circle" cx="64" cy="64" r="56" stroke="#10b981" stroke-width="8" fill="none" 
+                                                stroke-dasharray="351.86" stroke-dashoffset="351.86" class="transition-all duration-1000"/>
+                                        </svg>
+                                        <div class="absolute inset-0 flex items-center justify-center">
+                                            <span id="health-score-text" class="text-3xl font-black text-white">0%</span>
+                                        </div>
+                                    </div>
+                                    <div id="overall-status" class="mt-2 px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-full text-xs font-bold inline-block">Excellent</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Key Insights & Recommendations -->
+                            <div class="lg:w-3/4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <i data-lucide="lightbulb" class="w-4 h-4 text-amber-400"></i>
+                                        <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Key Insights</h4>
+                                    </div>
+                                    <div id="key-insights" class="space-y-2">
+                                        <!-- Insights will be populated here -->
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <i data-lucide="target" class="w-4 h-4 text-sky-400"></i>
+                                        <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Recommendations</h4>
+                                    </div>
+                                    <div id="recommendations" class="space-y-2">
+                                        <!-- Recommendations will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Report Employees -->
-                    <div class="card p-6 rounded-2xl flex flex-col items-center text-center">
-                        <div class="bg-emerald-500/20 p-4 rounded-full mb-4">
-                            <i data-lucide="users" class="w-10 h-10 text-emerald-500"></i>
+                    <!-- Row 1: Summary Stats -->
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 animate-slide-up" style="animation-delay: 0.1s;">
+                        <div class="card p-4 rounded-xl border-l-4 border-l-sky-500">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Aset</div>
+                            <div class="text-2xl font-black text-white" id="rpt-total-assets">0</div>
                         </div>
-                        <h4 class="text-lg font-bold text-white mb-2">Laporan Karyawan</h4>
-                        <p class="text-sm text-slate-400 mb-6">Unduh data keseluruhan karyawan aktif maupun inaktif beserta jabatannya ke format CSV.</p>
-                        <button onclick="exportEmployeeCSV()" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white py-3 rounded-xl font-bold flex justify-center items-center gap-2 transition-transform transform hover:scale-105 active:scale-95 shadow-lg">
-                            <i data-lucide="download" class="w-5 h-5"></i> Cetak Laporan Karyawan
-                        </button>
+                        <div class="card p-4 rounded-xl border-l-4 border-l-emerald-500">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">In Use</div>
+                            <div class="text-2xl font-black text-emerald-400" id="rpt-in-use">0</div>
+                        </div>
+                        <div class="card p-4 rounded-xl border-l-4 border-l-amber-500">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Maintenance</div>
+                            <div class="text-2xl font-black text-amber-400" id="rpt-maintenance">0</div>
+                        </div>
+                        <div class="card p-4 rounded-xl border-l-4 border-l-red-500">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Disposed</div>
+                            <div class="text-2xl font-black text-red-400" id="rpt-disposed">0</div>
+                        </div>
+                        <div class="card p-4 rounded-xl border-l-4 border-l-indigo-500">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Karyawan</div>
+                            <div class="text-2xl font-black text-indigo-400" id="rpt-total-emp">0</div>
+                        </div>
+                        <div class="card p-4 rounded-xl border-l-4 border-l-purple-500">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Garansi Kadaluarsa</div>
+                            <div class="text-2xl font-black text-purple-400" id="rpt-warranty-exp">0</div>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Main Charts -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-slide-up" style="animation-delay: 0.15s;">
+                        <!-- Asset Trend Chart -->
+                        <div class="card p-6 rounded-2xl">
+                            <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <i data-lucide="trending-up" class="w-4 h-4 text-sky-500"></i> Tren Aset Masuk (12 Bulan)
+                            </h4>
+                            <div class="h-64"><canvas id="rpt-trend-chart"></canvas></div>
+                        </div>
+                        <!-- Asset by Category Bar Chart -->
+                        <div class="card p-6 rounded-2xl">
+                            <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-500"></i> Aset per Kategori
+                            </h4>
+                            <div class="h-64"><canvas id="rpt-category-chart"></canvas></div>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Secondary Charts -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-slide-up" style="animation-delay: 0.2s;">
+                        <!-- Asset Status Pie -->
+                        <div class="card p-6 rounded-2xl">
+                            <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-500"></i> Status Aset
+                            </h4>
+                            <div class="h-56 flex justify-center"><canvas id="rpt-status-chart"></canvas></div>
+                        </div>
+                        <!-- Asset Age Distribution -->
+                        <div class="card p-6 rounded-2xl">
+                            <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <i data-lucide="clock" class="w-4 h-4 text-amber-500"></i> Usia Aset
+                            </h4>
+                            <div class="h-56 flex justify-center"><canvas id="rpt-age-chart"></canvas></div>
+                        </div>
+                        <!-- Employee by Department -->
+                        <div class="card p-6 rounded-2xl">
+                            <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <i data-lucide="users" class="w-4 h-4 text-purple-500"></i> Karyawan per Departemen
+                            </h4>
+                            <div class="h-56 flex justify-center"><canvas id="rpt-dept-chart"></canvas></div>
+                        </div>
+                    </div>
+
+                    <!-- Row 4: Warranty + Asset by Location -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-slide-up" style="animation-delay: 0.25s;">
+                        <!-- Warranty Summary -->
+                        <div class="card p-6 rounded-2xl">
+                            <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <i data-lucide="shield-alert" class="w-4 h-4 text-red-500"></i> Ringkasan Garansi
+                            </h4>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                                <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-center">
+                                    <div class="text-xl font-black text-red-400" id="rpt-w-expired">0</div>
+                                    <div class="text-[10px] font-bold text-red-400/70 uppercase">Kadaluarsa</div>
+                                </div>
+                                <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3 text-center">
+                                    <div class="text-xl font-black text-amber-400" id="rpt-w-30">0</div>
+                                    <div class="text-[10px] font-bold text-amber-400/70 uppercase">&lt;30 Hari</div>
+                                </div>
+                                <div class="bg-orange-500/10 border border-orange-500/20 rounded-xl p-3 text-center">
+                                    <div class="text-xl font-black text-orange-400" id="rpt-w-90">0</div>
+                                    <div class="text-[10px] font-bold text-orange-400/70 uppercase">&lt;90 Hari</div>
+                                </div>
+                                <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 text-center">
+                                    <div class="text-xl font-black text-emerald-400" id="rpt-w-valid">0</div>
+                                    <div class="text-[10px] font-bold text-emerald-400/70 uppercase">Valid</div>
+                                </div>
+                            </div>
+                            <div class="max-h-48 overflow-y-auto space-y-2 pr-1" id="rpt-warranty-list">
+                                <div class="text-center text-slate-500 text-xs py-4">Tidak ada peringatan garansi</div>
+                            </div>
+                        </div>
+
+                        <!-- Asset by Location -->
+                        <div class="card p-6 rounded-2xl">
+                            <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-sky-500"></i> Aset per Lokasi
+                            </h4>
+                            <div class="h-64"><canvas id="rpt-location-chart"></canvas></div>
+                        </div>
+                    </div>
+
+                    <!-- Row 5: Top Users + Recent Activity -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-slide-up" style="animation-delay: 0.3s;">
+                        <!-- Top Users -->
+                        <div class="card p-6 rounded-2xl">
+                            <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i> Top Pengguna Aset
+                            </h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-sm">
+                                    <thead class="text-slate-500 text-[10px] font-bold uppercase tracking-wider">
+                                        <tr><th class="p-2">#</th><th class="p-2">Pengguna</th><th class="p-2">Email</th><th class="p-2 text-right">Jumlah</th></tr>
+                                    </thead>
+                                    <tbody id="rpt-top-users" class="divide-y divide-slate-800/50"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="card p-6 rounded-2xl">
+                            <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <i data-lucide="activity" class="w-4 h-4 text-emerald-500"></i> Aktivitas Terakhir
+                            </h4>
+                            <div class="space-y-2 max-h-72 overflow-y-auto pr-1" id="rpt-recent-activity">
+                                <div class="text-center text-slate-500 text-xs py-4">Tidak ada aktivitas</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1323,19 +1586,368 @@
             ['dashboard', 'assets', 'employees', 'users', 'audit', 'email', 'report'].forEach(v => { const viewEl = document.getElementById(`view-${v}`); const navEl = document.getElementById(`nav-${v}`); if(viewEl) viewEl.classList.add('hidden'); if(navEl) { navEl.classList.remove('active-nav', 'text-white', 'bg-sky-600'); navEl.classList.add('text-slate-400'); } });
             document.getElementById(`view-${view}`).classList.remove('hidden');
             const btn = document.getElementById(`nav-${view}`); if(btn) { btn.classList.add('active-nav', 'text-white'); btn.classList.remove('text-slate-400'); }
-            document.getElementById('page-title').textContent = view==='users'?'Manajemen User':(view==='assets'?'Data Aset':(view==='employees'?'Daftar Karyawan':(view==='audit'?'Audit Log':(view==='email'?'Kirim Email':(view==='report'?'Laporan Sistem':'Dashboard')))));
+            document.getElementById('page-title').textContent = view==='users'?'Manajemen User':(view==='assets'?'Data Aset':(view==='employees'?'Daftar Karyawan':(view==='audit'?'Audit Log':(view==='email'?'Kirim Email':(view==='report'?'Dashboard Laporan':'Dashboard')))));
             if(view==='assets') fetchAssets(); if(view==='users') fetchUsers(); if(view==='dashboard') loadDashboard(); if(view==='audit') loadAuditLogs(); if(view==='employees') loadEmployees();
-            if(view==='report') { if(localData.length === 0) fetchAssets(); if(employeesData.length === 0) loadEmployees(); }
+            if(view==='report') { loadReportDashboard(); }
+        }
+
+        // --- REPORT DASHBOARD ---
+        let rptCharts = {};
+        async function loadReportDashboard() {
+            const loading = document.getElementById('report-loading');
+            const content = document.getElementById('report-content');
+            loading.classList.remove('hidden');
+            content.classList.add('hidden');
+
+            try {
+                const res = await authFetch(`${API}/reports/summary`);
+                const data = await res.json();
+
+                // --- Populate Executive Summary ---
+                const es = data.executive_summary;
+                
+                // Health Score Animation
+                const healthScore = es.health_score;
+                const healthCircle = document.getElementById('health-score-circle');
+                const healthText = document.getElementById('health-score-text');
+                const overallStatus = document.getElementById('overall-status');
+                
+                // Animate health score
+                setTimeout(() => {
+                    const circumference = 351.86;
+                    const offset = circumference - (healthScore / 100) * circumference;
+                    healthCircle.style.strokeDashoffset = offset;
+                    
+                    // Color based on score
+                    if (healthScore >= 80) {
+                        healthCircle.style.stroke = '#10b981';
+                        overallStatus.className = 'mt-2 px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-full text-xs font-bold inline-block';
+                    } else if (healthScore >= 60) {
+                        healthCircle.style.stroke = '#0ea5e9';
+                        overallStatus.className = 'mt-2 px-3 py-1 bg-sky-500/20 text-sky-400 rounded-full text-xs font-bold inline-block';
+                    } else if (healthScore >= 40) {
+                        healthCircle.style.stroke = '#f59e0b';
+                        overallStatus.className = 'mt-2 px-3 py-1 bg-amber-500/20 text-amber-400 rounded-full text-xs font-bold inline-block';
+                    } else {
+                        healthCircle.style.stroke = '#ef4444';
+                        overallStatus.className = 'mt-2 px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-xs font-bold inline-block';
+                    }
+                    
+                    overallStatus.textContent = es.overall_status;
+                    
+                    // Animate number
+                    let currentScore = 0;
+                    const increment = healthScore / 50;
+                    const timer = setInterval(() => {
+                        currentScore += increment;
+                        if (currentScore >= healthScore) {
+                            currentScore = healthScore;
+                            clearInterval(timer);
+                        }
+                        healthText.textContent = Math.round(currentScore) + '%';
+                    }, 30);
+                }, 300);
+
+                // Key Insights
+                const insightsEl = document.getElementById('key-insights');
+                insightsEl.innerHTML = es.key_insights.map(insight => `
+                    <div class="flex items-start gap-2 p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
+                        <i data-lucide="check-circle-2" class="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0"></i>
+                        <span class="text-xs text-slate-300">${insight}</span>
+                    </div>
+                `).join('');
+
+                // Recommendations
+                const recsEl = document.getElementById('recommendations');
+                recsEl.innerHTML = es.recommendations.map(rec => `
+                    <div class="flex items-start gap-2 p-2 bg-sky-500/10 rounded-lg border border-sky-500/20">
+                        <i data-lucide="arrow-right" class="w-4 h-4 text-sky-400 mt-0.5 flex-shrink-0"></i>
+                        <span class="text-xs text-slate-300">${rec}</span>
+                    </div>
+                `).join('');
+
+                // --- Populate Stats Cards ---
+                const as = data.asset_summary;
+                document.getElementById('rpt-total-assets').textContent = as.total;
+                document.getElementById('rpt-in-use').textContent = as.by_status['In Use'] || 0;
+                document.getElementById('rpt-maintenance').textContent = as.by_status['Maintenance'] || 0;
+                document.getElementById('rpt-disposed').textContent = as.by_status['Disposed'] || 0;
+                document.getElementById('rpt-total-emp').textContent = data.employee_summary.total;
+                document.getElementById('rpt-warranty-exp').textContent = data.warranty_summary.expired;
+
+                // --- Warranty Stats ---
+                document.getElementById('rpt-w-expired').textContent = data.warranty_summary.expired;
+                document.getElementById('rpt-w-30').textContent = data.warranty_summary.expiring_30_days;
+                document.getElementById('rpt-w-90').textContent = data.warranty_summary.expiring_90_days;
+                document.getElementById('rpt-w-valid').textContent = data.warranty_summary.valid;
+
+                // Warranty list
+                const wList = document.getElementById('rpt-warranty-list');
+                if (data.warranty_summary.expiring_soon_list.length > 0) {
+                    wList.innerHTML = data.warranty_summary.expiring_soon_list.map(w => `
+                        <div class="flex justify-between items-center p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
+                            <div>
+                                <div class="font-bold text-slate-200 text-xs">${w.name}</div>
+                                <div class="text-[9px] text-slate-500 font-mono">${w.serial_number} • ${w.category} • ${w.location}</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-xs font-black ${w.days_left <= 30 ? 'text-red-400' : 'text-amber-400'}">${w.days_left} Hari</div>
+                                <div class="text-[9px] text-slate-500">${w.warranty_date}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    wList.innerHTML = '<div class="text-center text-slate-500 text-xs py-4">✅ Tidak ada peringatan garansi</div>';
+                }
+
+                // --- Top Users ---
+                const topUsersEl = document.getElementById('rpt-top-users');
+                if (data.top_users.length > 0) {
+                    topUsersEl.innerHTML = data.top_users.map((u, i) => `
+                        <tr class="hover:bg-slate-800/40">
+                            <td class="p-2 text-xs text-slate-500 font-bold">${i + 1}</td>
+                            <td class="p-2 text-xs text-white font-bold">${u.user}</td>
+                            <td class="p-2 text-[10px] text-sky-400">${u.user_email || '-'}</td>
+                            <td class="p-2 text-right"><span class="px-2 py-0.5 bg-sky-500/10 text-sky-400 rounded text-xs font-black">${u.asset_count}</span></td>
+                        </tr>
+                    `).join('');
+                } else {
+                    topUsersEl.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-500 text-xs">Tidak ada data</td></tr>';
+                }
+
+                // --- Recent Activity ---
+                const actEl = document.getElementById('rpt-recent-activity');
+                if (data.recent_activity.length > 0) {
+                    const actionColors = {
+                        'CREATE_ASSET': 'text-emerald-400', 'UPDATE_ASSET': 'text-sky-400', 'DELETE_ASSET': 'text-red-400',
+                        'CREATE_EMPLOYEE': 'text-emerald-400', 'UPDATE_EMPLOYEE': 'text-sky-400', 'DELETE_EMPLOYEE': 'text-red-400',
+                        'LOGIN': 'text-indigo-400', 'LOGOUT': 'text-slate-400', 'CREATE_USER': 'text-purple-400', 'DELETE_USER': 'text-red-400'
+                    };
+                    const actionIcons = {
+                        'CREATE_ASSET': 'plus-circle', 'UPDATE_ASSET': 'edit-2', 'DELETE_ASSET': 'trash-2',
+                        'CREATE_EMPLOYEE': 'user-plus', 'UPDATE_EMPLOYEE': 'user-check', 'DELETE_EMPLOYEE': 'user-minus',
+                        'LOGIN': 'log-in', 'LOGOUT': 'log-out', 'CREATE_USER': 'user-plus', 'DELETE_USER': 'user-minus'
+                    };
+                    actEl.innerHTML = data.recent_activity.map(a => {
+                        const color = actionColors[a.action] || 'text-slate-400';
+                        const icon = actionIcons[a.action] || 'activity';
+                        const time = a.timestamp ? new Date(a.timestamp).toLocaleString('id-ID') : '-';
+                        return `
+                            <div class="flex items-start gap-3 p-3 bg-slate-800/30 rounded-xl border border-slate-700/30">
+                                <div class="p-1.5 bg-slate-800 rounded-lg"><i data-lucide="${icon}" class="w-3.5 h-3.5 ${color}"></i></div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-xs text-white font-bold">${a.action.replace(/_/g, ' ')}</div>
+                                    <div class="text-[10px] text-slate-500">${a.username || '-'} • ${a.entity_type || ''} • ${time}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                // --- CHARTS ---
+                const chartColors = ['#0ea5e9', '#6366f1', '#8b5cf6', '#d946ef', '#f43f5e', '#f59e0b', '#10b981', '#14b8a6', '#06b6d4', '#ec4899'];
+                const chartOpts = { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } } };
+
+                // Destroy old charts
+                Object.values(rptCharts).forEach(c => { if(c) c.destroy(); });
+
+                // 1. Trend Line Chart
+                rptCharts.trend = new Chart(document.getElementById('rpt-trend-chart').getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: data.asset_trends.map(t => t.month),
+                        datasets: [{
+                            label: 'Aset Masuk',
+                            data: data.asset_trends.map(t => t.count),
+                            borderColor: '#0ea5e9',
+                            backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 2,
+                            pointBackgroundColor: '#0ea5e9',
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        }]
+                    },
+                    options: { ...chartOpts, scales: { x: { ticks: { color: '#64748b', font: { size: 9 } }, grid: { color: 'rgba(51,65,85,0.3)' } }, y: { beginAtZero: true, ticks: { color: '#64748b', stepSize: 1 }, grid: { color: 'rgba(51,65,85,0.3)' } } }, plugins: { ...chartOpts.plugins, legend: { display: false } } }
+                });
+
+                // 2. Category Bar Chart
+                rptCharts.category = new Chart(document.getElementById('rpt-category-chart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(as.by_category),
+                        datasets: [{
+                            label: 'Jumlah',
+                            data: Object.values(as.by_category),
+                            backgroundColor: chartColors.slice(0, Object.keys(as.by_category).length),
+                            borderRadius: 8,
+                            borderSkipped: false
+                        }]
+                    },
+                    options: { ...chartOpts, scales: { x: { ticks: { color: '#64748b', font: { size: 9 } }, grid: { display: false } }, y: { beginAtZero: true, ticks: { color: '#64748b', stepSize: 1 }, grid: { color: 'rgba(51,65,85,0.3)' } } }, plugins: { ...chartOpts.plugins, legend: { display: false } } }
+                });
+
+                // 3. Status Doughnut
+                const statusColors = { 'In Use': '#10b981', 'Available': '#0ea5e9', 'Maintenance': '#f59e0b', 'Disposed': '#ef4444', 'Broken': '#dc2626' };
+                rptCharts.status = new Chart(document.getElementById('rpt-status-chart').getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(as.by_status),
+                        datasets: [{
+                            data: Object.values(as.by_status),
+                            backgroundColor: Object.keys(as.by_status).map(s => statusColors[s] || '#64748b'),
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { ...chartOpts, plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 10 }, padding: 12 } } } }
+                });
+
+                // 4. Age Distribution Polar Area
+                const ageColors = ['#10b981', '#0ea5e9', '#6366f1', '#f59e0b', '#ef4444', '#64748b'];
+                rptCharts.age = new Chart(document.getElementById('rpt-age-chart').getContext('2d'), {
+                    type: 'polarArea',
+                    data: {
+                        labels: Object.keys(data.asset_age_distribution),
+                        datasets: [{
+                            data: Object.values(data.asset_age_distribution),
+                            backgroundColor: ageColors.map(c => c + '80'),
+                            borderColor: ageColors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { ...chartOpts, plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 9 }, padding: 8 } } }, scales: { r: { ticks: { color: '#64748b', backdropColor: 'transparent' }, grid: { color: 'rgba(51,65,85,0.3)' } } } }
+                });
+
+                // 5. Employee by Department Doughnut
+                const deptColors = ['#10b981', '#34d399', '#059669', '#047857', '#0ea5e9', '#6366f1', '#8b5cf6', '#d946ef'];
+                rptCharts.dept = new Chart(document.getElementById('rpt-dept-chart').getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(data.employee_summary.by_department),
+                        datasets: [{
+                            data: Object.values(data.employee_summary.by_department),
+                            backgroundColor: deptColors.slice(0, Object.keys(data.employee_summary.by_department).length),
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { ...chartOpts, plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 10 }, padding: 12 } } } }
+                });
+
+                // 6. Location Horizontal Bar
+                rptCharts.location = new Chart(document.getElementById('rpt-location-chart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(as.by_location),
+                        datasets: [{
+                            label: 'Jumlah Aset',
+                            data: Object.values(as.by_location),
+                            backgroundColor: '#6366f180',
+                            borderColor: '#6366f1',
+                            borderWidth: 1,
+                            borderRadius: 6
+                        }]
+                    },
+                    options: { ...chartOpts, indexAxis: 'y', scales: { x: { beginAtZero: true, ticks: { color: '#64748b', stepSize: 1 }, grid: { color: 'rgba(51,65,85,0.3)' } }, y: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { display: false } } }, plugins: { ...chartOpts.plugins, legend: { display: false } } }
+                });
+
+                // Show content
+                loading.classList.add('hidden');
+                content.classList.remove('hidden');
+                lucide.createIcons();
+
+            } catch(e) {
+                console.error('Report load error:', e);
+                loading.innerHTML = '<div class="text-red-400 text-sm text-center py-10"><i data-lucide="alert-circle" class="w-8 h-8 mx-auto mb-2"></i>Gagal memuat data laporan.</div>';
+                lucide.createIcons();
+            }
         }
 
         // --- DASHBOARD ---
         async function loadDashboard() {
             try {
                 const res = await authFetch(`${API}/dashboard`); const data = await res.json();
+                
+                // --- Executive Summary ---
+                if (data.executive_summary) {
+                    const es = data.executive_summary;
+                    
+                    // Health Score Animation
+                    const healthScore = es.health_score;
+                    const healthCircle = document.getElementById('dash-health-circle');
+                    const healthText = document.getElementById('dash-health-text');
+                    const overallStatus = document.getElementById('dash-overall-status');
+                    
+                    setTimeout(() => {
+                        const circumference = 251.33;
+                        const offset = circumference - (healthScore / 100) * circumference;
+                        healthCircle.style.strokeDashoffset = offset;
+                        
+                        // Color based on score
+                        if (healthScore >= 80) {
+                            healthCircle.style.stroke = '#10b981';
+                            overallStatus.className = 'mt-2 px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-full text-xs font-bold inline-block';
+                        } else if (healthScore >= 60) {
+                            healthCircle.style.stroke = '#0ea5e9';
+                            overallStatus.className = 'mt-2 px-3 py-1 bg-sky-500/20 text-sky-400 rounded-full text-xs font-bold inline-block';
+                        } else if (healthScore >= 40) {
+                            healthCircle.style.stroke = '#f59e0b';
+                            overallStatus.className = 'mt-2 px-3 py-1 bg-amber-500/20 text-amber-400 rounded-full text-xs font-bold inline-block';
+                        } else {
+                            healthCircle.style.stroke = '#ef4444';
+                            overallStatus.className = 'mt-2 px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-xs font-bold inline-block';
+                        }
+                        
+                        overallStatus.textContent = es.overall_status;
+                        
+                        // Animate number
+                        let currentScore = 0;
+                        const increment = healthScore / 50;
+                        const timer = setInterval(() => {
+                            currentScore += increment;
+                            if (currentScore >= healthScore) {
+                                currentScore = healthScore;
+                                clearInterval(timer);
+                            }
+                            healthText.textContent = Math.round(currentScore) + '%';
+                        }, 30);
+                    }, 300);
+
+                    // Key Insights
+                    const insightsEl = document.getElementById('dash-key-insights');
+                    insightsEl.innerHTML = es.key_insights.map(insight => `
+                        <div class="flex items-start gap-2 p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0"></i>
+                            <span class="text-xs text-slate-300">${insight}</span>
+                        </div>
+                    `).join('');
+
+                    // Recommendations
+                    const recsEl = document.getElementById('dash-recommendations');
+                    recsEl.innerHTML = es.recommendations.map(rec => `
+                        <div class="flex items-start gap-2 p-2 bg-sky-500/10 rounded-lg border border-sky-500/20">
+                            <i data-lucide="arrow-right" class="w-4 h-4 text-sky-400 mt-0.5 flex-shrink-0"></i>
+                            <span class="text-xs text-slate-300">${rec}</span>
+                        </div>
+                    `).join('');
+                }
+                
+                // --- Original Dashboard Stats ---
                 animateValue('stat-total', 0, data.total, 1000);
                 animateValue('stat-incoming', 0, data.incoming_month, 1000);
                 animateValue('stat-disposed', 0, data.disposed, 1000);
                 animateValue('stat-employees', 0, data.total_employees, 1000);
+                
+                // --- Additional Stats ---
+                if (data.status_counts) {
+                    animateValue('dash-available', 0, data.status_counts['Available'] || 0, 1000);
+                    animateValue('dash-inuse', 0, data.status_counts['In Use'] || 0, 1000);
+                    animateValue('dash-maintenance', 0, data.status_counts['Maintenance'] || 0, 1000);
+                }
+                if (data.warranty_summary) {
+                    animateValue('dash-warranty-valid', 0, data.warranty_summary.valid || 0, 1000);
+                }
+                
                 renderChart(data.categories);
                 if (data.employee_departments) renderEmployeeChart(data.employee_departments);
                 const list = document.getElementById('warranty-list-dashboard'), badge = document.getElementById('notif-badge'), full = document.getElementById('warranty-list-full');

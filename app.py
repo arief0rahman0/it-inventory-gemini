@@ -562,6 +562,48 @@ def get_dashboard_stats():
     assets = conn.execute('SELECT * FROM assets').fetchall()
     employees_count = conn.execute('SELECT COUNT(*) as count FROM employees').fetchone()['count']
     emp_dept_rows = conn.execute('SELECT department, COUNT(*) as count FROM employees GROUP BY department').fetchall()
+    
+    # Additional dashboard data
+    status_counts = {}
+    for row in conn.execute('SELECT status, COUNT(*) as count FROM assets GROUP BY status ORDER BY count DESC').fetchall():
+        status_counts[row['status']] = row['count']
+    
+    location_counts = {}
+    for row in conn.execute('SELECT location, COUNT(*) as count FROM assets GROUP BY location ORDER BY count DESC').fetchall():
+        location_counts[row['location']] = row['count']
+    
+    # Warranty summary
+    expired = 0
+    expiring_30 = 0
+    expiring_90 = 0
+    valid_warranty = 0
+    warranty_alerts = []
+    
+    today = datetime.now()
+    warning_threshold_30 = today + timedelta(days=30)
+    warning_threshold_90 = today + timedelta(days=90)
+    
+    for row in assets:
+        asset = dict(row)
+        if asset.get('warranty_date'):
+            try:
+                w_date = datetime.strptime(asset['warranty_date'], '%Y-%m-%d')
+                days_left = (w_date - today).days
+                if days_left < 0:
+                    expired += 1
+                elif days_left <= 30:
+                    expiring_30 += 1
+                    asset['days_left'] = days_left
+                    warranty_alerts.append(asset)
+                elif days_left <= 90:
+                    expiring_90 += 1
+                else:
+                    valid_warranty += 1
+            except ValueError:
+                pass
+    
+    warranty_alerts.sort(key=lambda x: x['days_left'])
+    
     conn.close()
     
     emp_departments = {row['department']: row['count'] for row in emp_dept_rows}
@@ -570,11 +612,8 @@ def get_dashboard_stats():
     total_assets = len(assets)
     disposed_assets = 0
     incoming_assets_month = 0
-    warranty_alerts = []
     category_counts = {}
     current_month = datetime.now().strftime('%Y-%m')
-    today = datetime.now()
-    warning_threshold = today + timedelta(days=30)
 
     for row in assets:
         asset = dict(row)
@@ -582,15 +621,75 @@ def get_dashboard_stats():
         category_counts[cat] = category_counts.get(cat, 0) + 1
         if asset['status'] == 'Disposed': disposed_assets += 1
         if asset['created_at'] and asset['created_at'].startswith(current_month): incoming_assets_month += 1
-        if asset['warranty_date']:
-            try:
-                w_date = datetime.strptime(asset['warranty_date'], '%Y-%m-%d')
-                if today <= w_date <= warning_threshold:
-                    days_left = (w_date - today).days
-                    asset['days_left'] = days_left
-                    warranty_alerts.append(asset)
-            except ValueError: pass
-    warranty_alerts.sort(key=lambda x: x['days_left'])
+
+    # --- Executive Summary for Dashboard ---
+    health_score = 100
+    insight_messages = []
+    recommendations = []
+
+    # Warranty health (only consider if warranty data exists)
+    assets_with_warranty = expired + expiring_30 + expiring_90 + valid_warranty
+    if assets_with_warranty > 0:
+        warranty_health = ((valid_warranty + expiring_90) / assets_with_warranty) * 100
+        health_score = min(health_score, warranty_health)
+        
+        if expired > 0:
+            insight_messages.append(f"{expired} aset memiliki garansi yang sudah kadaluarsa")
+            recommendations.append("Segera review aset dengan garansi kadaluarsa")
+        
+        if expiring_30 > 0:
+            insight_messages.append(f"{expiring_30} aset garansinya akan kadaluarsa dalam 30 hari")
+            recommendations.append("Persiapkan budget untuk perpanjangan garansi")
+    else:
+        # Don't penalize for missing warranty data, just note it
+        insight_messages.append("Data garansi aset belum lengkap")
+
+    # Asset status health
+    if total_assets > 0:
+        in_use_percentage = (status_counts.get('In Use', 0) / total_assets) * 100
+        available_percentage = (status_counts.get('Available', 0) / total_assets) * 100
+        disposed_percentage = (status_counts.get('Disposed', 0) / total_assets) * 100
+        
+        insight_messages.append(f"Utilisasi aset: {in_use_percentage:.1f}% digunakan, {available_percentage:.1f}% tersedia")
+        
+        # Adjust health score based on utilization
+        if in_use_percentage > 90:
+            health_score = min(health_score, 70)  # Overutilization
+            recommendations.append("Pertimbangkan untuk menambah aset baru")
+        elif in_use_percentage > 80:
+            health_score = min(health_score, 85)
+            recommendations.append("Monitor utilisasi aset yang tinggi")
+        
+        if disposed_percentage > 15:
+            health_score = min(health_score, 75)
+            recommendations.append("Review proses disposal aset")
+
+    # Employee coverage
+    if employees_count > 0:
+        assets_per_employee = total_assets / employees_count
+        insight_messages.append(f"Rasio aset per karyawan: {assets_per_employee:.1f}")
+        
+        if assets_per_employee < 0.5:
+            health_score = min(health_score, 80)
+            recommendations.append("Rasio aset per karyawan rendah")
+
+    # Overall status
+    if health_score >= 90:
+        overall_status = "Excellent"
+    elif health_score >= 75:
+        overall_status = "Good"
+    elif health_score >= 60:
+        overall_status = "Fair"
+    else:
+        overall_status = "Needs Attention"
+
+    executive_summary = {
+        'health_score': round(health_score),
+        'overall_status': overall_status,
+        'key_insights': insight_messages if insight_messages else ["Sistem inventaris berjalan normal"],
+        'recommendations': recommendations if recommendations else (["Update data garansi aset untuk monitoring yang lebih akurat"] if assets_with_warranty == 0 else ["Lanjutkan monitoring rutin"]),
+        'utilization_rate': round((status_counts.get('In Use', 0) / total_assets * 100) if total_assets > 0 else 0, 1)
+    }
 
     return jsonify({
         "total": total_assets,
@@ -599,7 +698,16 @@ def get_dashboard_stats():
         "categories": category_counts,
         "warranty_alerts": warranty_alerts,
         "total_employees": employees_count,
-        "employee_departments": emp_departments
+        "employee_departments": emp_departments,
+        "status_counts": status_counts,
+        "location_counts": location_counts,
+        "warranty_summary": {
+            "expired": expired,
+            "expiring_30_days": expiring_30,
+            "expiring_90_days": expiring_90,
+            "valid": valid_warranty
+        },
+        "executive_summary": executive_summary
     })
 
 @app.route('/api/assets', methods=['GET'])
@@ -679,6 +787,240 @@ def delete_asset(asset_id):
         
         return jsonify({"status": "deleted"}), 200
     except Exception as e: return jsonify({"error": str(e)}), 400
+
+@app.route('/api/reports/summary', methods=['GET'])
+def get_report_summary():
+    """Get comprehensive report summary with charts data"""
+    if not get_current_user():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    conn = get_db_connection()
+    today = datetime.now()
+
+    # --- 1. Asset Summary ---
+    assets = conn.execute('SELECT * FROM assets').fetchall()
+    total_assets = len(assets)
+
+    # By status
+    status_counts = {}
+    for row in conn.execute('SELECT status, COUNT(*) as count FROM assets GROUP BY status ORDER BY count DESC').fetchall():
+        status_counts[row['status']] = row['count']
+
+    # By category
+    category_counts = {}
+    for row in conn.execute('SELECT category, COUNT(*) as count FROM assets GROUP BY category ORDER BY count DESC').fetchall():
+        category_counts[row['category']] = row['count']
+
+    # By location
+    location_counts = {}
+    for row in conn.execute('SELECT location, COUNT(*) as count FROM assets GROUP BY location ORDER BY count DESC').fetchall():
+        location_counts[row['location']] = row['count']
+
+    # --- 2. Asset Trends (last 12 months) ---
+    monthly_incoming = []
+    for i in range(11, -1, -1):
+        d = today - timedelta(days=i * 30)
+        month_str = d.strftime('%Y-%m')
+        count = conn.execute(
+            "SELECT COUNT(*) as count FROM assets WHERE created_at LIKE ?",
+            (f'{month_str}%',)
+        ).fetchone()['count']
+        monthly_incoming.append({'month': month_str, 'count': count})
+
+    # --- 3. Employee Summary ---
+    emp_total = conn.execute('SELECT COUNT(*) as count FROM employees').fetchone()['count']
+
+    emp_by_dept = {}
+    for row in conn.execute('SELECT department, COUNT(*) as count FROM employees GROUP BY department ORDER BY count DESC').fetchall():
+        emp_by_dept[row['department']] = row['count']
+
+    emp_by_status = {}
+    for row in conn.execute('SELECT status, COUNT(*) as count FROM employees GROUP BY status ORDER BY count DESC').fetchall():
+        emp_by_status[row['status']] = row['count']
+
+    emp_by_location = {}
+    for row in conn.execute('SELECT location, COUNT(*) as count FROM employees WHERE location != "" GROUP BY location ORDER BY count DESC').fetchall():
+        emp_by_location[row['location']] = row['count']
+
+    # --- 4. Warranty Summary ---
+    expired = 0
+    expiring_30 = 0
+    expiring_90 = 0
+    valid_warranty = 0
+    expiring_soon_list = []
+
+    for row in assets:
+        asset = dict(row)
+        if not asset.get('warranty_date'):
+            continue
+        try:
+            w_date = datetime.strptime(asset['warranty_date'], '%Y-%m-%d')
+            days_left = (w_date - today).days
+            if days_left < 0:
+                expired += 1
+            elif days_left <= 30:
+                expiring_30 += 1
+                asset['days_left'] = days_left
+                expiring_soon_list.append({
+                    'name': asset['name'], 'serial_number': asset['serial_number'],
+                    'warranty_date': asset['warranty_date'], 'days_left': days_left,
+                    'category': asset.get('category', ''), 'location': asset.get('location', '')
+                })
+            elif days_left <= 90:
+                expiring_90 += 1
+                asset['days_left'] = days_left
+                expiring_soon_list.append({
+                    'name': asset['name'], 'serial_number': asset['serial_number'],
+                    'warranty_date': asset['warranty_date'], 'days_left': days_left,
+                    'category': asset.get('category', ''), 'location': asset.get('location', '')
+                })
+            else:
+                valid_warranty += 1
+        except ValueError:
+            pass
+
+    expiring_soon_list.sort(key=lambda x: x['days_left'])
+
+    # --- 5. Asset Age Distribution ---
+    age_distribution = {
+        'Baru (<1 tahun)': 0, '1-2 tahun': 0, '2-3 tahun': 0,
+        '3-5 tahun': 0, 'Lama (>5 tahun)': 0, 'Tidak diketahui': 0
+    }
+    for row in assets:
+        asset = dict(row)
+        if not asset.get('purchase_date'):
+            age_distribution['Tidak diketahui'] += 1
+            continue
+        try:
+            p_date = datetime.strptime(asset['purchase_date'], '%Y-%m-%d')
+            age_days = (today - p_date).days
+            age_years = age_days / 365.25
+            if age_years < 1:
+                age_distribution['Baru (<1 tahun)'] += 1
+            elif age_years < 2:
+                age_distribution['1-2 tahun'] += 1
+            elif age_years < 3:
+                age_distribution['2-3 tahun'] += 1
+            elif age_years < 5:
+                age_distribution['3-5 tahun'] += 1
+            else:
+                age_distribution['Lama (>5 tahun)'] += 1
+        except ValueError:
+            age_distribution['Tidak diketahui'] += 1
+
+    # --- 6. Top Users ---
+    top_users = []
+    for row in conn.execute(
+        'SELECT user, user_email, COUNT(*) as asset_count FROM assets WHERE user != "" GROUP BY user ORDER BY asset_count DESC LIMIT 10'
+    ).fetchall():
+        top_users.append({'user': row['user'], 'user_email': row['user_email'], 'asset_count': row['asset_count']})
+
+    # --- 7. Recent Activity ---
+    recent_activity = []
+    for row in conn.execute(
+        'SELECT action, username, entity_type, timestamp, details FROM audit_logs ORDER BY timestamp DESC LIMIT 10'
+    ).fetchall():
+        recent_activity.append(dict(row))
+
+    # --- 8. Executive Summary ---
+    executive_summary = {
+        'key_insights': [],
+        'recommendations': [],
+        'health_score': 0,
+        'overall_status': 'Unknown'
+    }
+
+    # Calculate health score (0-100)
+    health_score = 100
+    insight_messages = []
+    recommendations = []
+
+    # Warranty health (only consider if warranty data exists)
+    assets_with_warranty = expired + expiring_30 + expiring_90 + valid_warranty
+    if assets_with_warranty > 0:
+        warranty_health = ((valid_warranty + expiring_90) / assets_with_warranty) * 100
+        health_score = min(health_score, warranty_health)
+        
+        if expired > 0:
+            insight_messages.append(f"{expired} aset memiliki garansi yang sudah kadaluarsa")
+            recommendations.append("Segera review aset dengan garansi kadaluarsa untuk penggantian atau perpanjangan")
+        
+        if expiring_30 > 0:
+            insight_messages.append(f"{expiring_30} aset garansinya akan kadaluarsa dalam 30 hari")
+            recommendations.append("Persiapkan budget untuk perpanjangan garansi aset yang akan kadaluarsa")
+    else:
+        insight_messages.append("Data garansi aset belum lengkap")
+
+    # Asset status health
+    if total_assets > 0:
+        in_use_percentage = (status_counts.get('In Use', 0) / total_assets) * 100
+        available_percentage = (status_counts.get('Available', 0) / total_assets) * 100
+        disposed_percentage = (status_counts.get('Disposed', 0) / total_assets) * 100
+        
+        insight_messages.append(f"Utilisasi aset: {in_use_percentage:.1f}% digunakan, {available_percentage:.1f}% tersedia")
+        
+        if in_use_percentage > 80:
+            recommendations.append("Pertimbangkan untuk menambah aset baru jika utilisasi terus meningkat")
+        
+        if disposed_percentage > 10:
+            recommendations.append("Review proses disposal aset untuk optimasi siklus hidup aset")
+
+    # Employee coverage
+    if emp_total > 0:
+        assets_per_employee = total_assets / emp_total
+        insight_messages.append(f"Rasio aset per karyawan: {assets_per_employee:.1f}")
+        
+        if assets_per_employee < 0.5:
+            recommendations.append("Rasio aset per karyawan rendah, review kebutuhan aset untuk produktivitas")
+
+    # Overall status
+    if health_score >= 80:
+        overall_status = "Excellent"
+    elif health_score >= 60:
+        overall_status = "Good"
+    elif health_score >= 40:
+        overall_status = "Fair"
+    else:
+        overall_status = "Needs Attention"
+
+    executive_summary = {
+        'key_insights': insight_messages if insight_messages else ["Sistem inventaris berjalan normal"],
+        'recommendations': recommendations if recommendations else ["Lanjutkan monitoring rutin inventaris", "Update data garansi aset untuk monitoring yang lebih akurat"],
+        'health_score': round(health_score),
+        'overall_status': overall_status,
+        'total_assets': total_assets,
+        'total_employees': emp_total,
+        'utilization_rate': round((status_counts.get('In Use', 0) / total_assets * 100) if total_assets > 0 else 0, 1)
+    }
+
+    conn.close()
+
+    return jsonify({
+        'executive_summary': executive_summary,
+        'asset_summary': {
+            'total': total_assets,
+            'by_status': status_counts,
+            'by_category': category_counts,
+            'by_location': location_counts
+        },
+        'asset_trends': monthly_incoming,
+        'employee_summary': {
+            'total': emp_total,
+            'by_department': emp_by_dept,
+            'by_status': emp_by_status,
+            'by_location': emp_by_location
+        },
+        'warranty_summary': {
+            'expired': expired,
+            'expiring_30_days': expiring_30,
+            'expiring_90_days': expiring_90,
+            'valid': valid_warranty,
+            'expiring_soon_list': expiring_soon_list
+        },
+        'asset_age_distribution': age_distribution,
+        'top_users': top_users,
+        'recent_activity': recent_activity
+    })
 
 @app.route('/')
 def index():
